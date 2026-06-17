@@ -9,13 +9,12 @@ class QuizController extends Controller
 {
     /**
      * Show the quiz page.
-     * Only accessible if the user has not completed the quiz yet.
      */
     public function show()
     {
         $user = Auth::user();
 
-        // If already done quiz → go straight to result
+        // Jika sudah selesai quiz → langsung ke hasil
         if ($user->quiz_result) {
             return redirect()->route('quiz.result');
         }
@@ -24,58 +23,38 @@ class QuizController extends Controller
     }
 
     /**
-     * Process submitted quiz answers and determine the best learning method.
-     *
-     * Scoring logic:
-     *   Each answer maps to one of four methods:
-     *     P = Pomodoro, A = Active Recall, B = Blurting, F = Feynman
-     *
-     *   The method with the highest accumulated score wins.
+     * Process submitted quiz answers.
      */
     public function submit(Request $request)
     {
         $answers = $request->input('answers', []);
 
-        // Answer → method score mapping
-        // Format: 'q{n}_{option}' => ['method' => points]
+        // Mapping jawaban ke skor metode
         $scoreMap = [
-            // Q1: Bagaimana cara terbaikmu memahami materi baru?
             'q1_visual'      => ['A' => 2, 'B' => 1],
             'q1_auditori'    => ['F' => 2, 'A' => 1],
             'q1_membaca'     => ['B' => 2, 'F' => 1],
             'q1_kinestetik'  => ['P' => 2, 'B' => 1],
-
-            // Q2: Berapa lama kamu bisa fokus tanpa istirahat?
             'q2_15menit'     => ['P' => 3],
             'q2_30menit'     => ['P' => 2, 'A' => 1],
             'q2_1jam'        => ['A' => 2, 'B' => 1],
             'q2_lebih'       => ['F' => 2, 'B' => 1],
-
-            // Q3: Apa yang kamu lakukan saat lupa materi?
             'q3_baca_ulang'  => ['B' => 2, 'F' => 1],
             'q3_rangkum'     => ['B' => 3],
             'q3_tanya'       => ['F' => 2, 'A' => 1],
             'q3_latihan'     => ['A' => 3],
-
-            // Q4: Lingkungan belajar yang paling cocok?
             'q4_tenang'      => ['B' => 2, 'A' => 1],
             'q4_musik'       => ['P' => 2, 'F' => 1],
             'q4_ramai'       => ['F' => 2, 'P' => 1],
             'q4_alam'        => ['P' => 3],
-
-            // Q5: Cara kamu menguji pemahaman?
             'q5_latihan'     => ['A' => 3],
             'q5_tutor'       => ['F' => 3],
             'q5_tulis_ulang' => ['B' => 3],
             'q5_jadwal'      => ['P' => 3],
-
-            // Q6: Kapan waktu belajar terbaikmu?
             'q6_pagi'        => ['P' => 2, 'A' => 1],
             'q6_siang'       => ['F' => 2, 'B' => 1],
             'q6_sore'        => ['B' => 2, 'F' => 1],
             'q6_malam'       => ['A' => 2, 'P' => 1],
-
-            // Q7: Tujuan belajarmu saat ini?
             'q7_ujian'       => ['A' => 2, 'P' => 1],
             'q7_pemahaman'   => ['F' => 3],
             'q7_skill'       => ['P' => 2, 'B' => 1],
@@ -93,7 +72,7 @@ class QuizController extends Controller
             }
         }
 
-        // Find the winner
+        // Tentukan pemenang
         arsort($scores);
         $winner = array_key_first($scores);
 
@@ -106,18 +85,32 @@ class QuizController extends Controller
 
         $result = $methodMap[$winner];
 
-        // Save to user
+        // Simpan hasil DAN detail skor ke user
         $user = Auth::user();
         $user->quiz_result = $result;
+        
+        // Format skor agar sesuai dengan key di view (pomodoro, active_recall, dll)
+        $formattedScores = [
+            'pomodoro'      => $scores['P'],
+            'active_recall' => $scores['A'],
+            'blurting'      => $scores['B'],
+            'feynman'       => $scores['F'],
+        ];
+        
+        $user->quiz_scores = $formattedScores; 
         $user->save();
 
         return redirect()->route('quiz.result');
     }
 
+    /**
+     * Reset quiz result so user can retake it.
+     */
     public function retake()
     {
         $user = Auth::user();
         $user->quiz_result = null;
+        $user->quiz_scores = null;
         $user->save();
 
         return redirect()->route('quiz');
@@ -134,6 +127,18 @@ class QuizController extends Controller
             return redirect()->route('quiz');
         }
 
-        return view('quiz.result', ['result' => $user->quiz_result]);
+        // Ambil skor dari DB, fallback ke 0 jika belum ada data
+        $scores = $user->quiz_scores ?? [
+            'pomodoro'      => 0,
+            'active_recall' => 0,
+            'feynman'       => 0,
+            'blurting'      => 0
+        ];
+
+        // Kirim KEDUA variabel ini ke view!
+        return view('quiz.result', [
+            'result' => $user->quiz_result,
+            'scores' => $scores
+        ]);
     }
 }
