@@ -1,0 +1,69 @@
+@extends('layouts.app')
+@section('content')
+<div class="dash-page">
+@include('dashboard._sidebar_pengajar', ['active' => 'kelas'])
+<main class="dash-main">
+    <div class="topbar">
+        <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        <div><h1 class="topbar__title">Jawaban — {{ $tugas->judul }}</h1><p class="topbar__sub">{{ $jawaban->total() }} jawaban terkumpul</p></div>
+        <div class="topbar__right"><a href="{{ route('tugas.index', $tugas->kelas_id) }}" class="btn-back">← Tugas</a></div>
+    </div>
+    @if(session('success'))<div class="alert-success" id="flashMsg">{{ session('success') }}</div>@endif
+
+    @if($jawaban->isEmpty())
+    <div class="empty-state"><div class="empty-state__icon">📭</div><p class="empty-state__title">Belum ada jawaban</p></div>
+    @else
+    @foreach($jawaban as $j)
+    <div class="jawaban-card">
+        <div class="jawaban-card__header">
+            <div>
+                <p class="jawaban-card__nama">{{ $j->siswa->name }}</p>
+                <p class="jawaban-card__email">{{ $j->siswa->email }} · {{ $j->submitted_at?->format('d M Y H:i') }}</p>
+            </div>
+            <span class="badge-status badge-status--{{ $j->status }}">{{ ucfirst($j->status) }}</span>
+        </div>
+        <div class="jawaban-card__teks">{{ $j->jawaban_text }}</div>
+        @if($j->nilai !== null)
+        <div class="jawaban-card__nilai">Nilai: <strong>{{ $j->nilai }}/100</strong> — {{ $j->feedback }}</div>
+        @endif
+        <form method="POST" action="{{ route('jawaban.nilai', $j) }}" class="nilai-form">
+            @csrf @method('PUT')
+            <div class="nilai-row">
+                <input type="number" name="nilai" value="{{ $j->nilai }}" min="0" max="100" placeholder="Nilai (0-100)" class="nilai-input">
+                <input type="text" name="feedback" value="{{ $j->feedback }}" placeholder="Feedback (opsional)" class="feedback-input">
+                <button type="submit" class="btn-nilai">Simpan Nilai</button>
+            </div>
+        </form>
+    </div>
+    @endforeach
+    <div style="margin-top:.75rem">{{ $jawaban->links() }}</div>
+    @endif
+</main>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+</div>
+@include('dashboard._dash_styles')
+<style>
+.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}
+.jawaban-card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.25rem;margin-bottom:.75rem;}
+.jawaban-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.jawaban-card__nama{font-size:.92rem;font-weight:700;color:#0F172A;}
+.jawaban-card__email{font-size:.75rem;color:#94A3B8;margin-top:.1rem;}
+.jawaban-card__teks{font-size:.85rem;color:#374151;line-height:1.7;background:#F8FAFC;border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem;white-space:pre-wrap;}
+.jawaban-card__nilai{font-size:.82rem;color:#15803D;background:#DCFCE7;border-radius:8px;padding:.5rem .85rem;margin-bottom:.75rem;}
+.nilai-form{display:flex;flex-direction:column;gap:.5rem;}
+.nilai-row{display:flex;gap:.5rem;flex-wrap:wrap;}
+.nilai-input{width:100px;padding:.45rem .75rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.83rem;font-family:inherit;outline:none;}
+.feedback-input{flex:1;min-width:150px;padding:.45rem .75rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.83rem;font-family:inherit;outline:none;}
+.btn-nilai{padding:.45rem 1rem;background:#2563EB;color:#fff;border:none;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.badge-status{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;}
+.badge-status--terkirim{background:#DBEAFE;color:#1D4ED8;}
+.badge-status--dinilai{background:#DCFCE7;color:#15803D;}
+.badge-status--terlambat{background:#FEE2E2;color:#DC2626;}
+</style>
+<script>
+const s=document.querySelector('.sidebar'),o=document.getElementById('sidebarOverlay'),h=document.getElementById('hamburgerBtn');
+if(h)h.addEventListener('click',()=>{s.classList.add('sidebar--open');o.classList.add('overlay--show');});
+if(o)o.addEventListener('click',()=>{s.classList.remove('sidebar--open');o.classList.remove('overlay--show');});
+setTimeout(()=>{const f=document.getElementById('flashMsg');if(f)f.style.transition='opacity .5s',f.style.opacity='0',setTimeout(()=>f&&f.remove(),500);},3000);
+</script>
+@endsection

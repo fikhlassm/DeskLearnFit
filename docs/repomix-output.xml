@@ -1,0 +1,784 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+00-overview.md
+01-audit-report.md
+02-architecture.md
+03-database-schema.md
+04-phase-report.md
+05-routes.md
+06-testing.md
+07-changelog.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="00-overview.md">
+# LearnFit — Project Documentation Overview
+
+> Platform pendidikan untuk personalisasi metode belajar dan jurnal efektivitas studi.
+
+## Daftar Dokumen
+
+| File | Deskripsi |
+|------|-----------|
+| [01-audit-report.md](01-audit-report.md) | Hasil audit kode sebelum development dimulai |
+| [02-architecture.md](02-architecture.md) | Arsitektur aplikasi, struktur folder, dan flow data |
+| [03-database-schema.md](03-database-schema.md) | Skema database lengkap & ERD textual |
+| [04-phase-report.md](04-phase-report.md) | Laporan implementasi per phase |
+| [05-routes.md](05-routes.md) | Daftar semua route beserta middleware |
+| [06-testing.md](06-testing.md) | Panduan testing dan hasil test per fase |
+| [07-changelog.md](07-changelog.md) | Changelog semua perubahan file |
+
+## Tech Stack
+
+- **Framework**: Laravel 12 (struktur Laravel 10)
+- **Language**: PHP 8.2+
+- **Frontend**: Blade + Vanilla JS (Plus Jakarta Sans)
+- **Database**: MySQL (SQLite untuk testing)
+- **Auth**: Custom manual auth (tanpa Breeze/Fortify)
+- **Testing**: PHPUnit 11
+- **Code Style**: Laravel Pint
+
+## User Roles
+
+| Role | Akses |
+|------|-------|
+| `siswa` | Quiz, Dashboard Siswa, Catatan Belajar, Sesi Pomodoro, Profil |
+| `pengajar` | Dashboard Pengajar, Kelas CRUD, Profil |
+</file>
+
+<file path="01-audit-report.md">
+# LearnFit — Audit Report (Phase 0)
+
+**Tanggal Audit**: 17 Juni 2026  
+**Auditor**: Kiro AI Engineer
+
+---
+
+## 1. Fitur yang Sudah Selesai (Pre-Development)
+
+| Fitur | Status | Catatan |
+|-------|--------|---------|
+| Landing page (welcome, about, contact) | ✅ Selesai | UI lengkap |
+| Register (siswa + pengajar) | ✅ Selesai | Validasi baik, redirect sesuai role |
+| Login dengan redirect by role | ✅ Selesai | Cek quiz_result untuk siswa |
+| Logout | ✅ Selesai | Session invalidate |
+| Quiz gaya belajar (show, submit, result, retake) | ✅ Selesai | Ada bug validasi |
+| Dashboard pengajar (view) | ✅ Selesai | Data masih statis/dummy |
+| Dashboard siswa (view) | ✅ Selesai | Membaca quiz_result |
+| Kelas CRUD (controller + routes) | ⚠️ Partial | Bug mass assignment, tidak ada isolasi pengajar |
+| Welcome-after | ✅ Selesai | UI lengkap |
+
+---
+
+## 2. Bug & Risiko yang Ditemukan
+
+### CRITICAL
+
+| # | Bug | File | Dampak |
+|---|-----|------|--------|
+| 1 | **Tidak ada role middleware** — siapapun bisa akses route manapun | `routes/web.php` | Siswa bisa akses `/dashboard/kelas`, pengajar bisa ikut quiz |
+| 2 | **`$request->all()` di KelasController** | `KelasController.php` | Mass assignment vulnerability |
+| 3 | **Quiz bisa disubmit kosong** — tidak ada validasi jumlah soal | `QuizController.php` | Submit kosong tetap menghasilkan pemenang default |
+
+### MEDIUM
+
+| # | Bug | File | Dampak |
+|---|-----|------|--------|
+| 4 | `User::$fillable` tidak include `quiz_result` dan `quiz_scores` | `User.php` | `save()` bypass fillable (bekerja tapi inconsistent) |
+| 5 | Tidak ada `pengajar_id` di tabel `kelas` | Migration | Semua pengajar lihat semua kelas, tidak ada isolasi |
+| 6 | Sidebar siswa semua link masih `href="#"` | `siswa.blade.php` | Link tidak berfungsi |
+
+### LOW
+
+| # | Issue | File |
+|---|-------|------|
+| 7 | Tidak ada logout button di dashboard siswa | `siswa.blade.php` |
+| 8 | phpunit.xml menggunakan DB asli bukan SQLite test | `phpunit.xml` |
+| 9 | Tidak ada factory untuk Kelas, JurnalBelajar, SesiBelajar | - |
+
+---
+
+## 3. Fitur yang Belum Ada
+
+- Catatan Belajar / Jurnal Belajar
+- Sesi Pomodoro / Sesi Belajar
+- Halaman Profil user
+- Materi & Tugas (di luar scope Phase 1-8)
+
+---
+
+## 4. File yang Akan Diubah/Dibuat
+
+### Diubah
+- `app/Http/Kernel.php` — tambah alias `role`
+- `app/Models/User.php` — tambah fillable, casts, relationships, factory states
+- `app/Models/Kelas.php` — tambah HasFactory
+- `app/Http/Controllers/QuizController.php` — tambah validasi
+- `app/Http/Controllers/KelasController.php` — ganti `$request->all()` dengan `$validated`
+- `routes/web.php` — regroup dengan role middleware
+- `resources/views/dashboard/siswa.blade.php` — perbaiki sidebar links
+- `resources/views/dashboard/pengajar.blade.php` — perbaiki sidebar links
+- `resources/views/dashboard/kelas-saya.blade.php` — perbaiki sidebar links
+- `database/factories/UserFactory.php` — tambah states siswa/pengajar
+- `phpunit.xml` — enable SQLite untuk testing
+
+### Dibuat Baru
+- `app/Http/Middleware/RoleMiddleware.php`
+- `app/Models/JurnalBelajar.php`
+- `app/Models/SesiBelajar.php`
+- `app/Http/Controllers/JurnalBelajarController.php`
+- `app/Http/Controllers/SesiBelajarController.php`
+- `app/Http/Controllers/ProfilController.php`
+- `database/migrations/2026_06_17_000001_create_jurnal_belajar_table.php`
+- `database/migrations/2026_06_17_000002_add_profil_fields_to_users_table.php`
+- `database/migrations/2026_06_17_000003_create_sesi_belajar_table.php`
+- `database/factories/KelasFactory.php`
+- `database/factories/JurnalBelajarFactory.php`
+- `database/factories/SesiBelajarFactory.php`
+- `resources/views/dashboard/catatan-belajar.blade.php`
+- `resources/views/dashboard/sesi-belajar.blade.php`
+- `resources/views/dashboard/profil.blade.php`
+- `tests/Feature/AuthFlowTest.php`
+- `tests/Feature/RoleAccessTest.php`
+- `tests/Feature/QuizFlowTest.php`
+- `tests/Feature/KelasCrudTest.php`
+- `tests/Feature/JurnalBelajarTest.php`
+- `tests/Feature/SesiBelajarTest.php`
+- `tests/Feature/ProfileTest.php`
+</file>
+
+<file path="02-architecture.md">
+# LearnFit — Architecture
+
+## Struktur Folder (Laravel 10 style, dipertahankan)
+
+```
+app/
+├── Console/Kernel.php
+├── Exceptions/Handler.php
+├── Http/
+│   ├── Controllers/
+│   │   ├── auth/
+│   │   │   ├── LoginController.php
+│   │   │   └── RegisterController.php
+│   │   ├── Controller.php
+│   │   ├── JurnalBelajarController.php   ← NEW
+│   │   ├── KelasController.php           ← REFACTORED
+│   │   ├── ProfilController.php          ← NEW
+│   │   ├── QuizController.php            ← FIXED
+│   │   └── SesiBelajarController.php     ← NEW
+│   ├── Kernel.php                        ← tambah alias 'role'
+│   └── Middleware/
+│       ├── RoleMiddleware.php            ← NEW
+│       └── ... (existing)
+├── Models/
+│   ├── JurnalBelajar.php                 ← NEW
+│   ├── Kelas.php                         ← tambah HasFactory
+│   ├── SesiBelajar.php                   ← NEW
+│   └── User.php                          ← UPDATED
+└── Providers/...
+```
+
+## Flow Authentication & Authorization
+
+```
+Request
+  │
+  ▼
+middleware: auth (cek session)
+  │
+  ├─ NOT AUTH → redirect /login
+  │
+  ▼
+middleware: role:siswa|pengajar (RoleMiddleware)
+  │
+  ├─ ROLE MISMATCH → redirect ke dashboard role asli
+  │
+  ▼
+Controller → Business Logic → View
+```
+
+## Flow Quiz
+
+```
+GET /quiz
+  │
+  ├─ sudah punya quiz_result? → redirect /quiz/hasil
+  └─ belum → tampilkan quiz.blade.php
+
+POST /quiz (7 jawaban wajib)
+  │
+  ├─ validasi: setiap soal wajib dijawab, opsi harus valid
+  │
+  ├─ hitung skor: P/A/B/F per jawaban
+  ├─ arsort → ambil pemenang
+  ├─ simpan quiz_result + quiz_scores ke users
+  └─ redirect /quiz/hasil
+
+GET /quiz/ulang
+  │
+  ├─ reset quiz_result = null
+  ├─ reset quiz_scores = null
+  └─ redirect /quiz
+```
+
+## Role-Based Route Groups
+
+```
+guest       → /register, /login
+auth        → /logout, /welcome, /dashboard/profil
+auth+siswa  → /dashboard/siswa, /quiz/*, /dashboard/catatan-belajar/*, /dashboard/sesi-belajar/*
+auth+pengajar → /dashboard/pengajar, /dashboard/kelas/*
+```
+
+## Data Ownership
+
+- `jurnal_belajar.user_id` → hanya pemilik yang bisa read/write
+- `sesi_belajar.user_id` → hanya pemilik yang bisa read/write
+- `kelas` → semua pengajar bisa akses (no per-pengajar isolation di phase ini)
+</file>
+
+<file path="03-database-schema.md">
+# LearnFit — Database Schema
+
+## ERD (Textual)
+
+```
+users
+  ├── id (PK)
+  ├── name
+  ├── email (unique)
+  ├── password
+  ├── role (enum: siswa, pengajar)
+  ├── quiz_result (nullable: pomodoro|active_recall|blurting|feynman)
+  ├── quiz_scores (JSON nullable)
+  ├── bio (nullable)          ← NEW migration 2026_06_17_000002
+  ├── tujuan_belajar (nullable) ← NEW
+  ├── jenjang (nullable)     ← NEW
+  ├── no_hp (nullable)       ← NEW
+  └── timestamps
+
+jurnal_belajar               ← NEW migration 2026_06_17_000001
+  ├── id (PK)
+  ├── user_id (FK → users)
+  ├── tanggal (date)
+  ├── judul (nullable)
+  ├── isi_jurnal (text)
+  ├── metode_yang_digunakan (nullable)
+  ├── rating_efektivitas (tinyint 1-5, nullable)
+  ├── durasi_menit (smallint, nullable)
+  └── timestamps
+  INDEX: (user_id, tanggal)
+
+sesi_belajar                 ← NEW migration 2026_06_17_000003
+  ├── id (PK)
+  ├── user_id (FK → users)
+  ├── metode (default: pomodoro)
+  ├── judul (nullable)
+  ├── durasi_fokus_menit (smallint, default: 25)
+  ├── durasi_istirahat_menit (smallint, default: 5)
+  ├── jumlah_siklus (smallint, default: 1)
+  ├── status (enum: aktif|selesai|batal)
+  ├── started_at (nullable timestamp)
+  ├── completed_at (nullable timestamp)
+  ├── catatan (text, nullable)
+  └── timestamps
+  INDEX: (user_id, status), (user_id, created_at)
+
+kelas
+  ├── id (PK)
+  ├── nama_kelas
+  ├── mata_pelajaran
+  ├── kode_kelas (unique)
+  ├── deskripsi (nullable)
+  ├── kapasitas (int, default: 30)
+  ├── status (enum: aktif|draf|selesai)
+  └── timestamps
+```
+
+## Migrations Order
+
+| File | Action |
+|------|--------|
+| 2014_10_12_000000_create_users_table | CREATE users |
+| 2026_04_25_000000_add_quiz_result_to_users_table | ADD quiz_result |
+| 2026_04_28_000000_create_kelas_table | CREATE kelas |
+| 2026_06_14_105529_add_quiz_scores_to_users_table | ADD quiz_scores |
+| **2026_06_17_000001_create_jurnal_belajar_table** | CREATE jurnal_belajar |
+| **2026_06_17_000002_add_profil_fields_to_users_table** | ADD bio, tujuan_belajar, jenjang, no_hp |
+| **2026_06_17_000003_create_sesi_belajar_table** | CREATE sesi_belajar |
+
+## Jalankan Migration
+
+```bash
+php artisan migrate
+```
+</file>
+
+<file path="04-phase-report.md">
+# LearnFit — Phase Implementation Report
+
+## PHASE 0 — Audit
+
+**Status**: ✅ Selesai  
+**Temuan**: 3 bug critical, 3 bug medium, 3 issue low  
+**Lihat**: [01-audit-report.md](01-audit-report.md)
+
+---
+
+## PHASE 1 — Role Access & Middleware
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Buat `app/Http/Middleware/RoleMiddleware.php`
+- Daftarkan alias `'role'` di `app/Http/Kernel.php`
+- Restrukturisasi `routes/web.php`:
+  - Guest-only group: `/register`, `/login`
+  - Auth group: `/logout`, `/welcome`, `/dashboard/profil`
+  - `auth + role:siswa`: dashboard siswa, quiz, catatan, sesi
+  - `auth + role:pengajar`: dashboard pengajar, kelas CRUD
+- Update `User::$fillable` untuk include `quiz_result`, `quiz_scores`, dan profil fields
+- Tambah helper methods `isSiswa()` dan `isPengajar()` di User model
+- Tambah relationships `jurnalBelajar()` dan `sesiBelajar()` di User model
+
+### Acceptance Criteria:
+- [x] Guest diarahkan ke login ketika akses dashboard
+- [x] Siswa tidak bisa buka dashboard pengajar → redirect dashboard.siswa + flash error
+- [x] Pengajar tidak bisa buka quiz/dashboard siswa → redirect dashboard.pengajar + flash error
+- [x] Redirect after login/register sesuai role dan status quiz
+
+---
+
+## PHASE 2 — Quiz Validation & Refactor
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Tambah `$validOptions` array — 7 soal × 4 opsi tiap soal
+- Tambah `$scoreMap` dan `$methodMap` sebagai private properties (tidak lagi inline)
+- Validasi dinamis: setiap `answers.qN` wajib ada dan opsi harus valid
+- Error message per soal dalam bahasa Indonesia
+- Ekstrak `scoreMap` ke property private agar controller tidak terlalu gemuk
+
+### Acceptance Criteria:
+- [x] Submit kosong ditolak dengan validation error
+- [x] Submit sebagian soal ditolak
+- [x] Submit opsi tidak valid ditolak
+- [x] Submit valid menyimpan `quiz_result` dan `quiz_scores`
+- [x] Retake menghapus `quiz_result` dan `quiz_scores`
+
+---
+
+## PHASE 3 — Catatan Belajar / Jurnal Belajar
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Migration `jurnal_belajar` dengan index `(user_id, tanggal)`
+- Model `JurnalBelajar` dengan casts, fillable, dan relationship
+- `JurnalBelajarController` dengan CRUD lengkap + ownership check
+- Routes siswa-only dengan route model binding
+- View `catatan-belajar.blade.php` dengan:
+  - Stats row (total catatan, catatan terakhir)
+  - Filter berdasarkan metode
+  - Daftar catatan dengan badge metode + rating bintang
+  - Modal tambah dan edit
+  - Empty state
+  - Pagination
+
+### Acceptance Criteria:
+- [x] Siswa bisa tambah, lihat, edit, hapus catatan miliknya
+- [x] Siswa tidak bisa akses catatan user lain (403)
+- [x] Tanggal tidak boleh masa depan
+- [x] Isi jurnal wajib diisi
+
+---
+
+## PHASE 4 — Sesi Belajar / Pomodoro
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Migration `sesi_belajar` dengan index `(user_id, status)` dan `(user_id, created_at)`
+- Model `SesiBelajar` dengan casts, fillable, dan relationship
+- `SesiBelajarController` dengan store, start, complete, destroy + ownership check
+- Routes siswa-only: index, store, start, complete, destroy
+- View `sesi-belajar.blade.php` dengan:
+  - Rekomendasi metode dari quiz_result
+  - Pomodoro timer client-side (Vanilla JS, no package)
+  - Form buat sesi baru
+  - Sesi aktif card dengan tombol "Tandai Selesai"
+  - Riwayat sesi dengan pagination
+  - Notifikasi browser saat timer selesai
+
+### Acceptance Criteria:
+- [x] Siswa bisa buat, start, complete, hapus sesi
+- [x] Siswa tidak bisa akses sesi user lain (403)
+- [x] Timer client-side tanpa websocket/package
+- [x] Validasi metode, durasi, jumlah siklus
+
+---
+
+## PHASE 5 — Profil
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Migration `add_profil_fields_to_users_table` (bio, tujuan_belajar, jenjang, no_hp)
+- `ProfilController` dengan show dan update
+- `Rule::unique('users')->ignore($user->id)` untuk email update
+- View `profil.blade.php` dengan sidebar dinamis (siswa/pengajar)
+- Role tidak bisa diubah melalui form (field hanya readonly/display)
+- Field khusus siswa: jenjang, tujuan_belajar
+
+### Acceptance Criteria:
+- [x] User bisa lihat dan update profil
+- [x] Role tidak bisa dimanipulasi dari form
+- [x] Email unique mengabaikan user sendiri
+- [x] Profil bisa diakses siswa maupun pengajar
+
+---
+
+## PHASE 6 — Kelas CRUD Cleanup
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Ganti `$request->all()` dengan `$validated` di `store()` dan `update()`
+- Gunakan route model binding `Kelas $kelas` (hapus `findOrFail($id)` manual)
+- `edit()` dikembalikan sebagai JSON untuk modal
+- Semua route kelas pindah ke group `auth + role:pengajar`
+- Tambah `HasFactory` ke model Kelas
+- Buat `KelasFactory`
+
+### Acceptance Criteria:
+- [x] Pengajar bisa CRUD kelas
+- [x] Siswa tidak bisa CRUD kelas (redirect + flash)
+- [x] Validasi aman, tidak ada mass assignment
+
+---
+
+## PHASE 7 — UI Sync
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Dashboard siswa: Semua link sidebar diperbaiki:
+  - "Catatan Belajar" → `route('catatan.index')`
+  - "Sesi Belajar" → `route('sesi.index')`
+  - "Profil" → `route('profil.show')`
+  - "Mentoring" dihapus (belum ada fiturnya)
+- Dashboard siswa: tambah logout button di topbar
+- Dashboard pengajar: "Profil" → `route('profil.show')`
+- Kelas-saya: "Profil" → `route('profil.show')`
+
+---
+
+## PHASE 8 — Testing
+
+**Status**: ✅ Selesai (perlu `php artisan test` untuk verifikasi)
+
+### Test files yang dibuat:
+
+| File | Test Count | Coverage |
+|------|-----------|----------|
+| `AuthFlowTest.php` | 8 | Register, login, logout flows |
+| `RoleAccessTest.php` | 11 | Guest, siswa, pengajar access control |
+| `QuizFlowTest.php` | 9 | Quiz show, submit, result, retake |
+| `KelasCrudTest.php` | 7 | Kelas CRUD + authorization |
+| `JurnalBelajarTest.php` | 8 | Jurnal CRUD + ownership |
+| `SesiBelajarTest.php` | 7 | Sesi CRUD + ownership |
+| `ProfileTest.php` | 7 | Profil show, update, role protection |
+
+**Total**: 57 test cases
+
+---
+
+## TODO / Belum Dikerjakan
+
+- [ ] Fitur Materi dan Tugas (Prioritas 5 — di luar scope Phase 1-8)
+- [ ] Isolasi kelas per pengajar (tambah `pengajar_id` ke tabel `kelas`)
+- [ ] Dashboard siswa: riwayat belajar yang sesungguhnya (saat ini dummy)
+- [ ] Dashboard pengajar: statistik real dari database
+- [ ] Email verification
+- [ ] Password reset
+</file>
+
+<file path="05-routes.md">
+# LearnFit — Route List
+
+## Public Routes
+
+| Method | URI | Name | Controller |
+|--------|-----|------|-----------|
+| GET | / | home | closure → welcome |
+| GET | /tentang | about | closure → about |
+| GET | /kontak | contact | closure → contact |
+
+## Guest-only Routes (redirect to home if authenticated)
+
+| Method | URI | Name | Controller |
+|--------|-----|------|-----------|
+| GET | /register | register | RegisterController@showForm |
+| POST | /register | — | RegisterController@register |
+| GET | /login | login | LoginController@showForm |
+| POST | /login | — | LoginController@login |
+
+## Auth Routes (semua authenticated user)
+
+| Method | URI | Name | Controller |
+|--------|-----|------|-----------|
+| POST | /logout | logout | LoginController@logout |
+| GET | /welcome | welcome | closure → auth.welcome-after |
+| GET | /dashboard/profil | profil.show | ProfilController@show |
+| PUT | /dashboard/profil | profil.update | ProfilController@update |
+
+## Siswa-only Routes (auth + role:siswa)
+
+| Method | URI | Name | Controller |
+|--------|-----|------|-----------|
+| GET | /dashboard/siswa | dashboard.siswa | closure |
+| GET | /quiz | quiz | QuizController@show |
+| POST | /quiz | quiz.submit | QuizController@submit |
+| GET | /quiz/hasil | quiz.result | QuizController@result |
+| GET | /quiz/ulang | quiz.retake | QuizController@retake |
+| GET | /dashboard/catatan-belajar | catatan.index | JurnalBelajarController@index |
+| POST | /dashboard/catatan-belajar | catatan.store | JurnalBelajarController@store |
+| GET | /dashboard/catatan-belajar/{jurnal}/edit | catatan.edit | JurnalBelajarController@edit |
+| PUT | /dashboard/catatan-belajar/{jurnal} | catatan.update | JurnalBelajarController@update |
+| DELETE | /dashboard/catatan-belajar/{jurnal} | catatan.destroy | JurnalBelajarController@destroy |
+| GET | /dashboard/sesi-belajar | sesi.index | SesiBelajarController@index |
+| POST | /dashboard/sesi-belajar | sesi.store | SesiBelajarController@store |
+| PATCH | /dashboard/sesi-belajar/{sesi}/start | sesi.start | SesiBelajarController@start |
+| PATCH | /dashboard/sesi-belajar/{sesi}/complete | sesi.complete | SesiBelajarController@complete |
+| DELETE | /dashboard/sesi-belajar/{sesi} | sesi.destroy | SesiBelajarController@destroy |
+
+## Pengajar-only Routes (auth + role:pengajar)
+
+| Method | URI | Name | Controller |
+|--------|-----|------|-----------|
+| GET | /dashboard/pengajar | dashboard.pengajar | closure |
+| GET | /dashboard/kelas | dashboard.kelas | KelasController@index |
+| POST | /dashboard/kelas | kelas.store | KelasController@store |
+| GET | /dashboard/kelas/{kelas} | kelas.edit | KelasController@edit |
+| PUT | /dashboard/kelas/{kelas} | kelas.update | KelasController@update |
+| DELETE | /dashboard/kelas/{kelas} | kelas.destroy | KelasController@destroy |
+
+## Middleware Summary
+
+```
+RoleMiddleware('role')
+  handle($request, $next, ...$roles)
+  - Cek $user->role ada di $roles
+  - Jika tidak: redirect ke dashboard role asli + flash error
+```
+</file>
+
+<file path="06-testing.md">
+# LearnFit — Testing Guide
+
+## Setup
+
+Test menggunakan `RefreshDatabase` trait yang me-reset database setiap test.  
+Database testing menggunakan koneksi yang dikonfigurasi di `.env` (atau SQLite jika diaktifkan di `phpunit.xml`).
+
+### Aktifkan SQLite untuk test lebih cepat (opsional)
+
+Edit `phpunit.xml`, uncomment:
+```xml
+<env name="DB_CONNECTION" value="sqlite"/>
+<env name="DB_DATABASE" value=":memory:"/>
+```
+
+## Menjalankan Test
+
+```bash
+# Semua test
+php artisan test --compact
+
+# Per file
+php artisan test --filter=AuthFlowTest
+php artisan test --filter=RoleAccessTest
+php artisan test --filter=QuizFlowTest
+php artisan test --filter=KelasCrudTest
+php artisan test --filter=JurnalBelajarTest
+php artisan test --filter=SesiBelajarTest
+php artisan test --filter=ProfileTest
+
+# Per method
+php artisan test --filter="test_siswa_bisa_buat_catatan_belajar"
+```
+
+## Test Coverage
+
+### AuthFlowTest (`tests/Feature/AuthFlowTest.php`)
+
+| Test | Skenario |
+|------|----------|
+| `test_register_siswa_redirects_to_welcome` | Register siswa → redirect welcome |
+| `test_register_pengajar_redirects_to_dashboard_pengajar` | Register pengajar → redirect dashboard pengajar |
+| `test_register_requires_valid_role` | Role harus siswa atau pengajar |
+| `test_register_requires_terms_accepted` | Terms wajib dicentang |
+| `test_login_siswa_tanpa_quiz_redirects_to_welcome` | Login siswa belum quiz → welcome |
+| `test_login_siswa_dengan_quiz_redirects_to_dashboard_siswa` | Login siswa sudah quiz → dashboard siswa |
+| `test_login_pengajar_redirects_to_dashboard_pengajar` | Login pengajar → dashboard pengajar |
+| `test_login_dengan_kredensial_salah_gagal` | Kredensial salah → session error |
+| `test_logout_redirect_ke_home` | Logout → home |
+
+### RoleAccessTest (`tests/Feature/RoleAccessTest.php`)
+
+| Test | Skenario |
+|------|----------|
+| `test_guest_tidak_bisa_akses_dashboard_siswa` | Guest → login |
+| `test_guest_tidak_bisa_akses_dashboard_pengajar` | Guest → login |
+| `test_guest_tidak_bisa_akses_quiz` | Guest → login |
+| `test_siswa_tidak_bisa_akses_dashboard_pengajar` | Siswa → dashboard siswa |
+| `test_siswa_tidak_bisa_akses_kelas_crud` | Siswa → dashboard siswa |
+| `test_pengajar_tidak_bisa_akses_dashboard_siswa` | Pengajar → dashboard pengajar |
+| `test_pengajar_tidak_bisa_akses_quiz` | Pengajar → dashboard pengajar |
+| `test_profil_bisa_diakses_siswa` | Siswa bisa akses profil |
+| `test_profil_bisa_diakses_pengajar` | Pengajar bisa akses profil |
+
+### QuizFlowTest (`tests/Feature/QuizFlowTest.php`)
+
+| Test | Skenario |
+|------|----------|
+| `test_siswa_bisa_lihat_halaman_quiz` | Show quiz 200 |
+| `test_siswa_yang_sudah_quiz_redirect_ke_hasil` | Sudah quiz → hasil |
+| `test_submit_valid_menyimpan_quiz_result_dan_scores` | 7 jawaban valid → simpan ke DB |
+| `test_submit_kosong_ditolak_dengan_validation_error` | Kosong → error |
+| `test_submit_jawaban_tidak_lengkap_ditolak` | Kurang soal → error |
+| `test_submit_opsi_tidak_valid_ditolak` | Opsi invalid → error |
+| `test_hasil_quiz_tampil_jika_sudah_quiz` | Result page 200 |
+| `test_hasil_quiz_redirect_ke_quiz_jika_belum_quiz` | Belum quiz → quiz |
+| `test_retake_menghapus_quiz_result` | Retake → null di DB |
+
+## Code Style
+
+Setelah mengubah file PHP, jalankan Pint:
+
+```bash
+vendor/bin/pint --dirty --format agent
+```
+</file>
+
+<file path="07-changelog.md">
+# LearnFit — Changelog
+
+## v0.2.0 — 17 Juni 2026
+
+### Fitur Baru
+- **Catatan Belajar** — CRUD catatan/jurnal belajar siswa dengan filter metode, rating bintang, badge metode
+- **Sesi Belajar / Pomodoro** — Timer pomodoro client-side (Vanilla JS), riwayat sesi, rekomendasi berdasarkan quiz
+- **Halaman Profil** — Edit nama, email, bio, tujuan belajar, jenjang, no HP untuk siswa & pengajar
+- **Role Middleware** — Akses berbasis role: siswa & pengajar dipisah dengan tegas
+
+### Perubahan
+- `routes/web.php` — Restrukturisasi total dengan role middleware groups
+- `QuizController.php` — Validasi 7 soal wajib dijawab, opsi harus valid, private properties untuk scoreMap
+- `KelasController.php` — Ganti `$request->all()` dengan `$validated`, route model binding
+- `User.php` — Fillable diperluas, casts diperbaiki, relationships ditambah, helper methods `isSiswa()`/`isPengajar()`
+- `Kelas.php` — Tambah `HasFactory`
+- `UserFactory.php` — Tambah states: `siswa()`, `siswaWithQuiz()`, `pengajar()`
+- `dashboard/siswa.blade.php` — Semua link sidebar aktif, tambah logout button
+- `dashboard/pengajar.blade.php` — Link Profil aktif
+- `dashboard/kelas-saya.blade.php` — Link Profil aktif
+- `app/Http/Kernel.php` — Tambah alias `'role'`
+
+### File Baru
+
+#### App
+- `app/Http/Middleware/RoleMiddleware.php`
+- `app/Models/JurnalBelajar.php`
+- `app/Models/SesiBelajar.php`
+- `app/Http/Controllers/JurnalBelajarController.php`
+- `app/Http/Controllers/SesiBelajarController.php`
+- `app/Http/Controllers/ProfilController.php`
+
+#### Database
+- `database/migrations/2026_06_17_000001_create_jurnal_belajar_table.php`
+- `database/migrations/2026_06_17_000002_add_profil_fields_to_users_table.php`
+- `database/migrations/2026_06_17_000003_create_sesi_belajar_table.php`
+- `database/factories/KelasFactory.php`
+- `database/factories/JurnalBelajarFactory.php`
+- `database/factories/SesiBelajarFactory.php`
+
+#### Views
+- `resources/views/dashboard/catatan-belajar.blade.php`
+- `resources/views/dashboard/sesi-belajar.blade.php`
+- `resources/views/dashboard/profil.blade.php`
+
+#### Tests
+- `tests/Feature/AuthFlowTest.php`
+- `tests/Feature/RoleAccessTest.php`
+- `tests/Feature/QuizFlowTest.php`
+- `tests/Feature/KelasCrudTest.php`
+- `tests/Feature/JurnalBelajarTest.php`
+- `tests/Feature/SesiBelajarTest.php`
+- `tests/Feature/ProfileTest.php`
+
+#### Docs
+- `docs/00-overview.md`
+- `docs/01-audit-report.md`
+- `docs/02-architecture.md`
+- `docs/03-database-schema.md`
+- `docs/04-phase-report.md`
+- `docs/05-routes.md`
+- `docs/06-testing.md`
+- `docs/07-changelog.md`
+
+---
+
+## v0.1.0 — Pre-development (existing)
+
+- Auth manual (register, login, logout)
+- Quiz gaya belajar (7 soal, 4 metode)
+- Dashboard siswa & pengajar (UI dasar)
+- Kelas CRUD (partial)
+- Landing, about, contact pages
+</file>
+
+</files>

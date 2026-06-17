@@ -34,29 +34,10 @@
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M6 8h8M6 11h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 14l1.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 Tugas dan Penilaian
             </a>
-            <a href="#" class="sidebar__link">
+            <a href="{{ route('profil.show') }}" class="sidebar__link">
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M3 18c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                 Profil
             </a>
-        </nav>
-
-        <div class="sidebar__user">
-            <div class="sidebar__avatar">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="#64748b" stroke-width="1.5"/><path d="M3 18c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </div>
-            <div>
-                <p class="sidebar__user-name">{{ Auth::user()->name }}</p>
-                <p class="sidebar__user-role">Pengajar</p>
-            </div>
-        </div>
-    </aside>
-
-    {{-- MAIN --}}
-    <main class="dash-main">
-
-        {{-- TOP BAR --}}
-        <div class="topbar">
-            <button class="hamburger" id="hamburgerBtn" aria-label="Buka Menu">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg>
             </button>
             <div>

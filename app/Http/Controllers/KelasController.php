@@ -3,61 +3,93 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kelas;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class KelasController extends Controller
 {
-    public function index()
+    /** Tampilkan kelas milik pengajar yang login saja. */
+    public function index(): View
     {
-        $kelasList = Kelas::latest()->get();
+        $kelasList = Kelas::where('pengajar_id', Auth::id())
+            ->withCount('siswa')
+            ->latest()
+            ->get();
+
         return view('dashboard.kelas-saya', compact('kelasList'));
     }
 
-    public function store(Request $request)
+    /** Buat kelas baru; pengajar_id diisi dari session, bukan dari form. */
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'nama_kelas'     => 'required|string|max:100',
-            'mata_pelajaran' => 'required|string|max:100',
-            'kode_kelas'     => 'required|string|max:20|unique:kelas,kode_kelas',
-            'deskripsi'      => 'nullable|string',
-            'kapasitas'      => 'required|integer|min:1|max:100',
-            'status'         => 'required|in:aktif,draf,selesai',
+        $validated = $request->validate([
+            'nama_kelas'     => ['required', 'string', 'max:100'],
+            'mata_pelajaran' => ['required', 'string', 'max:100'],
+            'kode_kelas'     => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas'],
+            'deskripsi'      => ['nullable', 'string', 'max:1000'],
+            'kapasitas'      => ['required', 'integer', 'min:1', 'max:200'],
+            'status'         => ['required', 'in:aktif,draf,selesai'],
+        ], [
+            'kode_kelas.unique' => 'Kode kelas sudah digunakan.',
         ]);
 
-        Kelas::create($request->all());
+        $validated['pengajar_id'] = Auth::id();
 
-        return redirect()->route('dashboard.kelas')->with('success', 'Kelas berhasil ditambahkan!');
+        Kelas::create($validated);
+
+        return redirect()->route('dashboard.kelas')
+            ->with('success', 'Kelas berhasil ditambahkan!');
     }
 
-    public function edit($id)
+    /** Kembalikan data kelas sebagai JSON untuk modal edit. */
+    public function edit(Kelas $kelas): JsonResponse
     {
-        $kelas = Kelas::findOrFail($id);
+        $this->authorizeOwnership($kelas);
+
         return response()->json($kelas);
     }
 
-    public function update(Request $request, $id)
+    /** Update kelas milik pengajar ini. */
+    public function update(Request $request, Kelas $kelas): RedirectResponse
     {
-        $kelas = Kelas::findOrFail($id);
+        $this->authorizeOwnership($kelas);
 
-        $request->validate([
-            'nama_kelas'     => 'required|string|max:100',
-            'mata_pelajaran' => 'required|string|max:100',
-            'kode_kelas'     => 'required|string|max:20|unique:kelas,kode_kelas,' . $id,
-            'deskripsi'      => 'nullable|string',
-            'kapasitas'      => 'required|integer|min:1|max:100',
-            'status'         => 'required|in:aktif,draf,selesai',
+        $validated = $request->validate([
+            'nama_kelas'     => ['required', 'string', 'max:100'],
+            'mata_pelajaran' => ['required', 'string', 'max:100'],
+            'kode_kelas'     => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas,' . $kelas->id],
+            'deskripsi'      => ['nullable', 'string', 'max:1000'],
+            'kapasitas'      => ['required', 'integer', 'min:1', 'max:200'],
+            'status'         => ['required', 'in:aktif,draf,selesai'],
+        ], [
+            'kode_kelas.unique' => 'Kode kelas sudah digunakan oleh kelas lain.',
         ]);
 
-        $kelas->update($request->all());
+        $kelas->update($validated);
 
-        return redirect()->route('dashboard.kelas')->with('success', 'Kelas berhasil diperbarui!');
+        return redirect()->route('dashboard.kelas')
+            ->with('success', 'Kelas berhasil diperbarui!');
     }
 
-    public function destroy($id)
+    /** Hapus kelas milik pengajar ini. */
+    public function destroy(Kelas $kelas): RedirectResponse
     {
-        $kelas = Kelas::findOrFail($id);
+        $this->authorizeOwnership($kelas);
+
         $kelas->delete();
 
-        return redirect()->route('dashboard.kelas')->with('success', 'Kelas berhasil dihapus!');
+        return redirect()->route('dashboard.kelas')
+            ->with('success', 'Kelas berhasil dihapus!');
+    }
+
+    /** Pastikan kelas milik pengajar yang sedang login. */
+    private function authorizeOwnership(Kelas $kelas): void
+    {
+        if ($kelas->pengajar_id !== Auth::id()) {
+            abort(403, 'Kelas ini bukan milik Anda.');
+        }
     }
 }
