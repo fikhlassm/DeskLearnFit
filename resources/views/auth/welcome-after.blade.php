@@ -87,28 +87,6 @@
 .title { font-size: clamp(2rem,4vw,3rem); font-weight: 800; color: #0f172a; line-height: 1.1; letter-spacing: -.03em; }
 .sub   { font-size: .9rem; color: #64748b; line-height: 1.6; max-width: 400px; }
 
-/* ─── STATS (inline, no stretch) ─── */
-.stats {
-    display: inline-flex;
-    align-items: center;
-    gap: 1.25rem;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: .75rem 1.25rem;
-    box-shadow: 0 1px 4px rgba(15,23,42,.05);
-    width: fit-content;
-    transition: box-shadow .25s, transform .2s;
-}
-.stats:hover {
-    box-shadow: 0 4px 16px rgba(15,23,42,.09);
-    transform: translateY(-2px);
-}
-.stat            { display: flex; flex-direction: column; align-items: center; }
-.stat__n         { font-size: 1.2rem; font-weight: 800; color: #0f172a; letter-spacing: -.02em; }
-.stat__l         { font-size: .68rem; color: #94a3b8; font-weight: 500; white-space: nowrap; }
-.stat__div       { width: 1px; height: 28px; background: #e2e8f0; }
-
 /* ─── REC CARD ─── */
 .rec-card {
     background: #ffffff;
@@ -331,17 +309,8 @@
             <h1 class="title" data-wa style="--delay:80ms">Selamat<br>Bergabung!</h1>
             <p class="sub" data-wa style="--delay:140ms">Langkah awal menuju cara belajar yang lebih cerdas dan efektif.</p>
 
-            {{-- Stats (inline width) --}}
-            <div class="stats" data-wa style="--delay:200ms">
-                <div class="stat"><span class="stat__n">12K+</span><span class="stat__l">Pelajar Aktif</span></div>
-                <div class="stat__div"></div>
-                <div class="stat"><span class="stat__n">200+</span><span class="stat__l">Materi</span></div>
-                <div class="stat__div"></div>
-                <div class="stat"><span class="stat__n">4.9</span><span class="stat__l">Rating</span></div>
-            </div>
-
             {{-- Recommend card --}}
-            <div class="rec-card" data-wa style="--delay:270ms">
+            <div class="rec-card" data-wa style="--delay:200ms">
                 <div class="rec-card__top">
                     <span class="badge">Direkomendasikan</span>
                     <span class="rec-card__time">
@@ -358,7 +327,7 @@
             </div>
 
             {{-- Quick links --}}
-            <div class="ql-grid" data-wa style="--delay:340ms">
+            <div class="ql-grid" data-wa style="--delay:270ms">
                 <a href="#" class="ql">
                     <div class="ql__icon" style="background:#EFF6FF;">
                         <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="12" rx="2" stroke="#2563EB" stroke-width="1.5"/><path d="M6 8h8M6 11h5" stroke="#2563EB" stroke-width="1.3" stroke-linecap="round"/></svg>
