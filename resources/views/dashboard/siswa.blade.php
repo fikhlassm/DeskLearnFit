@@ -9,6 +9,13 @@ $methodMap = [
     'blurting'     => ['label'=>'Blurting',      'color'=>'#059669', 'bg'=>'#ECFDF5', 'icon'=>'✍️'],
     'feynman'      => ['label'=>'Feynman',        'color'=>'#D97706', 'bg'=>'#FFFBEB', 'icon'=>'🏫'],
 ];
+// Data real dari DashboardController
+$totalCatatan    = $totalCatatan ?? 0;
+$totalSesiSelesai = $totalSesiSelesai ?? 0;
+$totalDurasi     = $totalDurasi ?? 0;
+$kelasDiikuti    = $kelasDiikuti ?? collect();
+$tugasBelumKumpul = $tugasBelumKumpul ?? collect();
+$tugasSudahKumpul = $tugasSudahKumpul ?? collect();
 $result   = Auth::user()->quiz_result;
 $method   = $result ? ($methodMap[$result] ?? null) : null;
 $userName = Auth::user()->name;
@@ -33,6 +40,10 @@ $userName = Auth::user()->name;
             <a href="{{ route('dashboard.siswa') }}" class="sidebar__link sidebar__link--active">
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="11" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="11" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/></svg>
                 Beranda
+            </a>
+            <a href="{{ route('siswa.kelas.index') }}" class="sidebar__link">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 3v14M2 8h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Kelas Saya
             </a>
             <a href="{{ route('catatan.index') }}" class="sidebar__link">
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M6 8h8M6 11h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -95,20 +106,29 @@ $userName = Auth::user()->name;
             </div>
         </div>
 
-        {{-- HERO: Kemajuan Mingguan --}}
+        {{-- HERO: Real Data --}}
         <div class="hero-card">
             <div class="hero-card__left">
-                <p class="hero-card__eyebrow">Kemajuan Mingguan</p>
-                <p class="hero-card__title">Ringkasan Belajar Mingguan</p>
-                <p class="hero-card__big">12.5 jam <span class="hero-card__target">/ 15 jam target</span></p>
-                <div class="hero-progress">
-                    <div class="hero-progress__fill" style="width:83%"></div>
+                <p class="hero-card__eyebrow">Ringkasan Aktivitasmu</p>
+                <p class="hero-card__title">Halo, {{ explode(' ', $userName)[0] }}! 👋</p>
+                <div style="display:flex;gap:1.5rem;margin:.75rem 0;flex-wrap:wrap;">
+                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $totalCatatan }}</p><p style="font-size:.78rem;opacity:.8">Catatan Belajar</p></div>
+                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $totalSesiSelesai }}</p><p style="font-size:.78rem;opacity:.8">Sesi Selesai</p></div>
+                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $kelasDiikuti->count() }}</p><p style="font-size:.78rem;opacity:.8">Kelas Diikuti</p></div>
                 </div>
-                <p class="hero-card__note">Hebat! Kamu tinggal 2.5 jam lagi mencapai target mingguanmu.</p>
+                @if($totalDurasi > 0)
+                <p class="hero-card__note">Total {{ $totalDurasi }} menit belajar sejauh ini. Terus semangat!</p>
+                @else
+                <p class="hero-card__note">Mulai sesi belajar untuk melacak waktu belajarmu.</p>
+                @endif
             </div>
             <div class="hero-card__right">
-                <span class="hero-badge">+11% Mingguan</span>
-                <a href="#" class="hero-btn">Lihat Statistik Detail →</a>
+                @if($tugasBelumKumpul->count() > 0)
+                <span class="hero-badge" style="background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4)">⚠ {{ $tugasBelumKumpul->count() }} tugas belum dikumpulkan</span>
+                @else
+                <span class="hero-badge">✓ Semua tugas terkumpul</span>
+                @endif
+                <a href="{{ route('siswa.kelas.index') }}" class="hero-btn">Kelas Saya →</a>
             </div>
         </div>
 
@@ -146,69 +166,36 @@ $userName = Auth::user()->name;
         {{-- RIWAYAT BELAJAR --}}
         <section class="section">
             <div class="section__head">
-                <h2 class="section__title">Riwayat Belajar</h2>
-                <div style="display:flex;gap:.5rem;align-items:center;">
-                    <button class="filter-btn">
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M3 7h8M5 11h4" stroke="#475569" stroke-width="1.4" stroke-linecap="round"/></svg>
-                        Filter
-                    </button>
-                    <a href="#" class="section__link">Lihat Semua</a>
-                </div>
+                <h2 class="section__title">Tugas Perlu Dikumpulkan</h2>
+                <a href="{{ route('siswa.kelas.index') }}" class="section__link">Lihat Semua Kelas</a>
             </div>
+            @if($tugasBelumKumpul->isEmpty())
+            <div style="background:#DCFCE7;border:1px solid #6EE7B7;border-radius:14px;padding:1rem 1.25rem;color:#065F46;font-size:.85rem;font-weight:600;">
+                ✓ Semua tugas sudah dikumpulkan!
+            </div>
+            @else
             <div class="history-list">
-
+                @foreach($tugasBelumKumpul->take(3) as $tugas)
+                <a href="{{ route('siswa.tugas.show', $tugas) }}" style="text-decoration:none">
                 <div class="history-item">
-                    <div class="history-icon" style="background:#EFF6FF;">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="#2563EB" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div class="history-icon" style="background:#FEF2F2;">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h8M4 14h10" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>
                     </div>
                     <div class="history-item__body">
-                        <p class="history-item__name">Fungsi</p>
-                        <p class="history-item__sub">Kalkulus • 60m</p>
+                        <p class="history-item__name">{{ $tugas->judul }}</p>
+                        <p class="history-item__sub">{{ $tugas->kelas->nama_kelas }}</p>
                     </div>
                     <div class="history-item__right">
-                        <span class="method-badge" style="background:#EFF6FF;color:#2563EB;">Pomodoro</span>
+                        <span class="method-badge" style="background:#FEE2E2;color:#DC2626;">Belum Kumpul</span>
                         <div class="history-item__time">
-                            <span class="history-item__date">Today</span>
-                            <span class="history-item__clock">14:20 WIB</span>
+                            <span class="history-item__date">{{ $tugas->deadline ? $tugas->deadline->format('d M') : 'No deadline' }}</span>
                         </div>
                     </div>
                 </div>
-
-                <div class="history-item">
-                    <div class="history-icon" style="background:#ECFDF5;">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="10" r="3" stroke="#059669" stroke-width="1.6"/><circle cx="13" cy="7" r="2" stroke="#059669" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="#059669" stroke-width="1.5"/><path d="M9.8 8.8l1.5-1M9.8 11.2l1.5 1" stroke="#059669" stroke-width="1.3"/></svg>
-                    </div>
-                    <div class="history-item__body">
-                        <p class="history-item__name">Clustering</p>
-                        <p class="history-item__sub">Statistika Deskriptif • 45m</p>
-                    </div>
-                    <div class="history-item__right">
-                        <span class="method-badge" style="background:#ECFDF5;color:#059669;">Mind Mapping</span>
-                        <div class="history-item__time">
-                            <span class="history-item__date">Kemarin</span>
-                            <span class="history-item__clock">09:15 WIB</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="history-item">
-                    <div class="history-icon" style="background:#FFFBEB;">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3v4M10 13v4M3 10h4M13 10h4" stroke="#D97706" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="10" r="2.5" stroke="#D97706" stroke-width="1.5"/></svg>
-                    </div>
-                    <div class="history-item__body">
-                        <p class="history-item__name">Gaya</p>
-                        <p class="history-item__sub">Fisika • 30m</p>
-                    </div>
-                    <div class="history-item__right">
-                        <span class="method-badge" style="background:#FFFBEB;color:#D97706;">Feynman</span>
-                        <div class="history-item__time">
-                            <span class="history-item__date">24 Okt 2023</span>
-                            <span class="history-item__clock">16:45 WIB</span>
-                        </div>
-                    </div>
-                </div>
-
+                </a>
+                @endforeach
             </div>
+            @endif
         </section>
 
     </main>

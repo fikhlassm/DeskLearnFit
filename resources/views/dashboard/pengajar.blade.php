@@ -38,8 +38,6 @@
                 <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M3 18c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                 Profil
             </a>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </button>
             <div>
                 <h1 class="topbar__title">Halo, {{ Auth::user()->name }}!</h1>
                 <p class="topbar__sub">Semoga harimu menyenangkan.</p>
@@ -58,9 +56,12 @@
                 <button class="topbar__icon-btn" aria-label="Notifikasi">
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v2.586l-1.707 1.707A1 1 0 003 14h14a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z" stroke="#475569" stroke-width="1.5"/><path d="M8 14a2 2 0 004 0" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
-                <button class="topbar__icon-btn" aria-label="Pengaturan">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="#475569" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
+                <form method="POST" action="{{ route('logout') }}" style="margin:0">
+                    @csrf
+                    <button type="submit" class="topbar__icon-btn" title="Logout">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -73,10 +74,9 @@
                         <div class="stat-card__icon" style="background:#EFF6FF;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#2563EB" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/></svg>
                         </div>
-                        <span class="stat-card__badge stat-card__badge--green">↗ +5%</span>
                     </div>
-                    <p class="stat-card__label">Total Mahasiswa</p>
-                    <p class="stat-card__value">120</p>
+                    <p class="stat-card__label">Total Siswa</p>
+                    <p class="stat-card__value">{{ $totalSiswa ?? 0 }}</p>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card__top">
@@ -85,17 +85,19 @@
                         </div>
                     </div>
                     <p class="stat-card__label">Kelas Aktif</p>
-                    <p class="stat-card__value">4</p>
+                    <p class="stat-card__value">{{ $totalKelas ?? 0 }}</p>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card__top">
                         <div class="stat-card__icon" style="background:#EFF6FF;">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2563EB" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
-                        <span class="stat-card__badge stat-card__badge--gray">Minggu ini</span>
+                        @if(($totalJawabanBelumDinilai ?? 0) > 0)
+                        <span class="stat-card__badge stat-card__badge--red">{{ $totalJawabanBelumDinilai }} belum dinilai</span>
+                        @endif
                     </div>
-                    <p class="stat-card__label">Jam Mengajar</p>
-                    <p class="stat-card__value">32 <span style="font-size:1rem;font-weight:500;color:#64748b;">jam</span></p>
+                    <p class="stat-card__label">Jawaban Masuk</p>
+                    <p class="stat-card__value">{{ $totalTugasTerbit ?? 0 }} <span style="font-size:1rem;font-weight:500;color:#64748b;">tugas terbit</span></p>
                 </div>
             </div>
         </section>

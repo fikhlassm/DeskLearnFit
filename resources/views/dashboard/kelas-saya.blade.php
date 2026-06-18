@@ -123,6 +123,9 @@
                         <td><span class="badge-status badge-{{ $kelas->status }}">{{ ucfirst($kelas->status) }}</span></td>
                         <td class="aksi-col">
                             <button class="btn-edit" onclick="openEdit({{ $kelas->id }},'{{ addslashes($kelas->nama_kelas) }}','{{ addslashes($kelas->mata_pelajaran) }}','{{ $kelas->kode_kelas }}','{{ addslashes($kelas->deskripsi) }}',{{ $kelas->kapasitas }},'{{ $kelas->status }}')">✏ Edit</button>
+                            <a href="{{ route('kelas.peserta', $kelas->id) }}" class="btn-edit" style="text-decoration:none;">👥 Peserta</a>
+                            <a href="{{ route('materi.index', $kelas->id) }}" class="btn-edit" style="text-decoration:none;background:#F5F3FF;border-color:#DDD6FE;color:#7C3AED;">📚 Materi</a>
+                            <a href="{{ route('tugas.index', $kelas->id) }}" class="btn-edit" style="text-decoration:none;background:#FFFBEB;border-color:#FDE68A;color:#D97706;">📝 Tugas</a>
                             <form method="POST" action="{{ route('kelas.destroy', $kelas->id) }}" style="display:inline" onsubmit="return confirm('Hapus kelas ini?')">
                                 @csrf
                                 @method('DELETE')
