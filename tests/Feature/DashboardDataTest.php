@@ -19,6 +19,7 @@ class DashboardDataTest extends TestCase
     public function test_dashboard_siswa_menampilkan_data_milik_siswa_login(): void
     {
         $siswa = User::factory()->siswaWithQuiz()->create();
+
         JurnalBelajar::factory()->count(3)->create(['user_id' => $siswa->id]);
         SesiBelajar::factory()->count(2)->create(['user_id' => $siswa->id, 'status' => 'selesai']);
 
@@ -38,6 +39,7 @@ class DashboardDataTest extends TestCase
 
         $response = $this->actingAs($siswaA)->get('/dashboard/siswa');
 
+        $response->assertStatus(200);
         $response->assertViewHas('totalCatatan', 0);
     }
 
@@ -46,13 +48,17 @@ class DashboardDataTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
         $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create(['nama_kelas' => 'Fisika Lanjutan']);
         $siswa    = User::factory()->siswaWithQuiz()->create();
-        AnggotaKelas::create(['kelas_id' => $kelas->id, 'siswa_id' => $siswa->id, 'joined_at' => now()]);
+
+        AnggotaKelas::create([
+            'kelas_id'  => $kelas->id,
+            'siswa_id'  => $siswa->id,
+            'joined_at' => now(),
+        ]);
 
         $response = $this->actingAs($siswa)->get('/dashboard/siswa');
 
         $response->assertStatus(200);
-        $kelasDiikuti = $response->viewData('kelasDiikuti');
-        $this->assertCount(1, $kelasDiikuti);
+        $this->assertCount(1, $response->viewData('kelasDiikuti'));
     }
 
     // ── Dashboard Pengajar ────────────────────────────────────────────────────
