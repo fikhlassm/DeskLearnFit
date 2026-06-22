@@ -177,6 +177,46 @@
 
 ---
 
+## PHASE 9 — Per-Method Tools Redesign
+
+**Status**: ✅ Selesai
+
+### Yang dikerjakan:
+- Tabel baru `flashcards` (FK ke `sesi_belajar`, cascade delete)
+- Tabel baru `entri_notebook` (FK ke `sesi_belajar`, dengan tipe + analisis)
+- Model `Flashcard` + `EntriNotebook` + relasi di `SesiBelajar`
+- Service `HeuristicAnalyzer` (stopwords ID, pencocokan kata kunci, marker Feynman)
+- Controller `FlashcardController` (store/update/destroy) dengan ownership check
+- Controller `NotebookController` (store/destroy) yang inject `HeuristicAnalyzer`
+- Redesign `sesi-belajar.blade.php` — layout 2 kolom (form kiri + tool kanan)
+- 3 partial baru: `tool-pomodoro`, `tool-flashcard`, `tool-notebook`
+- Auto-toggle field timer saat metode dropdown berubah
+- Update store() validasi: timer field hanya wajib untuk Pomodoro
+- Cascade delete: hapus sesi → flashcards & entri_notebook ikut terhapus
+
+### Tool Matrix
+
+| Metode | Tool | Storage | Analisis |
+|--------|------|---------|----------|
+| pomodoro | Timer fokus client-side | sesi_belajar | — |
+| active_recall | Deck kartu flash (Q/A) | flashcards | — |
+| blurting | Notebook + textarea | entri_notebook | HeuristicAnalyzer (skor 0-100) |
+| feynman | Notebook + textarea | entri_notebook | HeuristicAnalyzer + marker bonus |
+
+### Acceptance Criteria:
+- [x] User pilih metode, lalu tool yang sesuai muncul
+- [x] Pomodoro: timer client-side, jalan dengan benar
+- [x] Active Recall: tambah, edit, hapus kartu flash berfungsi
+- [x] Blurting/Feynman: submit entri → dapat narasi analisis + skor + kata kunci cocok
+- [x] Feynman skor >= Blurting skor untuk konten yang sama (marker bonus)
+- [x] Field timer hanya wajib untuk Pomodoro
+- [x] Tidak bisa tambah kartu di sesi non-Active-Recall (redirect + flash error)
+- [x] Tidak bisa submit notebook di sesi Pomodoro/Active-Recall
+- [x] Tidak bisa akses data user lain (403)
+- [x] Hapus sesi → flashcard & entri ikut terhapus (cascade)
+
+---
+
 ## TODO / Belum Dikerjakan
 
 - [ ] Fitur Materi dan Tugas (Prioritas 5 — di luar scope Phase 1-8)

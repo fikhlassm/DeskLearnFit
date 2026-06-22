@@ -36,7 +36,7 @@ class JawabanTugasController extends Controller
         }
 
         $validated = $request->validate([
-            'nilai'    => ['required', 'integer', 'min:0', 'max:100'],
+            'nilai' => ['required', 'integer', 'min:0', 'max:100'],
             'feedback' => ['nullable', 'string', 'max:2000'],
         ], [
             'nilai.min' => 'Nilai minimal 0.',
@@ -44,9 +44,9 @@ class JawabanTugasController extends Controller
         ]);
 
         $jawaban->update([
-            'nilai'    => $validated['nilai'],
+            'nilai' => $validated['nilai'],
             'feedback' => $validated['feedback'] ?? null,
-            'status'   => 'dinilai',
+            'status' => 'dinilai',
         ]);
 
         return redirect()->route('tugas.jawaban.index', $jawaban->tugas_id)
@@ -85,11 +85,11 @@ class JawabanTugasController extends Controller
         }
 
         JawabanTugas::create([
-            'tugas_id'     => $tugas->id,
-            'siswa_id'     => Auth::id(),
+            'tugas_id' => $tugas->id,
+            'siswa_id' => Auth::id(),
             'jawaban_text' => $validated['jawaban_text'],
             'submitted_at' => now(),
-            'status'       => $status,
+            'status' => $status,
         ]);
 
         $msg = $status === 'terlambat'
@@ -124,7 +124,7 @@ class JawabanTugasController extends Controller
         $jawaban->update([
             'jawaban_text' => $validated['jawaban_text'],
             'submitted_at' => now(),
-            'status'       => $jawaban->status === 'dinilai' ? 'dinilai' : $status,
+            'status' => $jawaban->status === 'dinilai' ? 'dinilai' : $status,
         ]);
 
         return redirect()->route('siswa.tugas.show', $jawaban->tugas_id)

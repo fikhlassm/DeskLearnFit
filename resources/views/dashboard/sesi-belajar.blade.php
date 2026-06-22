@@ -10,6 +10,8 @@ $metodeInfo = [
 ];
 $quizResult = Auth::user()->quiz_result;
 $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
+$selectedMetode = $selectedMetode ?? ($sesiAktif?->metode ?? $quizResult ?? 'pomodoro');
+if (!array_key_exists($selectedMetode, $metodeInfo)) $selectedMetode = 'pomodoro';
 @endphp
 
 <div class="dash-page">
@@ -45,7 +47,7 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
 <main class="dash-main">
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-        <div><h1 class="topbar__title">Sesi Belajar</h1><p class="topbar__sub">Timer pomodoro & riwayat sesi belajarmu</p></div>
+        <div><h1 class="topbar__title">Sesi Belajar</h1><p class="topbar__sub">Pilih metode — tool yang sesuai akan muncul</p></div>
         <div class="topbar__right">
             <form method="POST" action="{{ route('logout') }}" style="margin:0">@csrf
                 <button type="submit" class="topbar__icon-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -56,7 +58,6 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
     @if(session('success'))<div class="alert-success" id="flashMsg">{{ session('success') }}</div>@endif
     @if(session('error'))<div class="alert-error" id="flashMsg">{{ session('error') }}</div>@endif
 
-    {{-- REKOMENDASI METODE --}}
     @if($rekomendasiMetode)
     <div class="rekomendasi-card" style="border-left:4px solid {{ $rekomendasiMetode['color'] }}">
         <span class="rekomendasi-badge" style="background:{{ $rekomendasiMetode['bg'] }};color:{{ $rekomendasiMetode['color'] }}">✦ Rekomendasi untukmu</span>
@@ -65,71 +66,95 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
     </div>
     @endif
 
-    <div class="sesi-grid">
-        {{-- TIMER POMODORO --}}
-        <div class="timer-card">
-            <p class="timer-card__label">Timer Fokus</p>
-            <div class="timer-display" id="timerDisplay">25:00</div>
-            <div class="timer-progress-wrap"><div class="timer-progress-bar" id="timerBar" style="width:100%"></div></div>
-            <div class="timer-controls">
-                <button class="timer-btn timer-btn--start" id="btnTimerStart" onclick="startTimer()">▶ Mulai</button>
-                <button class="timer-btn timer-btn--pause" id="btnTimerPause" onclick="pauseTimer()" style="display:none">⏸ Jeda</button>
-                <button class="timer-btn timer-btn--reset" onclick="resetTimer()">↺ Reset</button>
-            </div>
-            <p class="timer-hint" id="timerHint">Siap untuk fokus belajar?</p>
-        </div>
-
-        {{-- FORM SESI BARU --}}
+    <div class="sesi-layout">
+        {{-- FORM SISI KIRI: Mulai Sesi Baru --}}
         <div class="form-card">
-            <p class="form-card__title">Mulai Sesi Baru</p>
+            <p class="form-card__title">🚀 Mulai Sesi Baru</p>
             <form method="POST" action="{{ route('sesi.store') }}">
                 @csrf
                 @if($errors->any())<div class="alert-error" style="margin-bottom:.75rem">{{ $errors->first() }}</div>@endif
                 <div class="form-group">
                     <label>Metode <span class="req">*</span></label>
-                    <select name="metode" required>
+                    <select name="metode" id="selectMetode" required>
                         @foreach($metodeInfo as $key => $info)
-                        <option value="{{ $key }}" {{ (old('metode', $quizResult) === $key) ? 'selected' : '' }}>{{ $info['icon'] }} {{ $info['label'] }}</option>
+                        <option value="{{ $key }}" {{ $selectedMetode === $key ? 'selected' : '' }}>{{ $info['icon'] }} {{ $info['label'] }}</option>
                         @endforeach
                     </select>
+                    <p class="form-hint" id="metodeHint">{{ $metodeInfo[$selectedMetode]['desc'] }}</p>
                 </div>
                 <div class="form-group">
                     <label>Judul / Topik</label>
                     <input type="text" name="judul" value="{{ old('judul') }}" placeholder="cth: Belajar Turunan Fungsi" maxlength="200">
                 </div>
-                <div class="form-row-3">
-                    <div class="form-group">
-                        <label>Fokus (menit)</label>
-                        <input type="number" name="durasi_fokus_menit" value="{{ old('durasi_fokus_menit', 25) }}" min="1" max="120" id="inputFokus">
-                    </div>
-                    <div class="form-group">
-                        <label>Istirahat (menit)</label>
-                        <input type="number" name="durasi_istirahat_menit" value="{{ old('durasi_istirahat_menit', 5) }}" min="1" max="60">
-                    </div>
-                    <div class="form-group">
-                        <label>Siklus</label>
-                        <input type="number" name="jumlah_siklus" value="{{ old('jumlah_siklus', 4) }}" min="1" max="10">
+
+                <div id="timerFields" style="{{ $selectedMetode === 'pomodoro' ? '' : 'display:none' }}">
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>Fokus (menit)</label>
+                            <input type="number" name="durasi_fokus_menit" value="{{ old('durasi_fokus_menit', 25) }}" min="1" max="120" id="inputFokus">
+                        </div>
+                        <div class="form-group">
+                            <label>Istirahat (menit)</label>
+                            <input type="number" name="durasi_istirahat_menit" value="{{ old('durasi_istirahat_menit', 5) }}" min="1" max="60">
+                        </div>
+                        <div class="form-group">
+                            <label>Siklus</label>
+                            <input type="number" name="jumlah_siklus" value="{{ old('jumlah_siklus', 4) }}" min="1" max="10">
+                        </div>
                     </div>
                 </div>
+
                 <button type="submit" class="btn-mulai-sesi">🚀 Catat & Mulai Sesi</button>
             </form>
         </div>
-    </div>
 
-    {{-- SESI AKTIF --}}
-    @if($sesiAktif)
-    <div class="sesi-aktif-card">
-        <div class="sesi-aktif-card__left">
-            <span class="badge-aktif">🟢 Sedang Berlangsung</span>
-            <p class="sesi-aktif-card__judul">{{ $sesiAktif->judul ?: $sesiAktif->metode }}</p>
-            <p class="sesi-aktif-card__meta">Dimulai {{ $sesiAktif->started_at->diffForHumans() }} · {{ $sesiAktif->durasi_fokus_menit }} menit fokus</p>
+        {{-- SISI KANAN: TOOL sesuai metode --}}
+        <div class="tool-card">
+            @if($sesiAktif)
+                @php $info = $metodeInfo[$sesiAktif->metode] ?? $metodeInfo['pomodoro']; @endphp
+                <div class="tool-card__head" style="background:{{ $info['bg'] }}">
+                    <span class="tool-card__icon" style="color:{{ $info['color'] }}">{{ $info['icon'] }}</span>
+                    <div>
+                        <p class="tool-card__label" style="color:{{ $info['color'] }}">Tool Aktif: {{ $info['label'] }}</p>
+                        <p class="tool-card__judul">{{ $sesiAktif->judul ?: 'Tanpa judul' }}</p>
+                    </div>
+                </div>
+
+                @if($sesiAktif->metode === 'pomodoro')
+                    @include('dashboard.partials.tool-pomodoro', ['sesi' => $sesiAktif])
+                @elseif($sesiAktif->metode === 'active_recall')
+                    @include('dashboard.partials.tool-flashcard', ['sesi' => $sesiAktif])
+                @elseif(in_array($sesiAktif->metode, ['blurting', 'feynman']))
+                    @include('dashboard.partials.tool-notebook', ['sesi' => $sesiAktif])
+                @endif
+
+                <div class="tool-card__footer">
+                    <form method="POST" action="{{ route('sesi.complete', $sesiAktif) }}" onsubmit="return confirm('Tandai sesi ini selesai?')">
+                        @csrf @method('PATCH')
+                        <button type="submit" class="btn-selesai-sesi">✓ Tandai Selesai</button>
+                    </form>
+                    <form method="POST" action="{{ route('sesi.destroy', $sesiAktif) }}" onsubmit="return confirm('Hapus sesi ini?')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn-hapus-tool">🗑 Hapus Sesi</button>
+                    </form>
+                </div>
+            @else
+                <div class="tool-card__empty">
+                    <div class="tool-card__empty-icon">🛠️</div>
+                    <p class="tool-card__empty-title">Pilih metode & buat sesi dulu</p>
+                    <p class="tool-card__empty-sub">
+                        @if($selectedMetode === 'pomodoro')
+                            Timer fokus akan muncul di sini.
+                        @elseif($selectedMetode === 'active_recall')
+                            Deck kartu flash akan muncul di sini.
+                        @else
+                            Notebook dengan analisis sistem akan muncul di sini.
+                        @endif
+                    </p>
+                </div>
+            @endif
         </div>
-        <form method="POST" action="{{ route('sesi.complete', $sesiAktif) }}">
-            @csrf @method('PATCH')
-            <button type="submit" class="btn-selesai-sesi">✓ Tandai Selesai</button>
-        </form>
     </div>
-    @endif
 
     {{-- RIWAYAT --}}
     <div class="section">
@@ -146,7 +171,7 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
                 <div class="riwayat-icon" style="background:{{ $info['bg'] }}"><span style="font-size:1.2rem">{{ $info['icon'] }}</span></div>
                 <div class="riwayat-body">
                     <p class="riwayat-judul">{{ $sesi->judul ?: $info['label'] }}</p>
-                    <p class="riwayat-meta">{{ $info['label'] }} · {{ $sesi->durasi_fokus_menit }}m fokus · {{ $sesi->jumlah_siklus }} siklus · {{ $sesi->created_at->format('d M Y') }}</p>
+                    <p class="riwayat-meta">{{ $info['label'] }} · {{ $sesi->created_at->format('d M Y H:i') }}</p>
                 </div>
                 <div class="riwayat-right">
                     @if($sesi->status === 'selesai')
@@ -199,35 +224,112 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
 .rekomendasi-badge{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;width:fit-content;}
 .rekomendasi-nama{font-size:1rem;font-weight:700;color:#0F172A;}
 .rekomendasi-desc{font-size:.8rem;color:#64748B;}
-.sesi-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;}
-.timer-card{background:#0F172A;border-radius:20px;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1rem;color:#fff;}
-.timer-card__label{font-size:.75rem;font-weight:700;letter-spacing:.06em;color:#64748B;text-transform:uppercase;}
-.timer-display{font-size:4rem;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:#fff;}
-.timer-progress-wrap{width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
-.timer-progress-bar{height:100%;background:linear-gradient(90deg,#2563EB,#60A5FA);border-radius:99px;transition:width .5s linear;}
-.timer-controls{display:flex;gap:.65rem;}
-.timer-btn{padding:.6rem 1.2rem;border-radius:10px;border:none;cursor:pointer;font-size:.83rem;font-weight:600;font-family:inherit;transition:opacity .18s,transform .15s;}
-.timer-btn--start{background:#2563EB;color:#fff;}
-.timer-btn--pause{background:#F59E0B;color:#fff;}
-.timer-btn--reset{background:rgba(255,255,255,.1);color:#94A3B8;}
-.timer-btn:hover{opacity:.88;transform:translateY(-1px);}
-.timer-hint{font-size:.75rem;color:#64748B;}
+.sesi-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;}
 .form-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.5rem;}
 .form-card__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:1rem;}
 .form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.75rem;}
 .form-group label{font-size:.8rem;font-weight:600;color:#374151;}
 .req{color:#EF4444;}
-.form-group input,.form-group select{padding:.55rem .85rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.85rem;color:#0F172A;outline:none;font-family:inherit;}
-.form-group input:focus,.form-group select:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
+.form-hint{font-size:.72rem;color:#94A3B8;margin-top:.15rem;}
+.form-group input,.form-group select,.form-group textarea{padding:.55rem .85rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.85rem;color:#0F172A;outline:none;font-family:inherit;background:#fff;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
 .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;}
 .btn-mulai-sesi{width:100%;padding:.75rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:.25rem;transition:background .18s;}
 .btn-mulai-sesi:hover{background:#1d4ed8;}
-.sesi-aktif-card{background:linear-gradient(135deg,#DCFCE7,#ECFDF5);border:1px solid #6EE7B7;border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
-.badge-aktif{font-size:.72rem;font-weight:700;display:block;margin-bottom:.3rem;color:#15803D;}
-.sesi-aktif-card__judul{font-size:1rem;font-weight:700;color:#0F172A;margin-bottom:.2rem;}
-.sesi-aktif-card__meta{font-size:.78rem;color:#64748B;}
-.btn-selesai-sesi{padding:.65rem 1.3rem;background:#15803D;color:#fff;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .18s;}
+.tool-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:0;display:flex;flex-direction:column;overflow:hidden;}
+.tool-card__head{padding:1rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid #E2E8F0;}
+.tool-card__icon{font-size:1.5rem;line-height:1;}
+.tool-card__label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.tool-card__judul{font-size:.95rem;font-weight:700;color:#0F172A;margin-top:.1rem;}
+.tool-card__empty{padding:3rem 1.5rem;text-align:center;color:#94A3B8;}
+.tool-card__empty-icon{font-size:3rem;margin-bottom:.5rem;}
+.tool-card__empty-title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:.3rem;}
+.tool-card__empty-sub{font-size:.82rem;color:#64748B;}
+.tool-card__footer{padding:1rem 1.25rem;border-top:1px solid #E2E8F0;display:flex;gap:.65rem;background:#FAFBFC;}
+.btn-selesai-sesi{flex:1;padding:.65rem 1.2rem;background:#15803D;color:#fff;border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;}
 .btn-selesai-sesi:hover{background:#166534;}
+.btn-hapus-tool{padding:.65rem 1rem;background:#fff;color:#991B1B;border:1px solid #FECACA;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-hapus-tool:hover{background:#FEF2F2;}
+
+/* ── Tool Pomodoro ── */
+.tool-pomodoro{background:#0F172A;color:#fff;padding:1.75rem;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.tool-pomodoro__label{font-size:.72rem;font-weight:700;letter-spacing:.06em;color:#64748B;text-transform:uppercase;}
+.tool-pomodoro__display{font-size:3.5rem;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:#fff;}
+.tool-pomodoro__progress-wrap{width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
+.tool-pomodoro__progress-bar{height:100%;background:linear-gradient(90deg,#2563EB,#60A5FA);border-radius:99px;transition:width .5s linear;}
+.tool-pomodoro__meta{display:flex;gap:.8rem;font-size:.72rem;color:#94A3B8;}
+.tool-pomodoro__controls{display:flex;gap:.65rem;}
+.tool-pomodoro__btn{padding:.6rem 1.2rem;border-radius:10px;border:none;cursor:pointer;font-size:.83rem;font-weight:600;font-family:inherit;transition:opacity .18s,transform .15s;}
+.tool-pomodoro__btn--start{background:#2563EB;color:#fff;}
+.tool-pomodoro__btn--pause{background:#F59E0B;color:#fff;}
+.tool-pomodoro__btn--reset{background:rgba(255,255,255,.1);color:#94A3B8;}
+.tool-pomodoro__btn:hover{opacity:.88;transform:translateY(-1px);}
+.tool-pomodoro__hint{font-size:.75rem;color:#64748B;}
+.tool-pomodoro__catatan{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:.4rem;width:100%;}
+.tool-pomodoro__catatan-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94A3B8;text-align:left;}
+.tool-pomodoro__catatan textarea{padding:.6rem .75rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:.82rem;font-family:inherit;resize:vertical;outline:none;}
+.tool-pomodoro__catatan textarea:focus{background:rgba(255,255,255,.12);border-color:#60A5FA;}
+.tool-pomodoro__catatan-save{padding:.5rem .9rem;background:#2563EB;color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;align-self:flex-end;transition:background .15s;}
+.tool-pomodoro__catatan-save:hover{background:#1d4ed8;}
+
+/* ── Tool Flashcard ── */
+.tool-flashcard{padding:1.25rem;display:flex;flex-direction:column;gap:1rem;}
+.tool-flashcard__title{font-size:1rem;font-weight:700;color:#0F172A;}
+.tool-flashcard__sub{font-size:.78rem;color:#64748B;}
+.tool-flashcard__form{display:flex;flex-direction:column;gap:.65rem;background:#F8FAFC;padding:1rem;border-radius:12px;border:1px dashed #CBD5E1;}
+.tool-flashcard__field{display:flex;flex-direction:column;gap:.25rem;}
+.tool-flashcard__field label{font-size:.75rem;font-weight:600;color:#374151;}
+.tool-flashcard__field textarea{padding:.55rem .75rem;border:1px solid #E2E8F0;border-radius:8px;font-size:.85rem;font-family:inherit;resize:vertical;outline:none;background:#fff;}
+.tool-flashcard__field textarea:focus{border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,.10);}
+.tool-flashcard__add{padding:.6rem;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.tool-flashcard__add:hover{background:#6D28D9;}
+.tool-flashcard__empty{padding:2rem 1rem;text-align:center;color:#94A3B8;font-size:.85rem;background:#FAFBFC;border-radius:12px;}
+.tool-flashcard__empty p:first-child{font-size:2rem;margin-bottom:.4rem;}
+.tool-flashcard__deck{display:flex;flex-direction:column;gap:.5rem;}
+.tool-flashcard__card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.65rem .9rem;}
+.tool-flashcard__card[open]{background:#FAFBFC;}
+.tool-flashcard__card summary{cursor:pointer;display:flex;align-items:center;gap:.6rem;list-style:none;}
+.tool-flashcard__card summary::-webkit-details-marker{display:none;}
+.tool-flashcard__num{font-size:.7rem;font-weight:700;background:#7C3AED;color:#fff;padding:.1rem .45rem;border-radius:6px;}
+.tool-flashcard__q{font-size:.85rem;font-weight:500;color:#0F172A;flex:1;}
+.tool-flashcard__answer{margin-top:.65rem;padding:.65rem;background:#F5F3FF;border-left:3px solid #7C3AED;border-radius:6px;}
+.tool-flashcard__a-label{font-size:.7rem;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:.04em;}
+.tool-flashcard__a-text{font-size:.82rem;color:#1E293B;margin-top:.2rem;white-space:pre-wrap;}
+.tool-flashcard__actions{display:flex;gap:.5rem;margin-top:.5rem;justify-content:flex-end;}
+.tool-flashcard__edit,.tool-flashcard__delete{background:none;border:1px solid #E2E8F0;padding:.3rem .7rem;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit;}
+.tool-flashcard__edit{color:#475569;}
+.tool-flashcard__delete{color:#991B1B;border-color:#FECACA;}
+
+/* ── Tool Notebook ── */
+.tool-notebook{padding:1.25rem;display:flex;flex-direction:column;gap:1rem;}
+.tool-notebook__title{font-size:1rem;font-weight:700;color:#0F172A;}
+.tool-notebook__sub{font-size:.78rem;color:#64748B;font-style:italic;}
+.tool-notebook__form{display:flex;flex-direction:column;gap:.65rem;background:#F8FAFC;padding:1rem;border-radius:12px;border:1px dashed #CBD5E1;}
+.tool-notebook__form textarea{padding:.75rem;border:1px solid #E2E8F0;border-radius:8px;font-size:.85rem;font-family:inherit;resize:vertical;outline:none;background:#fff;line-height:1.5;}
+.tool-notebook__form textarea:focus{border-color:#D97706;box-shadow:0 0 0 3px rgba(217,119,6,.10);}
+.tool-notebook__submit{padding:.65rem;background:#D97706;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;align-self:flex-end;padding-left:1.2rem;padding-right:1.2rem;}
+.tool-notebook__submit:hover{background:#B45309;}
+.tool-notebook__empty{padding:2rem 1rem;text-align:center;color:#94A3B8;font-size:.85rem;background:#FAFBFC;border-radius:12px;}
+.tool-notebook__empty p:first-child{font-size:2rem;margin-bottom:.4rem;}
+.tool-notebook__section-label{font-size:.8rem;font-weight:700;color:#0F172A;margin-top:.5rem;}
+.tool-notebook__list{display:flex;flex-direction:column;gap:.75rem;}
+.tool-notebook__entry{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:.65rem;}
+.tool-notebook__entry-head{display:flex;align-items:center;justify-content:space-between;}
+.tool-notebook__time{font-size:.72rem;color:#94A3B8;}
+.tool-notebook__score{font-size:.78rem;font-weight:700;padding:.2rem .55rem;border-radius:6px;}
+.tool-notebook__score[data-skor="0"],.tool-notebook__score[data-skor="1"],.tool-notebook__score[data-skor="2"],.tool-notebook__score[data-skor="3"],.tool-notebook__score[data-skor="4"]{background:#FEF2F2;color:#991B1B;}
+.tool-notebook__score[data-skor="5"],.tool-notebook__score[data-skor="6"]{background:#FEF3C7;color:#92400E;}
+.tool-notebook__score[data-skor="7"],.tool-notebook__score[data-skor="8"]{background:#DCFCE7;color:#15803D;}
+.tool-notebook__score[data-skor="9"],.tool-notebook__score[data-skor="100"]{background:#DCFCE7;color:#15803D;}
+.tool-notebook__konten{font-size:.85rem;color:#1E293B;line-height:1.55;white-space:pre-wrap;background:#F8FAFC;padding:.65rem;border-radius:8px;max-height:120px;overflow-y:auto;}
+.tool-notebook__analisis{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:.75rem;}
+.tool-notebook__a-title{font-size:.72rem;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem;}
+.tool-notebook__a-text{font-size:.8rem;color:#78350F;line-height:1.5;}
+.tool-notebook__keywords{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;}
+.tool-notebook__kw{font-size:.7rem;font-weight:600;background:#D97706;color:#fff;padding:.15rem .5rem;border-radius:6px;}
+.tool-notebook__entry-actions{display:flex;justify-content:flex-end;}
+.tool-notebook__entry-actions button{background:none;border:1px solid #FECACA;color:#991B1B;padding:.3rem .65rem;border-radius:6px;font-size:.75rem;cursor:pointer;font-family:inherit;}
+
 .section{display:flex;flex-direction:column;gap:.85rem;}
 .section__head{display:flex;align-items:center;justify-content:space-between;}
 .section__title{font-size:1rem;font-weight:700;color:#0F172A;display:flex;align-items:center;gap:.5rem;}
@@ -257,7 +359,7 @@ $rekomendasiMetode = $quizResult ? ($metodeInfo[$quizResult] ?? null) : null;
     .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:199;transition:opacity .28s;opacity:0;}
     .sidebar-overlay.overlay--show{display:block;opacity:1;}
     .dash-main{padding:1rem;}
-    .sesi-grid{grid-template-columns:1fr;}
+    .sesi-layout{grid-template-columns:1fr;}
     .form-row-3{grid-template-columns:1fr 1fr;}
 }
 </style>
@@ -269,8 +371,20 @@ overlay.addEventListener('click',()=>{sidebar.classList.remove('sidebar--open');
 document.querySelectorAll('.sidebar__link').forEach(l=>l.addEventListener('click',()=>{sidebar.classList.remove('sidebar--open');overlay.classList.remove('overlay--show');}));
 setTimeout(()=>{const f=document.getElementById('flashMsg');if(f)f.style.transition='opacity .5s',f.style.opacity='0',setTimeout(()=>f&&f.remove(),500);},3000);
 
+// Toggle timer fields + metode hint when metode dropdown changes
+const metodeInfoJs = @json($metodeInfo);
+const selectMetode = document.getElementById('selectMetode');
+const timerFields  = document.getElementById('timerFields');
+const metodeHint   = document.getElementById('metodeHint');
+selectMetode?.addEventListener('change', function() {
+    const m = this.value;
+    if (timerFields) timerFields.style.display = (m === 'pomodoro') ? '' : 'none';
+    if (metodeHint && metodeInfoJs[m]) metodeHint.textContent = metodeInfoJs[m].desc;
+});
+
+@if($sesiAktif && $sesiAktif->metode === 'pomodoro')
 // --- POMODORO TIMER ---
-let totalSeconds = parseInt(document.getElementById('inputFokus')?.value || 25) * 60;
+let totalSeconds = {{ (int) $sesiAktif->durasi_fokus_menit }} * 60;
 let remaining = totalSeconds;
 let running = false;
 let interval = null;
@@ -278,14 +392,13 @@ let interval = null;
 function pad(n){return String(n).padStart(2,'0');}
 function updateDisplay(){
     const m=Math.floor(remaining/60), s=remaining%60;
-    document.getElementById('timerDisplay').textContent=pad(m)+':'+pad(s);
-    document.getElementById('timerBar').style.width=(remaining/totalSeconds*100)+'%';
-    document.getElementById('timerHint').textContent=running?'Fokus! Jangan terganggu sekarang.':'Siap untuk fokus belajar?';
+    const display=document.getElementById('timerDisplay');
+    const bar=document.getElementById('timerBar');
+    const hint=document.getElementById('timerHint');
+    if(display)display.textContent=pad(m)+':'+pad(s);
+    if(bar)bar.style.width=(remaining/totalSeconds*100)+'%';
+    if(hint)hint.textContent=running?'Fokus! Jangan terganggu sekarang.':'Siap untuk fokus belajar?';
 }
-
-document.getElementById('inputFokus')?.addEventListener('change',function(){
-    if(!running){totalSeconds=parseInt(this.value||25)*60;remaining=totalSeconds;updateDisplay();}
-});
 
 function startTimer(){
     if(running)return;
@@ -299,7 +412,7 @@ function startTimer(){
             clearInterval(interval);running=false;
             document.getElementById('btnTimerPause').style.display='none';
             document.getElementById('btnTimerStart').style.display='';
-            document.getElementById('timerHint').textContent='🎉 Sesi fokus selesai! Saatnya istirahat.';
+            document.getElementById('timerHint').textContent='Sesi fokus selesai! Istirahat sebentar.';
             document.getElementById('timerDisplay').textContent='00:00';
             if(window.Notification&&Notification.permission==='granted')new Notification('LearnFit',{body:'Sesi fokus selesai! Istirahat sebentar.'});
         }
@@ -322,6 +435,11 @@ function resetTimer(){
     updateDisplay();
 }
 
+document.getElementById('btnTimerStart')?.addEventListener('click', startTimer);
+document.getElementById('btnTimerPause')?.addEventListener('click', pauseTimer);
+document.getElementById('btnTimerReset')?.addEventListener('click', resetTimer);
+
 updateDisplay();
+@endif
 </script>
 @endsection

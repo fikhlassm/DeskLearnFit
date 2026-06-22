@@ -32,34 +32,34 @@ class QuizController extends Controller
      * @var array<string, array<string, int>>
      */
     private array $scoreMap = [
-        'q1_visual'      => ['A' => 2, 'B' => 1],
-        'q1_auditori'    => ['F' => 2, 'A' => 1],
-        'q1_membaca'     => ['B' => 2, 'F' => 1],
-        'q1_kinestetik'  => ['P' => 2, 'B' => 1],
-        'q2_15menit'     => ['P' => 3],
-        'q2_30menit'     => ['P' => 2, 'A' => 1],
-        'q2_1jam'        => ['A' => 2, 'B' => 1],
-        'q2_lebih'       => ['F' => 2, 'B' => 1],
-        'q3_baca_ulang'  => ['B' => 2, 'F' => 1],
-        'q3_rangkum'     => ['B' => 3],
-        'q3_tanya'       => ['F' => 2, 'A' => 1],
-        'q3_latihan'     => ['A' => 3],
-        'q4_tenang'      => ['B' => 2, 'A' => 1],
-        'q4_musik'       => ['P' => 2, 'F' => 1],
-        'q4_ramai'       => ['F' => 2, 'P' => 1],
-        'q4_alam'        => ['P' => 3],
-        'q5_latihan'     => ['A' => 3],
-        'q5_tutor'       => ['F' => 3],
+        'q1_visual' => ['A' => 2, 'B' => 1],
+        'q1_auditori' => ['F' => 2, 'A' => 1],
+        'q1_membaca' => ['B' => 2, 'F' => 1],
+        'q1_kinestetik' => ['P' => 2, 'B' => 1],
+        'q2_15menit' => ['P' => 3],
+        'q2_30menit' => ['P' => 2, 'A' => 1],
+        'q2_1jam' => ['A' => 2, 'B' => 1],
+        'q2_lebih' => ['F' => 2, 'B' => 1],
+        'q3_baca_ulang' => ['B' => 2, 'F' => 1],
+        'q3_rangkum' => ['B' => 3],
+        'q3_tanya' => ['F' => 2, 'A' => 1],
+        'q3_latihan' => ['A' => 3],
+        'q4_tenang' => ['B' => 2, 'A' => 1],
+        'q4_musik' => ['P' => 2, 'F' => 1],
+        'q4_ramai' => ['F' => 2, 'P' => 1],
+        'q4_alam' => ['P' => 3],
+        'q5_latihan' => ['A' => 3],
+        'q5_tutor' => ['F' => 3],
         'q5_tulis_ulang' => ['B' => 3],
-        'q5_jadwal'      => ['P' => 3],
-        'q6_pagi'        => ['P' => 2, 'A' => 1],
-        'q6_siang'       => ['F' => 2, 'B' => 1],
-        'q6_sore'        => ['B' => 2, 'F' => 1],
-        'q6_malam'       => ['A' => 2, 'P' => 1],
-        'q7_ujian'       => ['A' => 2, 'P' => 1],
-        'q7_pemahaman'   => ['F' => 3],
-        'q7_skill'       => ['P' => 2, 'B' => 1],
-        'q7_hafal'       => ['B' => 3],
+        'q5_jadwal' => ['P' => 3],
+        'q6_pagi' => ['P' => 2, 'A' => 1],
+        'q6_siang' => ['F' => 2, 'B' => 1],
+        'q6_sore' => ['B' => 2, 'F' => 1],
+        'q6_malam' => ['A' => 2, 'P' => 1],
+        'q7_ujian' => ['A' => 2, 'P' => 1],
+        'q7_pemahaman' => ['F' => 3],
+        'q7_skill' => ['P' => 2, 'B' => 1],
+        'q7_hafal' => ['B' => 3],
     ];
 
     /** Map kode metode ke nama hasil. */
@@ -86,24 +86,24 @@ class QuizController extends Controller
         // Buat aturan validasi dinamis dari $validOptions
         $rules = [];
         foreach ($this->validOptions as $qKey => $options) {
-            $rules["answers.{$qKey}"] = ['required', 'string', 'in:' . implode(',', $options)];
+            $rules["answers.{$qKey}"] = ['required', 'string', 'in:'.implode(',', $options)];
         }
 
         $messages = [];
         foreach (array_keys($this->validOptions) as $qKey) {
             $num = ltrim($qKey, 'q');
             $messages["answers.{$qKey}.required"] = "Soal {$num} belum dijawab.";
-            $messages["answers.{$qKey}.in"]       = "Jawaban soal {$num} tidak valid.";
+            $messages["answers.{$qKey}.in"] = "Jawaban soal {$num} tidak valid.";
         }
 
         $validated = $request->validate($rules, $messages);
-        $answers   = $validated['answers'];
+        $answers = $validated['answers'];
 
         // Hitung skor
         $scores = ['P' => 0, 'A' => 0, 'B' => 0, 'F' => 0];
 
         foreach ($answers as $questionKey => $optionValue) {
-            $mapKey = $questionKey . '_' . $optionValue;
+            $mapKey = $questionKey.'_'.$optionValue;
             if (isset($this->scoreMap[$mapKey])) {
                 foreach ($this->scoreMap[$mapKey] as $method => $pts) {
                     $scores[$method] += $pts;
@@ -116,15 +116,15 @@ class QuizController extends Controller
         $result = $this->methodMap[$winner];
 
         $formattedScores = [
-            'pomodoro'      => $scores['P'],
+            'pomodoro' => $scores['P'],
             'active_recall' => $scores['A'],
-            'blurting'      => $scores['B'],
-            'feynman'       => $scores['F'],
+            'blurting' => $scores['B'],
+            'feynman' => $scores['F'],
         ];
 
-        $user               = Auth::user();
-        $user->quiz_result  = $result;
-        $user->quiz_scores  = $formattedScores;
+        $user = Auth::user();
+        $user->quiz_result = $result;
+        $user->quiz_scores = $formattedScores;
         $user->save();
 
         return redirect()->route('quiz.result');
@@ -133,7 +133,7 @@ class QuizController extends Controller
     /** Reset hasil quiz agar siswa bisa mengulang. */
     public function retake(): RedirectResponse
     {
-        $user              = Auth::user();
+        $user = Auth::user();
         $user->quiz_result = null;
         $user->quiz_scores = null;
         $user->save();
@@ -151,10 +151,10 @@ class QuizController extends Controller
         }
 
         $scores = $user->quiz_scores ?? [
-            'pomodoro'      => 0,
+            'pomodoro' => 0,
             'active_recall' => 0,
-            'feynman'       => 0,
-            'blurting'      => 0,
+            'feynman' => 0,
+            'blurting' => 0,
         ];
 
         return view('quiz.result', [

@@ -52,7 +52,28 @@ kelas
   ├── deskripsi (nullable)
   ├── kapasitas (int, default: 30)
   ├── status (enum: aktif|draf|selesai)
+  ├── pengajar_id (FK → users)    ← ADD 2026_06_17_000004
   └── timestamps
+
+flashcards                       ← NEW migration 2026_06_18_000001
+  ├── id (PK)
+  ├── sesi_id (FK → sesi_belajar, cascade)
+  ├── pertanyaan (text)
+  ├── jawaban (text)
+  ├── urutan (smallint, default: 0)
+  └── timestamps
+  INDEX: (sesi_id, urutan)
+
+entri_notebook                   ← NEW migration 2026_06_18_000002
+  ├── id (PK)
+  ├── sesi_id (FK → sesi_belajar, cascade)
+  ├── tipe (enum: blurting|feynman)
+  ├── konten (text)
+  ├── analisis_sistem (text, nullable)
+  ├── skor_keyakinan (smallint 0-100, nullable)
+  ├── kata_kunci_cocok (JSON, nullable)
+  └── timestamps
+  INDEX: (sesi_id, tipe)
 ```
 
 ## Migrations Order
@@ -66,6 +87,13 @@ kelas
 | **2026_06_17_000001_create_jurnal_belajar_table** | CREATE jurnal_belajar |
 | **2026_06_17_000002_add_profil_fields_to_users_table** | ADD bio, tujuan_belajar, jenjang, no_hp |
 | **2026_06_17_000003_create_sesi_belajar_table** | CREATE sesi_belajar |
+| 2026_06_17_000004_add_pengajar_id_to_kelas_table | ADD pengajar_id to kelas |
+| 2026_06_17_000005_create_anggota_kelas_table | CREATE anggota_kelas |
+| 2026_06_17_000006_create_materi_table | CREATE materi |
+| 2026_06_17_000007_create_tugas_table | CREATE tugas |
+| 2026_06_17_000008_create_jawaban_tugas_table | CREATE jawaban_tugas |
+| **2026_06_18_000001_create_flashcards_table** | CREATE flashcards |
+| **2026_06_18_000002_create_entri_notebook_table** | CREATE entri_notebook |
 
 ## Jalankan Migration
 

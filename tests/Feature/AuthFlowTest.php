@@ -15,12 +15,12 @@ class AuthFlowTest extends TestCase
     public function test_register_siswa_redirects_to_welcome(): void
     {
         $response = $this->post('/register', [
-            'name'                  => 'Budi Siswa',
-            'email'                 => 'budi@example.com',
-            'password'              => 'password123',
+            'name' => 'Budi Siswa',
+            'email' => 'budi@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role'                  => 'siswa',
-            'terms'                 => '1',
+            'role' => 'siswa',
+            'terms' => '1',
         ]);
 
         $response->assertRedirect(route('welcome'));
@@ -30,12 +30,12 @@ class AuthFlowTest extends TestCase
     public function test_register_pengajar_redirects_to_dashboard_pengajar(): void
     {
         $response = $this->post('/register', [
-            'name'                  => 'Ibu Pengajar',
-            'email'                 => 'ibu@example.com',
-            'password'              => 'password123',
+            'name' => 'Ibu Pengajar',
+            'email' => 'ibu@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role'                  => 'pengajar',
-            'terms'                 => '1',
+            'role' => 'pengajar',
+            'terms' => '1',
         ]);
 
         $response->assertRedirect(route('dashboard.pengajar'));
@@ -44,12 +44,12 @@ class AuthFlowTest extends TestCase
     public function test_register_requires_valid_role(): void
     {
         $response = $this->post('/register', [
-            'name'                  => 'Hacker',
-            'email'                 => 'hack@example.com',
-            'password'              => 'password123',
+            'name' => 'Hacker',
+            'email' => 'hack@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role'                  => 'admin',
-            'terms'                 => '1',
+            'role' => 'admin',
+            'terms' => '1',
         ]);
 
         $response->assertSessionHasErrors('role');
@@ -58,11 +58,11 @@ class AuthFlowTest extends TestCase
     public function test_register_requires_terms_accepted(): void
     {
         $response = $this->post('/register', [
-            'name'                  => 'No Terms',
-            'email'                 => 'noterms@example.com',
-            'password'              => 'password123',
+            'name' => 'No Terms',
+            'email' => 'noterms@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
-            'role'                  => 'siswa',
+            'role' => 'siswa',
         ]);
 
         $response->assertSessionHasErrors('terms');
@@ -75,7 +75,7 @@ class AuthFlowTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $response = $this->post('/login', [
-            'email'    => $siswa->email,
+            'email' => $siswa->email,
             'password' => 'password',
         ]);
 
@@ -87,7 +87,7 @@ class AuthFlowTest extends TestCase
         $siswa = User::factory()->siswaWithQuiz()->create();
 
         $response = $this->post('/login', [
-            'email'    => $siswa->email,
+            'email' => $siswa->email,
             'password' => 'password',
         ]);
 
@@ -99,7 +99,7 @@ class AuthFlowTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $response = $this->post('/login', [
-            'email'    => $pengajar->email,
+            'email' => $pengajar->email,
             'password' => 'password',
         ]);
 
@@ -111,7 +111,7 @@ class AuthFlowTest extends TestCase
         $user = User::factory()->siswa()->create();
 
         $response = $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
@@ -129,5 +129,26 @@ class AuthFlowTest extends TestCase
 
         $response->assertRedirect(route('home'));
         $this->assertGuest();
+    }
+
+    // ── Welcome-after (post-registration landing) ──────────────────────────────
+
+    public function test_welcome_after_page_renders_for_authenticated_user(): void
+    {
+        $user = User::factory()->siswa()->create();
+
+        $response = $this->actingAs($user)->get(route('welcome'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Selamat');
+        $response->assertSee('Bergabung');
+        $response->assertSee('Cari Metode Belajarmu');
+        $response->assertSee('Mulai Quiz');
+        $response->assertSee(route('quiz'));
+    }
+
+    public function test_welcome_after_is_protected_from_guests(): void
+    {
+        $this->get(route('welcome'))->assertRedirect(route('login'));
     }
 }

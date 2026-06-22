@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // quiz_result sudah ada, tambah quiz_scores jika belum ada
-            if (!Schema::hasColumn('users', 'quiz_scores')) {
+            if (! Schema::hasColumn('users', 'quiz_scores')) {
                 $table->json('quiz_scores')->nullable()->after('quiz_result');
             }
         });

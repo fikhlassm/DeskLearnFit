@@ -24,17 +24,17 @@ class ProfilController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name'          => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'bio'           => ['nullable', 'string', 'max:1000'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'bio' => ['nullable', 'string', 'max:1000'],
             'tujuan_belajar' => ['nullable', 'string', 'max:500'],
-            'jenjang'       => ['nullable', 'string', 'max:100'],
-            'no_hp'         => ['nullable', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
+            'jenjang' => ['nullable', 'string', 'max:100'],
+            'no_hp' => ['nullable', 'string', 'max:20', 'regex:/^[0-9\+\-\s]+$/'],
         ], [
-            'name.required'  => 'Nama lengkap wajib diisi.',
+            'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Email wajib diisi.',
-            'email.unique'   => 'Email sudah digunakan oleh akun lain.',
-            'no_hp.regex'    => 'Format nomor HP tidak valid.',
+            'email.unique' => 'Email sudah digunakan oleh akun lain.',
+            'no_hp.regex' => 'Format nomor HP tidak valid.',
         ]);
 
         // Pastikan role tidak ikut ter-update walau dikirim lewat request

@@ -17,8 +17,8 @@ class AnggotaKelasTest extends TestCase
     public function test_siswa_bisa_join_kelas_aktif_dengan_kode_valid(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create(['kode_kelas' => 'AKTIF01']);
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create(['kode_kelas' => 'AKTIF01']);
+        $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
             ->post('/dashboard/kelas-diikuti/join', ['kode_kelas' => 'AKTIF01'])
@@ -53,12 +53,12 @@ class AnggotaKelasTest extends TestCase
     public function test_siswa_tidak_bisa_join_kelas_yang_sama_dua_kali(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create(['kode_kelas' => 'DUP01']);
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create(['kode_kelas' => 'DUP01']);
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
@@ -72,17 +72,17 @@ class AnggotaKelasTest extends TestCase
     public function test_siswa_bisa_keluar_dari_kelas(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create();
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
         $this->actingAs($siswa)
-            ->delete('/dashboard/kelas-diikuti/' . $kelas->id . '/leave')
+            ->delete('/dashboard/kelas-diikuti/'.$kelas->id.'/leave')
             ->assertRedirect(route('siswa.kelas.index'));
 
         $this->assertDatabaseMissing('anggota_kelas', [
@@ -96,17 +96,17 @@ class AnggotaKelasTest extends TestCase
     public function test_pengajar_bisa_melihat_peserta_kelas_miliknya(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create();
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
         $this->actingAs($pengajar)
-            ->get('/dashboard/kelas/' . $kelas->id . '/peserta')
+            ->get('/dashboard/kelas/'.$kelas->id.'/peserta')
             ->assertStatus(200)
             ->assertSee($siswa->name);
     }
@@ -115,10 +115,10 @@ class AnggotaKelasTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
 
         $this->actingAs($pengajarA)
-            ->get('/dashboard/kelas/' . $kelas->id . '/peserta')
+            ->get('/dashboard/kelas/'.$kelas->id.'/peserta')
             ->assertForbidden();
     }
 

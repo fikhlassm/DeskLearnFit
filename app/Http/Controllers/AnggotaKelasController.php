@@ -52,13 +52,13 @@ class AnggotaKelasController extends Controller
         }
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => Auth::id(),
+            'kelas_id' => $kelas->id,
+            'siswa_id' => Auth::id(),
             'joined_at' => now(),
         ]);
 
         return redirect()->route('siswa.kelas.index')
-            ->with('success', 'Berhasil bergabung ke kelas ' . $kelas->nama_kelas . '!');
+            ->with('success', 'Berhasil bergabung ke kelas '.$kelas->nama_kelas.'!');
     }
 
     /** Siswa keluar dari kelas. */
@@ -76,7 +76,7 @@ class AnggotaKelasController extends Controller
         $anggota->delete();
 
         return redirect()->route('siswa.kelas.index')
-            ->with('success', 'Berhasil keluar dari kelas ' . $kelas->nama_kelas . '.');
+            ->with('success', 'Berhasil keluar dari kelas '.$kelas->nama_kelas.'.');
     }
 
     /** Pengajar melihat peserta kelas miliknya. */

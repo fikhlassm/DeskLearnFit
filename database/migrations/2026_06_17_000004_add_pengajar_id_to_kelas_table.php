@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::table('kelas', function (Blueprint $table) {
             $table->foreignId('pengajar_id')
-                  ->nullable()
-                  ->after('id')
-                  ->constrained('users')
-                  ->nullOnDelete();
+                ->nullable()
+                ->after('id')
+                ->constrained('users')
+                ->nullOnDelete();
             $table->index('pengajar_id');
         });
     }

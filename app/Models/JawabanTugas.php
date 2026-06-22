@@ -27,7 +27,7 @@ class JawabanTugas extends Model
     {
         return [
             'submitted_at' => 'datetime',
-            'nilai'        => 'integer',
+            'nilai' => 'integer',
         ];
     }
 

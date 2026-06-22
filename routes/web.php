@@ -1,18 +1,25 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\KelasController;
 use App\Http\Controllers\AnggotaKelasController;
-use App\Http\Controllers\JurnalBelajarController;
-use App\Http\Controllers\SesiBelajarController;
-use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\MateriController;
-use App\Http\Controllers\TugasController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\JawabanTugasController;
+use App\Http\Controllers\JurnalBelajarController;
+use App\Http\Controllers\KelasController;
+use App\Http\Controllers\MateriController;
+use App\Http\Controllers\NotebookController;
+use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\SesiBelajarController;
+use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\TugasController;
+use Illuminate\Support\Facades\Route;
 
 // ─── Public ──────────────────────────────────────────────────────────────────
 
@@ -20,8 +27,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/tentang', function () { return view('about'); })->name('about');
-Route::get('/kontak', function () { return view('contact'); })->name('contact');
+Route::get('/tentang', function () {
+    return view('about');
+})->name('about');
+Route::get('/kontak', function () {
+    return view('contact');
+})->name('contact');
 
 // ─── Guest-only ───────────────────────────────────────────────────────────────
 
@@ -30,6 +41,16 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::get('/login', [LoginController::class, 'showForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
+
+    // Reset Password
+    Route::get('/lupa-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/lupa-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+    // Google OAuth
+    Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
+    Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 });
 
 // ─── Any authenticated user ───────────────────────────────────────────────────
@@ -41,9 +62,17 @@ Route::middleware('auth')->group(function () {
         return view('auth.welcome-after');
     })->name('welcome');
 
+    // Email verification
+    Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+    Route::post('/email/verification-notification', [VerificationController::class, 'resend'])->name('verification.resend');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+
     // Profil — bisa diakses siswa & pengajar
     Route::get('/dashboard/profil', [ProfilController::class, 'show'])->name('profil.show');
     Route::put('/dashboard/profil', [ProfilController::class, 'update'])->name('profil.update');
+
+    // Materi download (siswa yang join kelas + pengajar pemilik)
+    Route::get('/dashboard/materi/{materi}/download', [MateriController::class, 'download'])->name('materi.download');
 });
 
 // ─── Siswa only ───────────────────────────────────────────────────────────────
@@ -61,6 +90,9 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/dashboard/kelas-diikuti', [AnggotaKelasController::class, 'index'])->name('siswa.kelas.index');
     Route::post('/dashboard/kelas-diikuti/join', [AnggotaKelasController::class, 'join'])->name('siswa.kelas.join');
     Route::delete('/dashboard/kelas-diikuti/{kelas}/leave', [AnggotaKelasController::class, 'leave'])->name('siswa.kelas.leave');
+
+    // Notebook Saya (list semua sesi per metode)
+    Route::get('/dashboard/notebook', [NotebookController::class, 'index'])->name('notebook.index');
 
     // Materi siswa
     Route::get('/dashboard/siswa/kelas/{kelas}/materi', [MateriController::class, 'indexSiswa'])->name('siswa.materi.index');
@@ -84,7 +116,20 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/dashboard/sesi-belajar', [SesiBelajarController::class, 'store'])->name('sesi.store');
     Route::patch('/dashboard/sesi-belajar/{sesi}/start', [SesiBelajarController::class, 'start'])->name('sesi.start');
     Route::patch('/dashboard/sesi-belajar/{sesi}/complete', [SesiBelajarController::class, 'complete'])->name('sesi.complete');
+    Route::patch('/dashboard/sesi-belajar/{sesi}/catatan', [SesiBelajarController::class, 'updateCatatan'])->name('sesi.catatan');
     Route::delete('/dashboard/sesi-belajar/{sesi}', [SesiBelajarController::class, 'destroy'])->name('sesi.destroy');
+
+    // Flashcards (tool Active Recall)
+    Route::post('/dashboard/sesi-belajar/{sesi}/flashcards', [FlashcardController::class, 'store'])->name('flashcard.store');
+    Route::put('/dashboard/flashcards/{flashcard}', [FlashcardController::class, 'update'])->name('flashcard.update');
+    Route::delete('/dashboard/flashcards/{flashcard}', [FlashcardController::class, 'destroy'])->name('flashcard.destroy');
+    Route::get('/dashboard/sesi-belajar/{sesi}/review', [FlashcardController::class, 'review'])->name('flashcard.review');
+    Route::post('/dashboard/sesi-belajar/{sesi}/review/answer', [FlashcardController::class, 'answer'])->name('flashcard.answer');
+    Route::get('/dashboard/sesi-belajar/{sesi}/review/stats', [FlashcardController::class, 'stats'])->name('flashcard.stats');
+
+    // Notebook (tool Blurting & Feynman)
+    Route::post('/dashboard/sesi-belajar/{sesi}/notebook', [NotebookController::class, 'store'])->name('notebook.store');
+    Route::delete('/dashboard/notebook/{entri}', [NotebookController::class, 'destroy'])->name('notebook.destroy');
 });
 
 // ─── Pengajar only ────────────────────────────────────────────────────────────
@@ -117,4 +162,8 @@ Route::middleware(['auth', 'role:pengajar'])->group(function () {
     Route::patch('/dashboard/tugas/{tugas}/publish', [TugasController::class, 'publish'])->name('tugas.publish');
     Route::get('/dashboard/tugas/{tugas}/jawaban', [JawabanTugasController::class, 'index'])->name('tugas.jawaban.index');
     Route::put('/dashboard/jawaban-tugas/{jawaban}/nilai', [JawabanTugasController::class, 'nilai'])->name('jawaban.nilai');
+
+    // Daftar siswa (profil siswa oleh pengajar)
+    Route::get('/dashboard/daftar-siswa', [SiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/dashboard/daftar-siswa/{siswa}', [SiswaController::class, 'show'])->name('siswa.show');
 });

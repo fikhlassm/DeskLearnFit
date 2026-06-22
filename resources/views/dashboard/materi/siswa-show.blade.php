@@ -20,7 +20,7 @@
         @if($materi->tipe === 'link' && $materi->link_url)
         <a href="{{ $materi->link_url }}" target="_blank" rel="noopener" class="btn-link-ext">🔗 Buka Link Materi →</a>
         @elseif($materi->tipe === 'file' && $materi->file_path)
-        <a href="{{ asset('storage/' . $materi->file_path) }}" target="_blank" class="btn-link-ext">📎 Unduh / Lihat File</a>
+        <a href="{{ route('materi.download', $materi) }}" class="btn-link-ext">📎 Unduh / Lihat File</a>
         @endif
 
         @if($materi->konten)

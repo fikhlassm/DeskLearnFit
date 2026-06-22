@@ -17,12 +17,12 @@ class MateriTest extends TestCase
     private function setupKelasWithSiswa(): array
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create();
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create();
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
@@ -37,17 +37,17 @@ class MateriTest extends TestCase
 
         $this->actingAs($pengajar)
             ->post("/dashboard/kelas/{$kelas->id}/materi", [
-                'judul'  => 'Pengenalan Kalkulus',
+                'judul' => 'Pengenalan Kalkulus',
                 'konten' => 'Kalkulus adalah cabang matematika...',
-                'tipe'   => 'teks',
+                'tipe' => 'teks',
             ])
             ->assertRedirect(route('materi.index', $kelas));
 
         $this->assertDatabaseHas('materi', [
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'judul'       => 'Pengenalan Kalkulus',
-            'status'      => 'draf',
+            'judul' => 'Pengenalan Kalkulus',
+            'status' => 'draf',
         ]);
     }
 
@@ -55,12 +55,12 @@ class MateriTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
 
         $this->actingAs($pengajarA)
             ->post("/dashboard/kelas/{$kelas->id}/materi", [
                 'judul' => 'Materi Tidak Sah',
-                'tipe'  => 'teks',
+                'tipe' => 'teks',
             ])
             ->assertForbidden();
     }
@@ -69,20 +69,20 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas] = $this->setupKelasWithSiswa();
         $materi = Materi::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
         $this->actingAs($pengajar)
             ->put("/dashboard/materi/{$materi->id}", [
-                'judul'  => 'Judul Diperbarui',
+                'judul' => 'Judul Diperbarui',
                 'konten' => 'Konten baru',
-                'tipe'   => 'teks',
+                'tipe' => 'teks',
             ])
             ->assertRedirect(route('materi.index', $kelas->id));
 
         $this->assertDatabaseHas('materi', [
-            'id'    => $materi->id,
+            'id' => $materi->id,
             'judul' => 'Judul Diperbarui',
         ]);
     }
@@ -91,7 +91,7 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas] = $this->setupKelasWithSiswa();
         $materi = Materi::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -106,9 +106,9 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas] = $this->setupKelasWithSiswa();
         $materi = Materi::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'status'      => 'draf',
+            'status' => 'draf',
         ]);
 
         $this->actingAs($pengajar)
@@ -116,7 +116,7 @@ class MateriTest extends TestCase
             ->assertRedirect(route('materi.index', $kelas->id));
 
         $this->assertDatabaseHas('materi', [
-            'id'     => $materi->id,
+            'id' => $materi->id,
             'status' => 'terbit',
         ]);
     }
@@ -127,9 +127,9 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupKelasWithSiswa();
         $materi = Materi::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'judul'       => 'Materi Terbit',
+            'judul' => 'Materi Terbit',
         ]);
 
         $this->actingAs($siswa)
@@ -142,10 +142,10 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupKelasWithSiswa();
         Materi::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'status'      => 'draf',
-            'judul'       => 'Materi Rahasia Draf',
+            'status' => 'draf',
+            'judul' => 'Materi Rahasia Draf',
         ]);
 
         $this->actingAs($siswa)
@@ -156,11 +156,11 @@ class MateriTest extends TestCase
 
     public function test_siswa_tidak_bisa_melihat_materi_dari_kelas_yang_tidak_diikuti(): void
     {
-        $pengajar  = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $pengajar = User::factory()->pengajar()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
         $siswaLuar = User::factory()->siswa()->create();
-        $materi    = Materi::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $materi = Materi::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -173,7 +173,7 @@ class MateriTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupKelasWithSiswa();
         $materi = Materi::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 

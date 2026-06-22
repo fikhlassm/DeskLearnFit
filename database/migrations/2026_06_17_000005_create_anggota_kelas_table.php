@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('anggota_kelas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kelas_id')
-                  ->constrained('kelas')
-                  ->cascadeOnDelete();
+                ->constrained('kelas')
+                ->cascadeOnDelete();
             $table->foreignId('siswa_id')
-                  ->constrained('users')
-                  ->cascadeOnDelete();
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->timestamp('joined_at')->nullable();
             $table->timestamps();
 

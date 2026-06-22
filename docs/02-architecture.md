@@ -81,6 +81,38 @@ auth+siswa  → /dashboard/siswa, /quiz/*, /dashboard/catatan-belajar/*, /dashbo
 auth+pengajar → /dashboard/pengajar, /dashboard/kelas/*
 ```
 
+## Per-Method Tool Flow (PHASE 9)
+
+```
+Siswa buka /dashboard/sesi-belajar?metode={m}
+  │
+  ▼
+SesiBelajarController@index
+  ├─ muat sesiAktif (jika ada)
+  ├─ muat selectedMetode dari query (default: quiz_result / pomodoro)
+  └─ render view
+        │
+        ▼
+  Blade: kondisional render tool
+    ├─ pomodoro    → partial tool-pomodoro (timer client-side)
+    ├─ active_recall → partial tool-flashcard (form + deck list)
+    └─ blurting/feynman → partial tool-notebook
+                          │
+                          ▼ submit
+                   NotebookController@store
+                          │
+                          ▼
+                   HeuristicAnalyzer::analyze(topik, konten, tipe)
+                          │
+                          ├─ tokenisasi + stopwords ID
+                          ├─ pencocokan kata kunci
+                          ├─ bonus panjang + marker Feynman
+                          └─ return {analisis, skor, kata_kunci_cocok}
+                          │
+                          ▼ simpan
+                   entri_notebook
+```
+
 ## Data Ownership
 
 - `jurnal_belajar.user_id` → hanya pemilik yang bisa read/write

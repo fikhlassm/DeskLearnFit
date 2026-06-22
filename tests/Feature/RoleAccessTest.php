@@ -39,8 +39,8 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswaWithQuiz()->create();
 
         $this->actingAs($siswa)
-             ->get('/dashboard/pengajar')
-             ->assertRedirect(route('dashboard.siswa'));
+            ->get('/dashboard/pengajar')
+            ->assertRedirect(route('dashboard.siswa'));
     }
 
     public function test_siswa_tidak_bisa_akses_kelas_crud(): void
@@ -48,8 +48,8 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswaWithQuiz()->create();
 
         $this->actingAs($siswa)
-             ->get('/dashboard/kelas')
-             ->assertRedirect(route('dashboard.siswa'));
+            ->get('/dashboard/kelas')
+            ->assertRedirect(route('dashboard.siswa'));
     }
 
     public function test_siswa_tidak_bisa_store_kelas(): void
@@ -57,14 +57,14 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswaWithQuiz()->create();
 
         $this->actingAs($siswa)
-             ->post('/dashboard/kelas', [
-                 'nama_kelas'     => 'Test Kelas',
-                 'mata_pelajaran' => 'Test',
-                 'kode_kelas'     => 'TST-01',
-                 'kapasitas'      => 30,
-                 'status'         => 'aktif',
-             ])
-             ->assertRedirect(route('dashboard.siswa'));
+            ->post('/dashboard/kelas', [
+                'nama_kelas' => 'Test Kelas',
+                'mata_pelajaran' => 'Test',
+                'kode_kelas' => 'TST-01',
+                'kapasitas' => 30,
+                'status' => 'aktif',
+            ])
+            ->assertRedirect(route('dashboard.siswa'));
     }
 
     // ── Pengajar akses terlarang ──────────────────────────────────────────────
@@ -74,8 +74,8 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/dashboard/siswa')
-             ->assertRedirect(route('dashboard.pengajar'));
+            ->get('/dashboard/siswa')
+            ->assertRedirect(route('dashboard.pengajar'));
     }
 
     public function test_pengajar_tidak_bisa_akses_quiz(): void
@@ -83,8 +83,8 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/quiz')
-             ->assertRedirect(route('dashboard.pengajar'));
+            ->get('/quiz')
+            ->assertRedirect(route('dashboard.pengajar'));
     }
 
     public function test_pengajar_tidak_bisa_submit_quiz(): void
@@ -92,8 +92,8 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->post('/quiz', [])
-             ->assertRedirect(route('dashboard.pengajar'));
+            ->post('/quiz', [])
+            ->assertRedirect(route('dashboard.pengajar'));
     }
 
     public function test_pengajar_tidak_bisa_akses_catatan_belajar(): void
@@ -101,8 +101,8 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/dashboard/catatan-belajar')
-             ->assertRedirect(route('dashboard.pengajar'));
+            ->get('/dashboard/catatan-belajar')
+            ->assertRedirect(route('dashboard.pengajar'));
     }
 
     // ── Akses yang seharusnya berhasil ────────────────────────────────────────
@@ -112,8 +112,8 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswaWithQuiz()->create();
 
         $this->actingAs($siswa)
-             ->get('/dashboard/siswa')
-             ->assertStatus(200);
+            ->get('/dashboard/siswa')
+            ->assertStatus(200);
     }
 
     public function test_pengajar_bisa_akses_dashboard_pengajar(): void
@@ -121,8 +121,8 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/dashboard/pengajar')
-             ->assertStatus(200);
+            ->get('/dashboard/pengajar')
+            ->assertStatus(200);
     }
 
     public function test_siswa_bisa_akses_quiz_jika_belum_quiz(): void
@@ -130,8 +130,8 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
-             ->get('/quiz')
-             ->assertStatus(200);
+            ->get('/quiz')
+            ->assertStatus(200);
     }
 
     public function test_profil_bisa_diakses_siswa(): void
@@ -139,8 +139,8 @@ class RoleAccessTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
-             ->get('/dashboard/profil')
-             ->assertStatus(200);
+            ->get('/dashboard/profil')
+            ->assertStatus(200);
     }
 
     public function test_profil_bisa_diakses_pengajar(): void
@@ -148,7 +148,7 @@ class RoleAccessTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/dashboard/profil')
-             ->assertStatus(200);
+            ->get('/dashboard/profil')
+            ->assertStatus(200);
     }
 }

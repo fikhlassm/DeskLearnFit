@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
+use App\Models\AnggotaKelas;
 use App\Models\JawabanTugas;
+use App\Models\Kelas;
+use App\Models\Materi;
+use App\Models\Tugas;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -15,9 +18,9 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         // Statistik personal
-        $totalCatatan    = $user->jurnalBelajar()->count();
+        $totalCatatan = $user->jurnalBelajar()->count();
         $totalSesiSelesai = $user->sesiBelajar()->where('status', 'selesai')->count();
-        $totalDurasi     = $user->sesiBelajar()
+        $totalDurasi = $user->sesiBelajar()
             ->where('status', 'selesai')
             ->sum('durasi_fokus_menit');
 
@@ -30,7 +33,7 @@ class DashboardController extends Controller
         // Tugas aktif dari kelas yang diikuti
         $kelasIds = $kelasDiikuti->pluck('id');
 
-        $tugasAktif = \App\Models\Tugas::whereIn('kelas_id', $kelasIds)
+        $tugasAktif = Tugas::whereIn('kelas_id', $kelasIds)
             ->where('status', 'terbit')
             ->with('kelas:id,nama_kelas')
             ->orderBy('deadline')
@@ -76,16 +79,16 @@ class DashboardController extends Controller
         // Statistik pengajar
         $totalKelas = $user->kelasDiajar()->count();
 
-        $totalSiswa = \App\Models\AnggotaKelas::whereIn(
+        $totalSiswa = AnggotaKelas::whereIn(
             'kelas_id',
             $user->kelasDiajar()->pluck('id')
         )->count();
 
-        $totalMateriTerbit = \App\Models\Materi::where('pengajar_id', $user->id)
+        $totalMateriTerbit = Materi::where('pengajar_id', $user->id)
             ->where('status', 'terbit')
             ->count();
 
-        $totalTugasTerbit = \App\Models\Tugas::where('pengajar_id', $user->id)
+        $totalTugasTerbit = Tugas::where('pengajar_id', $user->id)
             ->where('status', 'terbit')
             ->count();
 
@@ -100,7 +103,7 @@ class DashboardController extends Controller
             ->take(3)
             ->get();
 
-        $tugasTerbaru = \App\Models\Tugas::where('pengajar_id', $user->id)
+        $tugasTerbaru = Tugas::where('pengajar_id', $user->id)
             ->with('kelas:id,nama_kelas')
             ->withCount('jawabanTugas')
             ->latest()

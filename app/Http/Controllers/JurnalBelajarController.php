@@ -32,8 +32,8 @@ class JurnalBelajarController extends Controller
             $query->where('metode_yang_digunakan', $request->metode);
         }
 
-        $jurnalList   = $query->paginate(10)->withQueryString();
-        $totalJurnal  = Auth::user()->jurnalBelajar()->count();
+        $jurnalList = $query->paginate(10)->withQueryString();
+        $totalJurnal = Auth::user()->jurnalBelajar()->count();
         $jurnalTerbaru = Auth::user()->jurnalBelajar()->latest('tanggal')->first();
 
         return view('dashboard.catatan-belajar', compact(
@@ -47,16 +47,16 @@ class JurnalBelajarController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'tanggal'               => ['required', 'date', 'before_or_equal:today'],
-            'judul'                 => ['nullable', 'string', 'max:200'],
-            'isi_jurnal'            => ['required', 'string', 'max:5000'],
-            'metode_yang_digunakan' => ['nullable', 'string', 'in:' . implode(',', $this->metodeValid)],
-            'rating_efektivitas'    => ['nullable', 'integer', 'min:1', 'max:5'],
-            'durasi_menit'          => ['nullable', 'integer', 'min:1', 'max:1440'],
+            'tanggal' => ['required', 'date', 'before_or_equal:today'],
+            'judul' => ['nullable', 'string', 'max:200'],
+            'isi_jurnal' => ['required', 'string', 'max:5000'],
+            'metode_yang_digunakan' => ['nullable', 'string', 'in:'.implode(',', $this->metodeValid)],
+            'rating_efektivitas' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'durasi_menit' => ['nullable', 'integer', 'min:1', 'max:1440'],
         ], [
-            'tanggal.required'      => 'Tanggal wajib diisi.',
+            'tanggal.required' => 'Tanggal wajib diisi.',
             'tanggal.before_or_equal' => 'Tanggal tidak boleh di masa depan.',
-            'isi_jurnal.required'   => 'Isi jurnal wajib diisi.',
+            'isi_jurnal.required' => 'Isi jurnal wajib diisi.',
             'rating_efektivitas.min' => 'Rating minimal 1.',
             'rating_efektivitas.max' => 'Rating maksimal 5.',
         ]);
@@ -74,13 +74,13 @@ class JurnalBelajarController extends Controller
 
         // Format tanggal untuk input[type=date]
         return response()->json([
-            'id'                    => $jurnal->id,
-            'tanggal'               => $jurnal->tanggal->format('Y-m-d'),
-            'judul'                 => $jurnal->judul,
-            'isi_jurnal'            => $jurnal->isi_jurnal,
+            'id' => $jurnal->id,
+            'tanggal' => $jurnal->tanggal->format('Y-m-d'),
+            'judul' => $jurnal->judul,
+            'isi_jurnal' => $jurnal->isi_jurnal,
             'metode_yang_digunakan' => $jurnal->metode_yang_digunakan,
-            'rating_efektivitas'    => $jurnal->rating_efektivitas,
-            'durasi_menit'          => $jurnal->durasi_menit,
+            'rating_efektivitas' => $jurnal->rating_efektivitas,
+            'durasi_menit' => $jurnal->durasi_menit,
         ]);
     }
 
@@ -90,12 +90,12 @@ class JurnalBelajarController extends Controller
         $this->authorizeOwnership($jurnal);
 
         $validated = $request->validate([
-            'tanggal'               => ['required', 'date', 'before_or_equal:today'],
-            'judul'                 => ['nullable', 'string', 'max:200'],
-            'isi_jurnal'            => ['required', 'string', 'max:5000'],
-            'metode_yang_digunakan' => ['nullable', 'string', 'in:' . implode(',', $this->metodeValid)],
-            'rating_efektivitas'    => ['nullable', 'integer', 'min:1', 'max:5'],
-            'durasi_menit'          => ['nullable', 'integer', 'min:1', 'max:1440'],
+            'tanggal' => ['required', 'date', 'before_or_equal:today'],
+            'judul' => ['nullable', 'string', 'max:200'],
+            'isi_jurnal' => ['required', 'string', 'max:5000'],
+            'metode_yang_digunakan' => ['nullable', 'string', 'in:'.implode(',', $this->metodeValid)],
+            'rating_efektivitas' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'durasi_menit' => ['nullable', 'integer', 'min:1', 'max:1440'],
         ]);
 
         $jurnal->update($validated);

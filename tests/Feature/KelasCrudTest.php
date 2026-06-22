@@ -14,12 +14,12 @@ class KelasCrudTest extends TestCase
     private function kelasData(array $overrides = []): array
     {
         return array_merge([
-            'nama_kelas'     => 'Matematika Dasar',
+            'nama_kelas' => 'Matematika Dasar',
             'mata_pelajaran' => 'Matematika',
-            'kode_kelas'     => 'MTK-TST-01',
-            'deskripsi'      => 'Kelas test',
-            'kapasitas'      => 30,
-            'status'         => 'aktif',
+            'kode_kelas' => 'MTK-TST-01',
+            'deskripsi' => 'Kelas test',
+            'kapasitas' => 30,
+            'status' => 'aktif',
         ], $overrides);
     }
 
@@ -34,7 +34,7 @@ class KelasCrudTest extends TestCase
             ->assertRedirect(route('dashboard.kelas'));
 
         $this->assertDatabaseHas('kelas', [
-            'kode_kelas'  => 'MTK-TST-01',
+            'kode_kelas' => 'MTK-TST-01',
             'pengajar_id' => $pengajar->id,
         ]);
     }
@@ -78,14 +78,14 @@ class KelasCrudTest extends TestCase
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
 
-        Kelas::factory()->milikPengajar($pengajarA->id)->create(['nama_kelas' => 'Kelas A']);
-        Kelas::factory()->milikPengajar($pengajarB->id)->create(['nama_kelas' => 'Kelas B']);
+        Kelas::factory()->milikPengajar($pengajarA->id)->create(['nama_kelas' => 'MTK-EXCL-A']);
+        Kelas::factory()->milikPengajar($pengajarB->id)->create(['nama_kelas' => 'MTK-EXCL-B']);
 
         $this->actingAs($pengajarA)
             ->get('/dashboard/kelas')
             ->assertStatus(200)
-            ->assertSee('Kelas A')
-            ->assertDontSee('Kelas B');
+            ->assertSee('MTK-EXCL-A')
+            ->assertDontSee('MTK-EXCL-B');
     }
 
     // ── Update ────────────────────────────────────────────────────────────────
@@ -93,10 +93,10 @@ class KelasCrudTest extends TestCase
     public function test_pengajar_bisa_update_kelas_miliknya(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create(['kode_kelas' => 'MTK-TST-01']);
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create(['kode_kelas' => 'MTK-TST-01']);
 
         $this->actingAs($pengajar)
-            ->put('/dashboard/kelas/' . $kelas->id, $this->kelasData([
+            ->put('/dashboard/kelas/'.$kelas->id, $this->kelasData([
                 'nama_kelas' => 'Matematika Lanjutan',
                 'kode_kelas' => 'MTK-TST-01',
             ]))
@@ -109,10 +109,10 @@ class KelasCrudTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
 
         $this->actingAs($pengajarA)
-            ->put('/dashboard/kelas/' . $kelas->id, $this->kelasData())
+            ->put('/dashboard/kelas/'.$kelas->id, $this->kelasData())
             ->assertForbidden();
     }
 
@@ -122,7 +122,7 @@ class KelasCrudTest extends TestCase
         $kelas = Kelas::factory()->create();
 
         $this->actingAs($siswa)
-            ->put('/dashboard/kelas/' . $kelas->id, $this->kelasData())
+            ->put('/dashboard/kelas/'.$kelas->id, $this->kelasData())
             ->assertRedirect(route('dashboard.siswa'));
     }
 
@@ -131,10 +131,10 @@ class KelasCrudTest extends TestCase
     public function test_pengajar_bisa_hapus_kelas_miliknya(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
 
         $this->actingAs($pengajar)
-            ->delete('/dashboard/kelas/' . $kelas->id)
+            ->delete('/dashboard/kelas/'.$kelas->id)
             ->assertRedirect(route('dashboard.kelas'));
 
         $this->assertDatabaseMissing('kelas', ['id' => $kelas->id]);
@@ -144,10 +144,10 @@ class KelasCrudTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
 
         $this->actingAs($pengajarA)
-            ->delete('/dashboard/kelas/' . $kelas->id)
+            ->delete('/dashboard/kelas/'.$kelas->id)
             ->assertForbidden();
     }
 
@@ -157,7 +157,7 @@ class KelasCrudTest extends TestCase
         $kelas = Kelas::factory()->create();
 
         $this->actingAs($siswa)
-            ->delete('/dashboard/kelas/' . $kelas->id)
+            ->delete('/dashboard/kelas/'.$kelas->id)
             ->assertRedirect(route('dashboard.siswa'));
 
         $this->assertDatabaseHas('kelas', ['id' => $kelas->id]);

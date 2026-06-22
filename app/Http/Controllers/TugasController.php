@@ -32,20 +32,20 @@ class TugasController extends Controller
         $this->authorizeKelas($kelas);
 
         $validated = $request->validate([
-            'judul'     => ['required', 'string', 'max:255'],
+            'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            'deadline'  => ['nullable', 'date', 'after:now'],
+            'deadline' => ['nullable', 'date', 'after:now'],
         ], [
             'deadline.after' => 'Deadline harus di masa depan.',
         ]);
 
         Tugas::create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => Auth::id(),
-            'judul'       => $validated['judul'],
-            'deskripsi'   => $validated['deskripsi'],
-            'deadline'    => $validated['deadline'] ?? null,
-            'status'      => 'draf',
+            'judul' => $validated['judul'],
+            'deskripsi' => $validated['deskripsi'],
+            'deadline' => $validated['deadline'] ?? null,
+            'status' => 'draf',
         ]);
 
         return redirect()->route('tugas.index', $kelas)
@@ -66,9 +66,9 @@ class TugasController extends Controller
         $this->authorizeTugas($tugas);
 
         $validated = $request->validate([
-            'judul'     => ['required', 'string', 'max:255'],
+            'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            'deadline'  => ['nullable', 'date'],
+            'deadline' => ['nullable', 'date'],
         ]);
 
         $tugas->update($validated);
@@ -94,7 +94,7 @@ class TugasController extends Controller
         $this->authorizeTugas($tugas);
 
         $tugas->update([
-            'status'       => 'terbit',
+            'status' => 'terbit',
             'published_at' => now(),
         ]);
 

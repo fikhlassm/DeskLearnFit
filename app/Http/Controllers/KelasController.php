@@ -26,12 +26,12 @@ class KelasController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama_kelas'     => ['required', 'string', 'max:100'],
+            'nama_kelas' => ['required', 'string', 'max:100'],
             'mata_pelajaran' => ['required', 'string', 'max:100'],
-            'kode_kelas'     => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas'],
-            'deskripsi'      => ['nullable', 'string', 'max:1000'],
-            'kapasitas'      => ['required', 'integer', 'min:1', 'max:200'],
-            'status'         => ['required', 'in:aktif,draf,selesai'],
+            'kode_kelas' => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas'],
+            'deskripsi' => ['nullable', 'string', 'max:1000'],
+            'kapasitas' => ['required', 'integer', 'min:1', 'max:200'],
+            'status' => ['required', 'in:aktif,draf,selesai'],
         ], [
             'kode_kelas.unique' => 'Kode kelas sudah digunakan.',
         ]);
@@ -58,12 +58,12 @@ class KelasController extends Controller
         $this->authorizeOwnership($kelas);
 
         $validated = $request->validate([
-            'nama_kelas'     => ['required', 'string', 'max:100'],
+            'nama_kelas' => ['required', 'string', 'max:100'],
             'mata_pelajaran' => ['required', 'string', 'max:100'],
-            'kode_kelas'     => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas,' . $kelas->id],
-            'deskripsi'      => ['nullable', 'string', 'max:1000'],
-            'kapasitas'      => ['required', 'integer', 'min:1', 'max:200'],
-            'status'         => ['required', 'in:aktif,draf,selesai'],
+            'kode_kelas' => ['required', 'string', 'max:20', 'unique:kelas,kode_kelas,'.$kelas->id],
+            'deskripsi' => ['nullable', 'string', 'max:1000'],
+            'kapasitas' => ['required', 'integer', 'min:1', 'max:200'],
+            'status' => ['required', 'in:aktif,draf,selesai'],
         ], [
             'kode_kelas.unique' => 'Kode kelas sudah digunakan oleh kelas lain.',
         ]);

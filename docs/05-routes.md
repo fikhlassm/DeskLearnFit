@@ -42,9 +42,14 @@
 | DELETE | /dashboard/catatan-belajar/{jurnal} | catatan.destroy | JurnalBelajarController@destroy |
 | GET | /dashboard/sesi-belajar | sesi.index | SesiBelajarController@index |
 | POST | /dashboard/sesi-belajar | sesi.store | SesiBelajarController@store |
-| PATCH | /dashboard/sesi-belajar/{sesi}/start | sesi.start | SesiBelajarController@start |
+| GET | /dashboard/sesi-belajar/{sesi}/start | sesi.start | SesiBelajarController@start |
 | PATCH | /dashboard/sesi-belajar/{sesi}/complete | sesi.complete | SesiBelajarController@complete |
 | DELETE | /dashboard/sesi-belajar/{sesi} | sesi.destroy | SesiBelajarController@destroy |
+| POST | /dashboard/sesi-belajar/{sesi}/flashcards | flashcard.store | FlashcardController@store |
+| PUT | /dashboard/flashcards/{flashcard} | flashcard.update | FlashcardController@update |
+| DELETE | /dashboard/flashcards/{flashcard} | flashcard.destroy | FlashcardController@destroy |
+| POST | /dashboard/sesi-belajar/{sesi}/notebook | notebook.store | NotebookController@store |
+| DELETE | /dashboard/notebook/{entri} | notebook.destroy | NotebookController@destroy |
 
 ## Pengajar-only Routes (auth + role:pengajar)
 

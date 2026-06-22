@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SesiBelajar extends Model
 {
     use HasFactory;
+
     protected $table = 'sesi_belajar';
 
     /** @var array<int, string> */
@@ -28,11 +30,11 @@ class SesiBelajar extends Model
     protected function casts(): array
     {
         return [
-            'durasi_fokus_menit'     => 'integer',
+            'durasi_fokus_menit' => 'integer',
             'durasi_istirahat_menit' => 'integer',
-            'jumlah_siklus'          => 'integer',
-            'started_at'             => 'datetime',
-            'completed_at'           => 'datetime',
+            'jumlah_siklus' => 'integer',
+            'started_at' => 'datetime',
+            'completed_at' => 'datetime',
         ];
     }
 
@@ -49,5 +51,40 @@ class SesiBelajar extends Model
     public function isSelesai(): bool
     {
         return $this->status === 'selesai';
+    }
+
+    public function isPomodoro(): bool
+    {
+        return $this->metode === 'pomodoro';
+    }
+
+    public function isActiveRecall(): bool
+    {
+        return $this->metode === 'active_recall';
+    }
+
+    public function isBlurting(): bool
+    {
+        return $this->metode === 'blurting';
+    }
+
+    public function isFeynman(): bool
+    {
+        return $this->metode === 'feynman';
+    }
+
+    public function flashcards(): HasMany
+    {
+        return $this->hasMany(Flashcard::class, 'sesi_id');
+    }
+
+    public function entriNotebook(): HasMany
+    {
+        return $this->hasMany(EntriNotebook::class, 'sesi_id');
+    }
+
+    public function flashcardReviews(): HasMany
+    {
+        return $this->hasMany(FlashcardReview::class, 'sesi_id');
     }
 }

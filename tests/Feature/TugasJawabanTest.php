@@ -17,12 +17,12 @@ class TugasJawabanTest extends TestCase
     private function setupEnv(): array
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create();
-        $siswa    = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->aktif()->create();
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
@@ -37,16 +37,16 @@ class TugasJawabanTest extends TestCase
 
         $this->actingAs($pengajar)
             ->post("/dashboard/kelas/{$kelas->id}/tugas", [
-                'judul'     => 'Tugas Pertama',
+                'judul' => 'Tugas Pertama',
                 'deskripsi' => 'Kerjakan soal berikut ini.',
             ])
             ->assertRedirect(route('tugas.index', $kelas));
 
         $this->assertDatabaseHas('tugas', [
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'judul'       => 'Tugas Pertama',
-            'status'      => 'draf',
+            'judul' => 'Tugas Pertama',
+            'status' => 'draf',
         ]);
     }
 
@@ -54,11 +54,11 @@ class TugasJawabanTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
 
         $this->actingAs($pengajarA)
             ->post("/dashboard/kelas/{$kelas->id}/tugas", [
-                'judul'     => 'Tidak Sah',
+                'judul' => 'Tidak Sah',
                 'deskripsi' => 'test',
             ])
             ->assertForbidden();
@@ -68,9 +68,9 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas] = $this->setupEnv();
         $tugas = Tugas::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'status'      => 'draf',
+            'status' => 'draf',
         ]);
 
         $this->actingAs($pengajar)
@@ -86,9 +86,9 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         $tugas = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'judul'       => 'Tugas Aktif',
+            'judul' => 'Tugas Aktif',
         ]);
 
         $this->actingAs($siswa)
@@ -101,10 +101,10 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         Tugas::factory()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
-            'status'      => 'draf',
-            'judul'       => 'Tugas Tersembunyi',
+            'status' => 'draf',
+            'judul' => 'Tugas Tersembunyi',
         ]);
 
         $this->actingAs($siswa)
@@ -114,11 +114,11 @@ class TugasJawabanTest extends TestCase
 
     public function test_siswa_tidak_bisa_melihat_tugas_dari_kelas_yang_tidak_diikuti(): void
     {
-        $pengajar  = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $pengajar = User::factory()->pengajar()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
         $siswaLuar = User::factory()->siswa()->create();
-        $tugas     = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $tugas = Tugas::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -133,7 +133,7 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         $tugas = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -146,7 +146,7 @@ class TugasJawabanTest extends TestCase
         $this->assertDatabaseHas('jawaban_tugas', [
             'tugas_id' => $tugas->id,
             'siswa_id' => $siswa->id,
-            'status'   => 'terkirim',
+            'status' => 'terkirim',
         ]);
     }
 
@@ -154,16 +154,16 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         $tugas = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
         JawabanTugas::create([
-            'tugas_id'     => $tugas->id,
-            'siswa_id'     => $siswa->id,
+            'tugas_id' => $tugas->id,
+            'siswa_id' => $siswa->id,
             'jawaban_text' => 'Jawaban pertama',
             'submitted_at' => now(),
-            'status'       => 'terkirim',
+            'status' => 'terkirim',
         ]);
 
         $this->actingAs($siswa)
@@ -177,7 +177,7 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         $tugas = Tugas::factory()->ditutup()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -190,11 +190,11 @@ class TugasJawabanTest extends TestCase
 
     public function test_siswa_tidak_bisa_submit_tugas_dari_kelas_yang_tidak_diikuti(): void
     {
-        $pengajar  = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajar->id)->create();
+        $pengajar = User::factory()->pengajar()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create();
         $siswaLuar = User::factory()->siswa()->create();
-        $tugas     = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $tugas = Tugas::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 
@@ -210,28 +210,28 @@ class TugasJawabanTest extends TestCase
     public function test_pengajar_bisa_menilai_jawaban_dari_tugas_miliknya(): void
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
-        $tugas   = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $tugas = Tugas::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
         $jawaban = JawabanTugas::create([
-            'tugas_id'     => $tugas->id,
-            'siswa_id'     => $siswa->id,
+            'tugas_id' => $tugas->id,
+            'siswa_id' => $siswa->id,
             'jawaban_text' => 'Jawaban',
             'submitted_at' => now(),
-            'status'       => 'terkirim',
+            'status' => 'terkirim',
         ]);
 
         $this->actingAs($pengajar)
             ->put("/dashboard/jawaban-tugas/{$jawaban->id}/nilai", [
-                'nilai'    => 85,
+                'nilai' => 85,
                 'feedback' => 'Bagus sekali!',
             ])
             ->assertRedirect(route('tugas.jawaban.index', $tugas->id));
 
         $this->assertDatabaseHas('jawaban_tugas', [
-            'id'     => $jawaban->id,
-            'nilai'  => 85,
+            'id' => $jawaban->id,
+            'nilai' => 85,
             'status' => 'dinilai',
         ]);
     }
@@ -240,25 +240,25 @@ class TugasJawabanTest extends TestCase
     {
         $pengajarA = User::factory()->pengajar()->create();
         $pengajarB = User::factory()->pengajar()->create();
-        $kelas     = Kelas::factory()->milikPengajar($pengajarB->id)->create();
-        $siswa     = User::factory()->siswa()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajarB->id)->create();
+        $siswa = User::factory()->siswa()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 
-        $tugas   = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $tugas = Tugas::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajarB->id,
         ]);
         $jawaban = JawabanTugas::create([
-            'tugas_id'     => $tugas->id,
-            'siswa_id'     => $siswa->id,
+            'tugas_id' => $tugas->id,
+            'siswa_id' => $siswa->id,
             'jawaban_text' => 'Jawaban',
             'submitted_at' => now(),
-            'status'       => 'terkirim',
+            'status' => 'terkirim',
         ]);
 
         $this->actingAs($pengajarA)
@@ -269,16 +269,16 @@ class TugasJawabanTest extends TestCase
     public function test_nilai_harus_0_sampai_100(): void
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
-        $tugas   = Tugas::factory()->terbit()->create([
-            'kelas_id'    => $kelas->id,
+        $tugas = Tugas::factory()->terbit()->create([
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
         $jawaban = JawabanTugas::create([
-            'tugas_id'     => $tugas->id,
-            'siswa_id'     => $siswa->id,
+            'tugas_id' => $tugas->id,
+            'siswa_id' => $siswa->id,
             'jawaban_text' => 'Jawaban',
             'submitted_at' => now(),
-            'status'       => 'terkirim',
+            'status' => 'terkirim',
         ]);
 
         $this->actingAs($pengajar)
@@ -290,7 +290,7 @@ class TugasJawabanTest extends TestCase
     {
         [$pengajar, $kelas, $siswa] = $this->setupEnv();
         $tugas = Tugas::factory()->ditutup()->create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => $pengajar->id,
         ]);
 

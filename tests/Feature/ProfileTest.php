@@ -15,9 +15,9 @@ class ProfileTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
-             ->get('/dashboard/profil')
-             ->assertStatus(200)
-             ->assertViewHas('user', $siswa);
+            ->get('/dashboard/profil')
+            ->assertStatus(200)
+            ->assertViewHas('user', $siswa);
     }
 
     public function test_pengajar_bisa_lihat_profil(): void
@@ -25,8 +25,8 @@ class ProfileTest extends TestCase
         $pengajar = User::factory()->pengajar()->create();
 
         $this->actingAs($pengajar)
-             ->get('/dashboard/profil')
-             ->assertStatus(200);
+            ->get('/dashboard/profil')
+            ->assertStatus(200);
     }
 
     public function test_user_bisa_update_nama_dan_email(): void
@@ -34,27 +34,27 @@ class ProfileTest extends TestCase
         $user = User::factory()->siswa()->create();
 
         $this->actingAs($user)
-             ->put('/dashboard/profil', [
-                 'name'  => 'Nama Baru',
-                 'email' => $user->email,
-             ])
-             ->assertRedirect(route('profil.show'))
-             ->assertSessionHas('success');
+            ->put('/dashboard/profil', [
+                'name' => 'Nama Baru',
+                'email' => $user->email,
+            ])
+            ->assertRedirect(route('profil.show'))
+            ->assertSessionHas('success');
 
         $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Nama Baru']);
     }
 
     public function test_email_harus_unik_kecuali_milik_sendiri(): void
     {
-        $user  = User::factory()->siswa()->create();
+        $user = User::factory()->siswa()->create();
         $other = User::factory()->siswa()->create(['email' => 'other@example.com']);
 
         $this->actingAs($user)
-             ->put('/dashboard/profil', [
-                 'name'  => $user->name,
-                 'email' => 'other@example.com',
-             ])
-             ->assertSessionHasErrors('email');
+            ->put('/dashboard/profil', [
+                'name' => $user->name,
+                'email' => 'other@example.com',
+            ])
+            ->assertSessionHasErrors('email');
     }
 
     public function test_update_email_milik_sendiri_tidak_error(): void
@@ -62,12 +62,12 @@ class ProfileTest extends TestCase
         $user = User::factory()->siswa()->create();
 
         $this->actingAs($user)
-             ->put('/dashboard/profil', [
-                 'name'  => $user->name,
-                 'email' => $user->email,
-             ])
-             ->assertRedirect(route('profil.show'))
-             ->assertSessionHasNoErrors();
+            ->put('/dashboard/profil', [
+                'name' => $user->name,
+                'email' => $user->email,
+            ])
+            ->assertRedirect(route('profil.show'))
+            ->assertSessionHasNoErrors();
     }
 
     public function test_role_tidak_bisa_diubah_melalui_request(): void
@@ -75,11 +75,11 @@ class ProfileTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
-             ->put('/dashboard/profil', [
-                 'name'  => $siswa->name,
-                 'email' => $siswa->email,
-                 'role'  => 'pengajar', // coba inject role
-             ]);
+            ->put('/dashboard/profil', [
+                'name' => $siswa->name,
+                'email' => $siswa->email,
+                'role' => 'pengajar', // coba inject role
+            ]);
 
         $siswa->refresh();
         $this->assertEquals('siswa', $siswa->role);
@@ -90,19 +90,19 @@ class ProfileTest extends TestCase
         $siswa = User::factory()->siswa()->create();
 
         $this->actingAs($siswa)
-             ->put('/dashboard/profil', [
-                 'name'           => $siswa->name,
-                 'email'          => $siswa->email,
-                 'bio'            => 'Siswa aktif yang suka belajar.',
-                 'tujuan_belajar' => 'Lulus SNBT 2025',
-                 'jenjang'        => 'SMA',
-                 'no_hp'          => '081234567890',
-             ])
-             ->assertRedirect(route('profil.show'))
-             ->assertSessionHasNoErrors();
+            ->put('/dashboard/profil', [
+                'name' => $siswa->name,
+                'email' => $siswa->email,
+                'bio' => 'Siswa aktif yang suka belajar.',
+                'tujuan_belajar' => 'Lulus SNBT 2025',
+                'jenjang' => 'SMA',
+                'no_hp' => '081234567890',
+            ])
+            ->assertRedirect(route('profil.show'))
+            ->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('users', [
-            'id'      => $siswa->id,
+            'id' => $siswa->id,
             'jenjang' => 'SMA',
         ]);
     }

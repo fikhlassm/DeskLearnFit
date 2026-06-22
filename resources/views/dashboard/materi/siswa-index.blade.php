@@ -14,14 +14,19 @@
     @else
     <div class="list-card">
         @foreach($materiList as $materi)
-        <a href="{{ route('siswa.materi.show', $materi) }}" class="list-item list-item--link">
+        <div class="list-item">
             <div class="list-item__icon badge-tipe--{{ $materi->tipe }}">{{ $materi->tipe === 'link' ? '🔗' : ($materi->tipe === 'file' ? '📎' : '📄') }}</div>
             <div class="list-item__left">
-                <p class="list-item__judul">{{ $materi->judul }}</p>
+                <p class="list-item__judul"><a href="{{ route('siswa.materi.show', $materi) }}">{{ $materi->judul }}</a></p>
                 <p class="list-item__sub">{{ $materi->published_at?->format('d M Y') }}</p>
             </div>
             <span class="badge-tipe badge-tipe--{{ $materi->tipe }}">{{ strtoupper($materi->tipe) }}</span>
-        </a>
+            @if($materi->tipe === 'file' && $materi->file_path)
+            <a href="{{ route('materi.download', $materi) }}" class="btn-dl" title="Unduh">⬇</a>
+            @elseif($materi->tipe === 'link' && $materi->link_url)
+            <a href="{{ $materi->link_url }}" target="_blank" rel="noopener" class="btn-dl" title="Buka link">↗</a>
+            @endif
+        </div>
         @endforeach
     </div>
     <div style="margin-top:.75rem">{{ $materiList->links() }}</div>
@@ -44,6 +49,10 @@
 .badge-tipe--teks{background:#EFF6FF;color:#2563EB;}
 .badge-tipe--link{background:#F0FDF4;color:#15803D;}
 .badge-tipe--file{background:#FFFBEB;color:#D97706;}
+.btn-dl{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;background:#EFF6FF;color:#2563EB;text-decoration:none;font-size:1rem;font-weight:700;transition:background .15s;}
+.btn-dl:hover{background:#DBEAFE;}
+.list-item__judul a{color:#0F172A;text-decoration:none;font-weight:600;}
+.list-item__judul a:hover{color:#2563EB;text-decoration:underline;}
 </style>
 <script>
 const sidebar=document.querySelector('.sidebar'),overlay=document.getElementById('sidebarOverlay'),hamburger=document.getElementById('hamburgerBtn');

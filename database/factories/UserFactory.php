@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -16,14 +17,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'              => fake()->name(),
-            'email'             => fake()->unique()->safeEmail(),
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password'          => static::$password ??= Hash::make('password'),
-            'role'              => 'siswa',
-            'quiz_result'       => null,
-            'quiz_scores'       => null,
-            'remember_token'    => Str::random(10),
+            'password' => static::$password ??= Hash::make('password'),
+            'role' => 'siswa',
+            'quiz_result' => null,
+            'quiz_scores' => null,
+            'remember_token' => Str::random(10),
         ];
     }
 
@@ -31,7 +32,7 @@ class UserFactory extends Factory
     public function siswa(): static
     {
         return $this->state(fn () => [
-            'role'        => 'siswa',
+            'role' => 'siswa',
             'quiz_result' => null,
             'quiz_scores' => null,
         ]);
@@ -41,13 +42,13 @@ class UserFactory extends Factory
     public function siswaWithQuiz(): static
     {
         return $this->state(fn () => [
-            'role'        => 'siswa',
+            'role' => 'siswa',
             'quiz_result' => 'pomodoro',
             'quiz_scores' => [
-                'pomodoro'      => 12,
+                'pomodoro' => 12,
                 'active_recall' => 8,
-                'blurting'      => 6,
-                'feynman'       => 5,
+                'blurting' => 6,
+                'feynman' => 5,
             ],
         ]);
     }
@@ -56,7 +57,7 @@ class UserFactory extends Factory
     public function pengajar(): static
     {
         return $this->state(fn () => [
-            'role'        => 'pengajar',
+            'role' => 'pengajar',
             'quiz_result' => null,
             'quiz_scores' => null,
         ]);

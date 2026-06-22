@@ -46,12 +46,12 @@ class DashboardDataTest extends TestCase
     public function test_dashboard_siswa_menampilkan_kelas_yang_diikuti(): void
     {
         $pengajar = User::factory()->pengajar()->create();
-        $kelas    = Kelas::factory()->milikPengajar($pengajar->id)->create(['nama_kelas' => 'Fisika Lanjutan']);
-        $siswa    = User::factory()->siswaWithQuiz()->create();
+        $kelas = Kelas::factory()->milikPengajar($pengajar->id)->create(['nama_kelas' => 'Fisika Lanjutan']);
+        $siswa = User::factory()->siswaWithQuiz()->create();
 
         AnggotaKelas::create([
-            'kelas_id'  => $kelas->id,
-            'siswa_id'  => $siswa->id,
+            'kelas_id' => $kelas->id,
+            'siswa_id' => $siswa->id,
             'joined_at' => now(),
         ]);
 

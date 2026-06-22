@@ -32,12 +32,12 @@ class MateriController extends Controller
         $this->authorizeKelas($kelas);
 
         $validated = $request->validate([
-            'judul'     => ['required', 'string', 'max:255'],
+            'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
-            'konten'    => ['nullable', 'string'],
-            'tipe'      => ['required', 'in:teks,link,file'],
-            'link_url'  => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
-            'file'      => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
+            'konten' => ['nullable', 'string'],
+            'tipe' => ['required', 'in:teks,link,file'],
+            'link_url' => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
+            'file' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
         ], [
             'link_url.required_if' => 'URL wajib diisi jika tipe materi adalah link.',
         ]);
@@ -48,15 +48,15 @@ class MateriController extends Controller
         }
 
         Materi::create([
-            'kelas_id'    => $kelas->id,
+            'kelas_id' => $kelas->id,
             'pengajar_id' => Auth::id(),
-            'judul'       => $validated['judul'],
-            'deskripsi'   => $validated['deskripsi'] ?? null,
-            'konten'      => $validated['konten'] ?? null,
-            'tipe'        => $validated['tipe'],
-            'link_url'    => $validated['link_url'] ?? null,
-            'file_path'   => $filePath,
-            'status'      => 'draf',
+            'judul' => $validated['judul'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'konten' => $validated['konten'] ?? null,
+            'tipe' => $validated['tipe'],
+            'link_url' => $validated['link_url'] ?? null,
+            'file_path' => $filePath,
+            'status' => 'draf',
         ]);
 
         return redirect()->route('materi.index', $kelas)
@@ -77,12 +77,12 @@ class MateriController extends Controller
         $this->authorizeMateri($materi);
 
         $validated = $request->validate([
-            'judul'     => ['required', 'string', 'max:255'],
+            'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
-            'konten'    => ['nullable', 'string'],
-            'tipe'      => ['required', 'in:teks,link,file'],
-            'link_url'  => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
-            'file'      => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
+            'konten' => ['nullable', 'string'],
+            'tipe' => ['required', 'in:teks,link,file'],
+            'link_url' => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
+            'file' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
         ]);
 
         $filePath = $materi->file_path;
@@ -94,11 +94,11 @@ class MateriController extends Controller
         }
 
         $materi->update([
-            'judul'     => $validated['judul'],
+            'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'] ?? null,
-            'konten'    => $validated['konten'] ?? null,
-            'tipe'      => $validated['tipe'],
-            'link_url'  => $validated['link_url'] ?? null,
+            'konten' => $validated['konten'] ?? null,
+            'tipe' => $validated['tipe'],
+            'link_url' => $validated['link_url'] ?? null,
             'file_path' => $filePath,
         ]);
 
@@ -128,7 +128,7 @@ class MateriController extends Controller
         $this->authorizeMateri($materi);
 
         $materi->update([
-            'status'       => 'terbit',
+            'status' => 'terbit',
             'published_at' => now(),
         ]);
 
@@ -161,6 +161,31 @@ class MateriController extends Controller
         $this->authorizeSiswaKelas($materi->kelas);
 
         return view('dashboard.materi.siswa-show', compact('materi'));
+    }
+
+    /** Download file materi (dengan authorization siswa/pengajar). */
+    public function download(Materi $materi)
+    {
+        $user = Auth::user();
+
+        if ($materi->status !== 'terbit' && $materi->pengajar_id !== $user->id) {
+            abort(404);
+        }
+
+        $isMyKelas = $user->isPengajar()
+            ? $materi->pengajar_id === $user->id
+            : $materi->kelas->siswa()->where('siswa_id', $user->id)->exists();
+
+        abort_unless($isMyKelas, 403, 'Anda tidak punya akses ke materi ini.');
+
+        if (! $materi->file_path || ! Storage::disk('public')->exists($materi->file_path)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return Storage::disk('public')->download(
+            $materi->file_path,
+            $materi->judul.'.'.pathinfo($materi->file_path, PATHINFO_EXTENSION),
+        );
     }
 
     // ── Authorization helpers ─────────────────────────────────────────────────

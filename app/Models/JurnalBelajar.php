@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class JurnalBelajar extends Model
 {
     use HasFactory;
+
     protected $table = 'jurnal_belajar';
 
     /** @var array<int, string> */
@@ -25,9 +26,9 @@ class JurnalBelajar extends Model
     protected function casts(): array
     {
         return [
-            'tanggal'            => 'date',
+            'tanggal' => 'date',
             'rating_efektivitas' => 'integer',
-            'durasi_menit'       => 'integer',
+            'durasi_menit' => 'integer',
         ];
     }
 

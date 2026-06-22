@@ -74,11 +74,6 @@ $methods = [
     ],
 ];
 
-{{--
-    PERBAIKAN UTAMA:
-    Gunakan $result dan $scores yang dikirim controller via view(),
-    BUKAN request()->get() yang selalu kosong setelah redirect.
---}}
 $resultKey = $result ?? 'active_recall';
 $m         = $methods[$resultKey] ?? $methods['active_recall'];
 

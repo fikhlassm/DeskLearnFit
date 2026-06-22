@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('sesi_belajar', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
-                  ->constrained('users')
-                  ->cascadeOnDelete();
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->string('metode')->default('pomodoro');
             $table->string('judul')->nullable();
             $table->unsignedSmallInteger('durasi_fokus_menit')->default(25);
