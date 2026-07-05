@@ -18,16 +18,10 @@ class SesiBelajarController extends Controller
         'feynman',
     ];
 
-    /** Tampilkan halaman sesi belajar + riwayat. */
+    /** Tampilkan halaman daftar sesi belajar & form buat sesi baru. */
     public function index(Request $request): View
     {
         $user = Auth::user();
-
-        $sesiAktif = $user->sesiBelajar()
-            ->with(['flashcards', 'entriNotebook'])
-            ->where('status', 'aktif')
-            ->latest()
-            ->first();
 
         $riwayat = $user->sesiBelajar()
             ->orderByDesc('created_at')
@@ -37,13 +31,12 @@ class SesiBelajarController extends Controller
             ->where('status', 'selesai')
             ->count();
 
-        $selectedMetode = $request->query('metode', $sesiAktif?->metode ?? 'pomodoro');
+        $selectedMetode = $request->query('metode', 'pomodoro');
         if (! in_array($selectedMetode, $this->metodeValid, true)) {
             $selectedMetode = 'pomodoro';
         }
 
         return view('dashboard.sesi-belajar', compact(
-            'sesiAktif',
             'riwayat',
             'totalSelesai',
             'selectedMetode',
@@ -89,10 +82,21 @@ class SesiBelajarController extends Controller
         $validated['durasi_istirahat_menit'] = $validated['durasi_istirahat_menit'] ?? 5;
         $validated['jumlah_siklus'] = $validated['jumlah_siklus'] ?? 1;
 
-        SesiBelajar::create($validated);
+        $sesi = SesiBelajar::create($validated);
 
-        return redirect()->route('sesi.index', ['metode' => $validated['metode']])
+        return redirect()->route('sesi.show', $sesi->id)
             ->with('success', 'Sesi belajar dimulai!');
+    }
+
+    /** Tampilkan halaman spesifik untuk sesi belajar yang sedang aktif / selesai. */
+    public function show(SesiBelajar $sesi): View
+    {
+        $this->authorizeOwnership($sesi);
+        $sesi->load(['flashcards', 'entriNotebook']);
+
+        return view('dashboard.sesi-show', [
+            'sesiAktif' => $sesi
+        ]);
     }
 
     /** Tandai sesi sebagai dimulai (set started_at). */

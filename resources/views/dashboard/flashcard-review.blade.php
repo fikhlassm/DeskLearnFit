@@ -43,13 +43,10 @@
                         <p class="review-card__label">Jawaban</p>
                         <p class="review-card__a">{{ $card->jawaban }}</p>
                         <p class="review-card__ask">Apakah kamu mengingatnya dengan benar?</p>
-                        <form method="POST" action="{{ route('flashcard.answer', $sesi) }}" class="review-card__actions">
-                            @csrf
-                            <input type="hidden" name="flashcard_id" value="{{ $card->id }}">
-                            <input type="hidden" name="benar" id="benarInput{{ $i }}" value="1">
-                            <button type="submit" class="review-btn review-btn--err" onclick="document.getElementById('benarInput{{ $i }}').value='0'">✗ Salah</button>
-                            <button type="submit" class="review-btn review-btn--ok" onclick="document.getElementById('benarInput{{ $i }}').value='1'">✓ Benar</button>
-                        </form>
+                        <div class="review-card__actions">
+                            <button type="button" class="review-btn review-btn--err" onclick="submitAnswer(this, {{ $card->id }}, 0)">✗ Salah</button>
+                            <button type="button" class="review-btn review-btn--ok" onclick="submitAnswer(this, {{ $card->id }}, 1)">✓ Benar</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,6 +159,43 @@ function flipCard(i) {
     } else {
         front.style.display = 'block';
         back.style.display = 'none';
+    }
+}
+
+async function submitAnswer(btn, cardId, benar) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '...';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch("{{ route('flashcard.answer', $sesi) }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                flashcard_id: cardId,
+                benar: benar
+            })
+        });
+
+        if (response.ok) {
+            if (current < total - 1) {
+                navigateCard(1);
+            } else {
+                window.location.reload();
+            }
+        } else {
+            alert('Gagal menyimpan jawaban.');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    } catch (e) {
+        alert('Terjadi kesalahan.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
     }
 }
 

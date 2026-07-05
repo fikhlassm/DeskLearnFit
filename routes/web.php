@@ -104,16 +104,16 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::post('/dashboard/siswa/tugas/{tugas}/jawaban', [JawabanTugasController::class, 'submit'])->name('siswa.tugas.submit');
     Route::put('/dashboard/siswa/jawaban-tugas/{jawaban}', [JawabanTugasController::class, 'updateSubmit'])->name('siswa.tugas.update-submit');
 
-    // Catatan Belajar
+    // Jurnal / Catatan Belajar
     Route::get('/dashboard/catatan-belajar', [JurnalBelajarController::class, 'index'])->name('catatan.index');
     Route::post('/dashboard/catatan-belajar', [JurnalBelajarController::class, 'store'])->name('catatan.store');
-    Route::get('/dashboard/catatan-belajar/{jurnal}/edit', [JurnalBelajarController::class, 'edit'])->name('catatan.edit');
     Route::put('/dashboard/catatan-belajar/{jurnal}', [JurnalBelajarController::class, 'update'])->name('catatan.update');
     Route::delete('/dashboard/catatan-belajar/{jurnal}', [JurnalBelajarController::class, 'destroy'])->name('catatan.destroy');
 
     // Sesi Belajar
     Route::get('/dashboard/sesi-belajar', [SesiBelajarController::class, 'index'])->name('sesi.index');
     Route::post('/dashboard/sesi-belajar', [SesiBelajarController::class, 'store'])->name('sesi.store');
+    Route::get('/dashboard/sesi-belajar/{sesi}', [SesiBelajarController::class, 'show'])->name('sesi.show');
     Route::patch('/dashboard/sesi-belajar/{sesi}/start', [SesiBelajarController::class, 'start'])->name('sesi.start');
     Route::patch('/dashboard/sesi-belajar/{sesi}/complete', [SesiBelajarController::class, 'complete'])->name('sesi.complete');
     Route::patch('/dashboard/sesi-belajar/{sesi}/catatan', [SesiBelajarController::class, 'updateCatatan'])->name('sesi.catatan');

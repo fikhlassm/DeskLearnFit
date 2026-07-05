@@ -44,14 +44,14 @@
     .public-nav__inner { @apply container-page flex h-[68px] items-center gap-10; }
     .public-nav__brand { @apply flex items-center gap-2.5 no-underline; }
     .public-nav__brand-name { @apply font-display text-xl font-bold text-ink-900; }
-    .public-nav__links { @apply ml-auto flex list-none gap-1; }
+    .public-nav__links { @apply ml-auto hidden md:flex list-none gap-1; }
     .public-nav__link {
         @apply rounded-lg px-3.5 py-2 text-sm font-medium text-ink-600 no-underline transition-colors duration-200;
     }
     .public-nav__link:hover, .public-nav__link--active { @apply bg-brand-50 text-brand-600; }
-    .public-nav__actions { @apply flex gap-2; }
+    .public-nav__actions { @apply hidden md:flex gap-2; }
     .public-nav__hamburger {
-        @apply hidden flex-col gap-[5px] cursor-pointer border-0 bg-transparent p-1.5 ml-auto;
+        @apply flex md:hidden flex-col gap-[5px] cursor-pointer border-0 bg-transparent p-1.5 ml-auto;
     }
     .public-nav__hamburger span {
         @apply block h-0.5 w-[22px] rounded-sm bg-ink-900 transition-all duration-300;

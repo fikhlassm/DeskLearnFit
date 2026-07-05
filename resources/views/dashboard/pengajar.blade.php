@@ -86,73 +86,42 @@
             <section class="section">
                 <div class="section__head">
                     <h2 class="section__title">Jadwal Mengajar Hari Ini</h2>
-                    <a href="#" class="section__link">Lihat Semua</a>
+                    <!-- <a href="#" class="section__link">Lihat Semua</a> -->
                 </div>
                 <div class="schedule-list">
-
-                    <div class="sched-card sched-card--active">
-                        <div class="sched-card__time">
-                            <span class="sched-card__hour">08:00</span>
-                            <span class="sched-card__end">09:40</span>
+                    @if($jadwalHariIni->isEmpty())
+                        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.5rem;text-align:center;">
+                            <p style="color:#64748B;font-size:0.85rem;">Tidak ada jadwal mengajar hari ini.</p>
                         </div>
-                        <div class="sched-card__body">
-                            <span class="sched-badge sched-badge--live">Sedang Berlangsung</span>
-                            <p class="sched-card__name">Aljabar Linear (Kls A)</p>
-                            <div class="sched-card__meta">
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1a5 5 0 100 10A5 5 0 007 1zM7 3v4l2.5 1.5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Ruang 402
-                                </span>
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4.5" r="2.5" stroke="#94a3b8" stroke-width="1.3"/></svg>
-                                    45 Mhs
-                                </span>
+                    @else
+                        @foreach($jadwalHariIni as $jadwal)
+                            @php
+                                $now = \Carbon\Carbon::now();
+                                $mulai = \Carbon\Carbon::parse($jadwal->jam_mulai);
+                                $selesai = \Carbon\Carbon::parse($jadwal->jam_selesai);
+                                $isActive = $now->between($mulai, $selesai);
+                            @endphp
+                            <div class="sched-card {{ $isActive ? 'sched-card--active' : '' }}">
+                                <div class="sched-card__time">
+                                    <span class="sched-card__hour">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}</span>
+                                    <span class="sched-card__end">{{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</span>
+                                </div>
+                                <div class="sched-card__body">
+                                    @if($isActive)
+                                        <span class="sched-badge sched-badge--live">Sedang Berlangsung</span>
+                                    @endif
+                                    <p class="sched-card__name">{{ $jadwal->kelas->nama_kelas ?? 'Kelas' }}</p>
+                                    <div class="sched-card__meta">
+                                        <span>
+                                            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1a5 5 0 100 10A5 5 0 007 1zM7 3v4l2.5 1.5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/></svg>
+                                            {{ $jadwal->ruang ?: 'Online' }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <a href="{{ route('materi.index', $jadwal->kelas_id) }}" class="sched-btn {{ $isActive ? 'sched-btn--primary' : 'sched-btn--ghost' }}" style="text-decoration:none; display:inline-block; text-align:center;">Masuk Kelas</a>
                             </div>
-                        </div>
-                        <button class="sched-btn sched-btn--primary">Masuk Kelas</button>
-                    </div>
-
-                    <div class="sched-card">
-                        <div class="sched-card__time">
-                            <span class="sched-card__hour">10:00</span>
-                            <span class="sched-card__end">11:40</span>
-                        </div>
-                        <div class="sched-card__body">
-                            <p class="sched-card__name">Kalkulus II (Kls C)</p>
-                            <div class="sched-card__meta">
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1a5 5 0 100 10A5 5 0 007 1zM7 3v4l2.5 1.5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Lab Komputer 1
-                                </span>
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4.5" r="2.5" stroke="#94a3b8" stroke-width="1.3"/></svg>
-                                    30 Mhs
-                                </span>
-                            </div>
-                        </div>
-                        <button class="sched-btn sched-btn--ghost">Siapkan Materi</button>
-                    </div>
-
-                    <div class="sched-card">
-                        <div class="sched-card__time">
-                            <span class="sched-card__hour">13:00</span>
-                            <span class="sched-card__end">15:30</span>
-                        </div>
-                        <div class="sched-card__body">
-                            <p class="sched-card__name">Statistika Lanjut (Kls B)</p>
-                            <div class="sched-card__meta">
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1a5 5 0 100 10A5 5 0 007 1zM7 3v4l2.5 1.5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/></svg>
-                                    Ruang 305
-                                </span>
-                                <span>
-                                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#94a3b8" stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="4.5" r="2.5" stroke="#94a3b8" stroke-width="1.3"/></svg>
-                                    40 Mhs
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
+                        @endforeach
+                    @endif
                 </div>
             </section>
 
@@ -160,47 +129,32 @@
             <section class="section">
                 <h2 class="section__title">Tugas Menunggu Dinilai</h2>
                 <div class="task-card">
-
-                    <div class="task-item">
-                        <div class="task-item__head">
-                            <p class="task-item__name">Kuis 1: Matriks</p>
-                            <span class="task-badge task-badge--blue">24/45</span>
+                    @if($tugasTerbaru->isEmpty())
+                        <div style="text-align:center; padding: 1rem 0;">
+                            <p style="color:#64748B;font-size:0.85rem;">Belum ada tugas.</p>
                         </div>
-                        <p class="task-item__class">Aljabar Linear</p>
-                        <div class="task-bar"><div class="task-bar__fill task-bar__fill--blue" style="width:53%"></div></div>
-                        <div class="task-item__foot">
-                            <span class="task-item__deadline">Tenggat: Besok</span>
-                            <span class="task-item__pct">53% Selesai</span>
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <div class="task-item__head">
-                            <p class="task-item__name">Tugas Akhir Bab 3</p>
-                            <span class="task-badge task-badge--red">5/30</span>
-                        </div>
-                        <p class="task-item__class">Kalkulus II</p>
-                        <div class="task-bar"><div class="task-bar__fill task-bar__fill--red" style="width:16%"></div></div>
-                        <div class="task-item__foot">
-                            <span class="task-item__deadline task-item__deadline--urgent">Tenggat: Hari Ini</span>
-                            <span class="task-item__pct">16% Selesai</span>
-                        </div>
-                    </div>
-
-                    <div class="task-item">
-                        <div class="task-item__head">
-                            <p class="task-item__name">Laporan Praktikum</p>
-                            <span class="task-badge task-badge--green">38/40</span>
-                        </div>
-                        <p class="task-item__class">Statistika Lanjut</p>
-                        <div class="task-bar"><div class="task-bar__fill task-bar__fill--green" style="width:95%"></div></div>
-                        <div class="task-item__foot">
-                            <span class="task-item__deadline">Tenggat: Lusa</span>
-                            <span class="task-item__pct">95% Selesai</span>
-                        </div>
-                    </div>
-
-                    <a href="#" class="btn-all-tasks">Lihat Semua Tugas</a>
+                    @else
+                        @foreach($tugasTerbaru as $tugas)
+                            @php
+                                $totalSiswa = $tugas->kelas->siswa()->count();
+                                $dikumpulkan = $tugas->jawaban_tugas_count;
+                                $pct = $totalSiswa > 0 ? round(($dikumpulkan / $totalSiswa) * 100) : 0;
+                            @endphp
+                            <div class="task-item">
+                                <div class="task-item__head">
+                                    <p class="task-item__name">{{ $tugas->judul }}</p>
+                                    <span class="task-badge task-badge--blue">{{ $dikumpulkan }}/{{ $totalSiswa }}</span>
+                                </div>
+                                <p class="task-item__class">{{ $tugas->kelas->nama_kelas }}</p>
+                                <div class="task-bar"><div class="task-bar__fill task-bar__fill--blue" style="width:{{ $pct }}%"></div></div>
+                                <div class="task-item__foot">
+                                    <span class="task-item__deadline">Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->diffForHumans() }}</span>
+                                    <span class="task-item__pct">{{ $pct }}% Dikumpulkan</span>
+                                </div>
+                            </div>
+                        @endforeach
+                        <!-- <a href="#" class="btn-all-tasks">Lihat Semua Tugas</a> -->
+                    @endif
                 </div>
             </section>
 

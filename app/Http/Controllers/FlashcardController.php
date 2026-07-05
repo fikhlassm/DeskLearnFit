@@ -93,7 +93,7 @@ class FlashcardController extends Controller
     }
 
     /** Submit jawaban review (benar/salah) untuk satu kartu. */
-    public function answer(Request $request, SesiBelajar $sesi): RedirectResponse
+    public function answer(Request $request, SesiBelajar $sesi)
     {
         $this->authorizeOwnership($sesi);
 
@@ -113,6 +113,10 @@ class FlashcardController extends Controller
             'benar' => $validated['benar'],
             'reviewed_at' => now(),
         ]);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['success' => true]);
+        }
 
         return back();
     }

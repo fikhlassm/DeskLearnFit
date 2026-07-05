@@ -14,6 +14,10 @@
         <h1 class="auth-card__title">Lupa Password?</h1>
         <p class="auth-card__desc">Masukkan email Anda. Kami akan kirim link untuk membuat password baru.</p>
 
+        @if(session('status'))
+            <div class="alert-success">{{ session('status') }}</div>
+        @endif
+
         @if($errors->any())
             <div class="alert-error">{{ $errors->first() }}</div>
         @endif
@@ -43,6 +47,7 @@
 .auth-card__title{font-size:1.6rem;font-weight:800;color:#0F172A;margin-bottom:.4rem;letter-spacing:-.02em;}
 .auth-card__desc{font-size:.85rem;color:#64748B;margin-bottom:1.5rem;line-height:1.5;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:.65rem 1rem;color:#991B1B;font-size:.83rem;margin-bottom:1rem;}
+.alert-success{background:#ECFCCB;border:1px solid #BEF264;border-radius:10px;padding:.65rem 1rem;color:#4D7C0F;font-size:.83rem;margin-bottom:1rem;}
 .auth-form{display:flex;flex-direction:column;gap:1rem;}
 .form-group{display:flex;flex-direction:column;gap:.3rem;}
 .form-group label{font-size:.8rem;font-weight:600;color:#374151;}

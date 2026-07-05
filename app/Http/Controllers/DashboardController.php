@@ -116,6 +116,13 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $hariIni = now()->translatedFormat('l'); // Senin, Selasa, etc.
+        $jadwalHariIni = \App\Models\Jadwal::whereHas('kelas', fn ($q) => $q->where('pengajar_id', $user->id))
+            ->with('kelas:id,nama_kelas')
+            ->where('hari', $hariIni)
+            ->orderBy('jam_mulai')
+            ->get();
+
         return view('dashboard.pengajar', compact(
             'user',
             'totalKelas',
@@ -126,6 +133,7 @@ class DashboardController extends Controller
             'kelasTerbaru',
             'tugasTerbaru',
             'jawabanTerbaru',
+            'jadwalHariIni',
         ));
     }
 }

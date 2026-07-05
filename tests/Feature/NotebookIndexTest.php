@@ -21,7 +21,7 @@ class NotebookIndexTest extends TestCase
             ->get('/dashboard/notebook')
             ->assertStatus(200)
             ->assertViewIs('dashboard.notebook-index')
-            ->assertSee('Notebook Saya')
+            ->assertSee('Catatan Belajar')
             ->assertSee('Pomodoro')
             ->assertSee('Active Recall')
             ->assertSee('Blurting')

@@ -19,6 +19,7 @@
     </a>
     @endif
 
+    @if($sesi->status !== 'selesai')
     <form method="POST" action="{{ route('flashcard.store', $sesi) }}" class="tool-flashcard__form">
         @csrf
         <div class="tool-flashcard__field">
@@ -31,6 +32,7 @@
         </div>
         <button type="submit" class="tool-flashcard__add">+ Tambah Kartu</button>
     </form>
+    @endif
 
     @if($cards->isEmpty())
         <div class="tool-flashcard__empty">
@@ -40,24 +42,57 @@
     @else
         <div class="tool-flashcard__deck">
             @foreach($cards as $i => $card)
-            <details class="tool-flashcard__card">
-                <summary>
+            <details class="tool-flashcard__card" id="card-details-{{ $card->id }}">
+                <summary id="card-summary-{{ $card->id }}">
                     <span class="tool-flashcard__num">#{{ $i + 1 }}</span>
                     <span class="tool-flashcard__q">{{ \Illuminate\Support\Str::limit($card->pertanyaan, 80) }}</span>
                 </summary>
-                <div class="tool-flashcard__answer">
-                    <p class="tool-flashcard__a-label">Jawaban:</p>
-                    <p class="tool-flashcard__a-text">{{ $card->jawaban }}</p>
+                <div id="card-view-{{ $card->id }}">
+                    <div class="tool-flashcard__answer">
+                        <p class="tool-flashcard__a-label">Jawaban:</p>
+                        <p class="tool-flashcard__a-text">{{ $card->jawaban }}</p>
+                    </div>
+                    @if($sesi->status !== 'selesai')
+                    <div class="tool-flashcard__actions">
+                        <button type="button" class="tool-flashcard__edit" onclick="editFlashcard({{ $card->id }})">✎ Edit</button>
+                        <form method="POST" action="{{ route('flashcard.destroy', $card) }}" onsubmit="return confirm('Hapus kartu ini?')" style="display:inline">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="tool-flashcard__delete">🗑 Hapus</button>
+                        </form>
+                    </div>
+                    @endif
                 </div>
-                <div class="tool-flashcard__actions">
-                    <button type="button" class="tool-flashcard__edit" data-card-id="{{ $card->id }}">✎ Edit</button>
-                    <form method="POST" action="{{ route('flashcard.destroy', $card) }}" onsubmit="return confirm('Hapus kartu ini?')" style="display:inline">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="tool-flashcard__delete">🗑 Hapus</button>
-                    </form>
-                </div>
+
+                @if($sesi->status !== 'selesai')
+                <form method="POST" action="{{ route('flashcard.update', $card) }}" style="display:none; margin-top: 10px;" id="editForm-{{ $card->id }}" class="tool-flashcard__form">
+                    @csrf @method('PUT')
+                    <div class="tool-flashcard__field">
+                        <label>Pertanyaan</label>
+                        <textarea name="pertanyaan" rows="2" required maxlength="1000">{{ $card->pertanyaan }}</textarea>
+                    </div>
+                    <div class="tool-flashcard__field">
+                        <label>Jawaban</label>
+                        <textarea name="jawaban" rows="2" required maxlength="2000">{{ $card->jawaban }}</textarea>
+                    </div>
+                    <div style="display:flex;gap:10px;justify-content:flex-end;">
+                        <button type="button" class="tool-flashcard__delete" onclick="cancelEdit({{ $card->id }})">Batal</button>
+                        <button type="submit" class="tool-flashcard__add">Simpan</button>
+                    </div>
+                </form>
+                @endif
             </details>
             @endforeach
         </div>
     @endif
 </div>
+
+<script>
+function editFlashcard(id) {
+    document.getElementById('card-view-' + id).style.display = 'none';
+    document.getElementById('editForm-' + id).style.display = 'flex';
+}
+function cancelEdit(id) {
+    document.getElementById('card-view-' + id).style.display = 'block';
+    document.getElementById('editForm-' + id).style.display = 'none';
+}
+</script>

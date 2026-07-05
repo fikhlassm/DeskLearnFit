@@ -37,7 +37,7 @@ class SesiBelajarTest extends TestCase
 
         $this->actingAs($siswa)
             ->post('/dashboard/sesi-belajar', $this->validSesi())
-            ->assertRedirect(route('sesi.index', ['metode' => 'pomodoro']))
+            ->assertRedirect(route('sesi.show', SesiBelajar::first()->id))
             ->assertSessionHas('success');
 
         $this->assertDatabaseHas('sesi_belajar', [
@@ -56,7 +56,7 @@ class SesiBelajarTest extends TestCase
                 'metode' => 'active_recall',
                 'judul' => 'Kuis Kalkulus',
             ])
-            ->assertRedirect(route('sesi.index', ['metode' => 'active_recall']))
+            ->assertRedirect(route('sesi.show', SesiBelajar::first()->id))
             ->assertSessionHas('success');
 
         $this->assertDatabaseHas('sesi_belajar', [

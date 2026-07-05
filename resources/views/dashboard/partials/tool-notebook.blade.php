@@ -13,12 +13,14 @@
     <p class="tool-notebook__title">{{ $icon }} Notebook {{ $label }}</p>
     <p class="tool-notebook__sub">{{ $guide }}</p>
 
+    @if($sesi->status !== 'selesai')
     <form method="POST" action="{{ route('notebook.store', $sesi) }}" class="tool-notebook__form">
         @csrf
         <textarea name="konten" rows="6" required minlength="5" maxlength="5000"
             placeholder="Mulai menulis di sini…">{{ old('konten') }}</textarea>
         <button type="submit" class="tool-notebook__submit">📤 Kirim & Analisis</button>
     </form>
+    @endif
 
     @if($entries->isEmpty())
         <div class="tool-notebook__empty">
@@ -46,10 +48,12 @@
                     </div>
                     @endif
                 </div>
+                @if($sesi->status !== 'selesai')
                 <form method="POST" action="{{ route('notebook.destroy', $entri) }}" onsubmit="return confirm('Hapus entri ini?')" class="tool-notebook__entry-actions">
                     @csrf @method('DELETE')
                     <button type="submit">🗑 Hapus</button>
                 </form>
+                @endif
             </div>
             @endforeach
         </div>
