@@ -1,12 +1,11 @@
 <footer class="public-footer">
     <div class="public-footer__inner">
         <a href="{{ route('home') }}" class="public-footer__brand">
-            <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand-600 text-white">
-                <svg viewBox="0 0 28 28" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                    <path d="M8 10h12M8 14h8M8 18h10"/>
-                </svg>
-            </span>
-            <span class="public-footer__brand-name">LearnFit</span>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="shrink-0">
+                <rect width="28" height="28" rx="8" fill="#2563EB"/>
+                <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="font-display text-[22px] font-bold tracking-tight text-white">LearnFit</span>
         </a>
 
         <p class="public-footer__tagline">Temukan gaya belajarmu yang paling efektif bersama kami.</p>
@@ -17,6 +16,6 @@
             <a href="{{ route('contact') }}" class="public-footer__link">Kontak</a>
         </nav>
 
-        <p class="public-footer__copy">&copy; {{ date('Y') }} LearnFit. Hak Cipta Dilindungi.</p>
+        <p class="public-footer__copy">&copy; {{ date('Y') }} LearnFit (Kelompok 8). Hak Cipta Dilindungi.</p>
     </div>
 </footer>

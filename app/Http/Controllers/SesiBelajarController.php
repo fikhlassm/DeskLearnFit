@@ -95,7 +95,7 @@ class SesiBelajarController extends Controller
         $sesi->load(['flashcards', 'entriNotebook']);
 
         return view('dashboard.sesi-show', [
-            'sesiAktif' => $sesi
+            'sesiAktif' => $sesi,
         ]);
     }
 

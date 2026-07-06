@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnggotaKelas;
+use App\Models\Jadwal;
 use App\Models\JawabanTugas;
 use App\Models\Kelas;
 use App\Models\Materi;
@@ -117,7 +118,7 @@ class DashboardController extends Controller
             ->get();
 
         $hariIni = now()->translatedFormat('l'); // Senin, Selasa, etc.
-        $jadwalHariIni = \App\Models\Jadwal::whereHas('kelas', fn ($q) => $q->where('pengajar_id', $user->id))
+        $jadwalHariIni = Jadwal::whereHas('kelas', fn ($q) => $q->where('pengajar_id', $user->id))
             ->with('kelas:id,nama_kelas')
             ->where('hari', $hariIni)
             ->orderBy('jam_mulai')

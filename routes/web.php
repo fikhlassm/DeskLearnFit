@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\JawabanTugasController;
@@ -18,21 +19,47 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SesiBelajarController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\TugasController;
+use App\Models\JurnalBelajar;
+use App\Models\Kelas;
+use App\Models\SesiBelajar;
+use App\Models\Testimoni;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 // ─── Public ──────────────────────────────────────────────────────────────────
 
 Route::get('/', function () {
-    return view('welcome');
+    $stats = [
+        'totalSiswa' => User::where('role', 'siswa')->count(),
+        'totalKelas' => Kelas::count(),
+        'totalSesi' => SesiBelajar::where('status', 'selesai')->count(),
+        'totalCatatan' => JurnalBelajar::count(),
+    ];
+
+    $testimonis = Testimoni::with('user:id,name,role')
+        ->where('is_tampil', true)
+        ->latest()
+        ->take(6)
+        ->get();
+
+    return view('welcome', compact('stats', 'testimonis'));
 })->name('home');
 
 Route::get('/tentang', function () {
-    return view('about');
+    $stats = [
+        'totalSiswa' => User::where('role', 'siswa')->count(),
+        'totalKelas' => Kelas::count(),
+        'totalSesi' => SesiBelajar::where('status', 'selesai')->count(),
+        'totalCatatan' => JurnalBelajar::count(),
+    ];
+    return view('about', compact('stats'));
 })->name('about');
 Route::get('/kontak', function () {
     return view('contact');
 })->name('contact');
+Route::post('/kontak', [ContactController::class, 'submit'])->name('contact.submit');
 
 // ─── Guest-only ───────────────────────────────────────────────────────────────
 
@@ -130,6 +157,9 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     // Notebook (tool Blurting & Feynman)
     Route::post('/dashboard/sesi-belajar/{sesi}/notebook', [NotebookController::class, 'store'])->name('notebook.store');
     Route::delete('/dashboard/notebook/{entri}', [NotebookController::class, 'destroy'])->name('notebook.destroy');
+
+    // Testimoni
+    Route::post('/dashboard/testimoni', [TestimoniController::class, 'store'])->name('testimoni.store');
 });
 
 // ─── Pengajar only ────────────────────────────────────────────────────────────

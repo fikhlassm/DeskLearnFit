@@ -90,11 +90,33 @@ onReady(() => {
                     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="animate-spin"><circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,.3)" stroke-width="2"/><path d="M12 2a10 10 0 0 1 10 10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> Mengirim...';
             }
 
-            // Simulate server latency (replace with real POST /contact when backend endpoint exists)
-            window.setTimeout(() => {
-                if (form) form.style.display = 'none';
-                if (successEl) successEl.style.display = 'flex';
-            }, 1200);
+            // Send POST to backend
+            fetch('/kontak', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    if (form) form.style.display = 'none';
+                    if (successEl) successEl.style.display = 'flex';
+                } else {
+                    alert('Gagal mengirim pesan: ' + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Terjadi kesalahan jaringan.');
+            })
+            .finally(() => {
+                if (submitBtn && submitBtn.dataset.originalHtml) {
+                    submitBtn.innerHTML = submitBtn.dataset.originalHtml;
+                    submitBtn.disabled = false;
+                }
+            });
         });
 
         // "Send another" button
@@ -109,6 +131,60 @@ onReady(() => {
                     submitBtn.innerHTML = submitBtn.dataset.originalHtml || submitBtn.innerHTML;
                 }
             });
+        }
+    }
+
+    // ─── Navbar Active Link Management ───
+    const publicNavLinks = document.querySelectorAll('.public-nav__link');
+    const path = window.location.pathname;
+    const isHomePage = path === '/' || path === '/index.php';
+
+    function setNavbarActive(key) {
+        publicNavLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+            const isFitur = href.includes('#fitur');
+            const isHome = href === '/' || href.endsWith('/#') || (href.endsWith('/') && !href.includes('#'));
+            
+            link.classList.remove('public-nav__link--active');
+            if (key === 'fitur' && isFitur) {
+                link.classList.add('public-nav__link--active');
+            } else if (key === 'home' && isHome && !isFitur) {
+                link.classList.add('public-nav__link--active');
+            }
+        });
+    }
+
+    if (isHomePage) {
+        const fiturSection = document.getElementById('fitur');
+        
+        // Initial check for hash
+        if (window.location.hash === '#fitur') {
+            setNavbarActive('fitur');
+        }
+
+        if (fiturSection && 'IntersectionObserver' in window) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-30% 0px -50% 0px', // Trigger when Fitur is somewhat in view
+                threshold: 0
+            };
+
+            const activeObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setNavbarActive('fitur');
+                    } else {
+                        const rect = entry.boundingClientRect;
+                        // If the section is below the viewport, we are at the top (home)
+                        if (rect.top > 0) {
+                            setNavbarActive('home');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            activeObserver.observe(fiturSection);
         }
     }
 });

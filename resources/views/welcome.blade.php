@@ -112,111 +112,58 @@
         </div>
 
         <div class="testimonials-grid">
-            <div class="testi-card" data-animate="fade-up" style="--delay:0ms">
+            @forelse($testimonis as $testi)
+            <div class="testi-card" data-animate="fade-up" style="--delay:{{ $loop->index * 100 }}ms">
                 <div class="testi-card__stars text-amber-400">
-                    @for($i = 0; $i < 5; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block" />@endfor
+                    @for($i = 0; $i < 5; $i++)
+                        @if($i < $testi->rating)
+                            <x-icon name="star" style="solid" class="h-4 w-4 inline-block" />
+                        @else
+                            <x-icon name="star" class="h-4 w-4 inline-block text-ink-200" />
+                        @endif
+                    @endfor
                 </div>
-                <p class="testi-card__text">"LearnFit benar-benar mengubah cara aku belajar. Sekarang aku lebih fokus dan nilai-nilaiku meningkat drastis dalam 2 bulan!"</p>
+                <p class="testi-card__text">"{{ $testi->komentar }}"</p>
                 <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#667eea,#764ba2)">A</div>
+                    @php
+                        $colors = ['linear-gradient(135deg,#667eea,#764ba2)', 'linear-gradient(135deg,#f093fb,#f5576c)', 'linear-gradient(135deg,#4facfe,#00f2fe)', 'linear-gradient(135deg,#43e97b,#38f9d7)', 'linear-gradient(135deg,#fa709a,#fee140)'];
+                        $bg = $colors[$loop->index % count($colors)];
+                        $initial = strtoupper(substr($testi->user->name, 0, 1));
+                    @endphp
+                    <div class="testi-card__avatar" style="background:{{ $bg }}">{{ $initial }}</div>
                     <div>
-                        <p class="testi-card__name">Aditya Ramadhan</p>
-                        <p class="testi-card__role">Mahasiswa Teknik, UI</p>
+                        <p class="testi-card__name">{{ $testi->user->name }}</p>
+                        <p class="testi-card__role">{{ ucfirst($testi->user->role) }}</p>
                     </div>
                 </div>
             </div>
-
-            <div class="testi-card testi-card--featured" data-animate="fade-up" style="--delay:100ms">
-                <div class="testi-card__stars text-amber-300">
-                    @for($i = 0; $i < 5; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block" />@endfor
-                </div>
-                <p class="testi-card__text">"Aku sudah coba banyak platform belajar, tapi LearnFit yang paling personal. Terasa seperti punya tutor pribadi yang tahu persis bagaimana aku belajar."</p>
-                <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#f093fb,#f5576c)">S</div>
-                    <div>
-                        <p class="testi-card__name">Sari Indah Permata</p>
-                        <p class="testi-card__role">Siswa SMA, Surabaya</p>
-                    </div>
-                </div>
+            @empty
+            <div class="col-span-full py-10 text-center">
+                <p class="text-ink-500 mb-2">Belum ada testimoni dari siswa saat ini.</p>
+                <p class="text-sm text-ink-400">Jadilah yang pertama membagikan pengalaman belajarmu di LearnFit!</p>
             </div>
-
-            <div class="testi-card" data-animate="fade-up" style="--delay:200ms">
-                <div class="testi-card__stars text-amber-400">
-                    @for($i = 0; $i < 5; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block" />@endfor
-                </div>
-                <p class="testi-card__text">"Platform terbaik untuk persiapan ujian. Analisis gaya belajarnya akurat banget, dan materi yang disarankan tepat sasaran!"</p>
-                <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">R</div>
-                    <div>
-                        <p class="testi-card__name">Rizky Pratama</p>
-                        <p class="testi-card__role">Fresh Graduate, Bandung</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card" data-animate="fade-up" style="--delay:300ms">
-                <div class="testi-card__stars">
-                    @for($i = 0; $i < 4; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block text-amber-400" />@endfor
-                    <x-icon name="star" class="h-4 w-4 inline-block text-ink-200" />
-                </div>
-                <p class="testi-card__text">"Desainnya bersih dan mudah dipakai. Fitur analisis progresnya membantu aku tahu bagian mana yang perlu lebih banyak perhatian."</p>
-                <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">N</div>
-                    <div>
-                        <p class="testi-card__name">Nadia Kusuma</p>
-                        <p class="testi-card__role">Mahasiswa Kedokteran, UGM</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card" data-animate="fade-up" style="--delay:400ms">
-                <div class="testi-card__stars text-amber-400">
-                    @for($i = 0; $i < 5; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block" />@endfor
-                </div>
-                <p class="testi-card__text">"Dalam 3 minggu pakai LearnFit, IPK saya naik dari 2.8 ke 3.5. Metode belajar visual yang disarankan sangat cocok sama saya!"</p>
-                <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#fa709a,#fee140)">B</div>
-                    <div>
-                        <p class="testi-card__name">Bima Arjuna</p>
-                        <p class="testi-card__role">Mahasiswa Ekonomi, Unpad</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="testi-card" data-animate="fade-up" style="--delay:500ms">
-                <div class="testi-card__stars text-amber-400">
-                    @for($i = 0; $i < 5; $i++)<x-icon name="star" style="solid" class="h-4 w-4 inline-block" />@endfor
-                </div>
-                <p class="testi-card__text">"Rekomendasi ke semua teman-teman! Belajar jadi menyenangkan dan tidak terasa membebani. LearnFit benar-benar game changer."</p>
-                <div class="testi-card__author">
-                    <div class="testi-card__avatar" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb)">D</div>
-                    <div>
-                        <p class="testi-card__name">Dewi Rahayu</p>
-                        <p class="testi-card__role">Guru SD, Yogyakarta</p>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
 
         <div class="testi-stats" data-animate="fade-up">
             <div class="testi-stat">
-                <span class="testi-stat__num">12.000+</span>
-                <span class="testi-stat__label">Pelajar Aktif</span>
+                <span class="testi-stat__num">{{ number_format($stats['totalSiswa']) }}</span>
+                <span class="testi-stat__label">Siswa Terdaftar</span>
             </div>
             <div class="testi-stat__divider"></div>
             <div class="testi-stat">
-                <span class="testi-stat__num">4.9/5</span>
-                <span class="testi-stat__label">Rating Rata-rata</span>
+                <span class="testi-stat__num">{{ number_format($stats['totalKelas']) }}</span>
+                <span class="testi-stat__label">Kelas Tersedia</span>
             </div>
             <div class="testi-stat__divider"></div>
             <div class="testi-stat">
-                <span class="testi-stat__num">98%</span>
-                <span class="testi-stat__label">Puas dengan Metode</span>
+                <span class="testi-stat__num">{{ number_format($stats['totalSesi']) }}</span>
+                <span class="testi-stat__label">Sesi Belajar Selesai</span>
             </div>
             <div class="testi-stat__divider"></div>
             <div class="testi-stat">
-                <span class="testi-stat__num">50+</span>
-                <span class="testi-stat__label">Kota di Indonesia</span>
+                <span class="testi-stat__num">{{ number_format($stats['totalCatatan']) }}</span>
+                <span class="testi-stat__label">Catatan & Jurnal</span>
             </div>
         </div>
     </section>

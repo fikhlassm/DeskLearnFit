@@ -154,6 +154,40 @@ $userName = Auth::user()->name;
             @endif
         </section>
 
+        {{-- TESTIMONI FORM --}}
+        <section class="section" style="margin-top: 2rem;">
+            <div class="section__head">
+                <h2 class="section__title">Bagikan Pengalaman Belajarmu</h2>
+            </div>
+            
+            @if(session('success'))
+            <div style="background:#DCFCE7;border:1px solid #6EE7B7;border-radius:14px;padding:1rem 1.25rem;color:#065F46;font-size:.85rem;font-weight:600;margin-bottom:1rem;">
+                ✓ {{ session('success') }}
+            </div>
+            @endif
+
+            <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.5rem;">
+                <form action="{{ route('testimoni.store') }}" method="POST">
+                    @csrf
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.5rem;">Rating Bintang</label>
+                        <select name="rating" required style="width:100%;padding:.75rem 1rem;border:1px solid #E2E8F0;border-radius:10px;font-family:inherit;font-size:.85rem;outline:none;background:#F8FAFC;">
+                            <option value="5">⭐⭐⭐⭐⭐ Sangat Puas</option>
+                            <option value="4">⭐⭐⭐⭐ Puas</option>
+                            <option value="3">⭐⭐⭐ Biasa Saja</option>
+                            <option value="2">⭐⭐ Kurang Puas</option>
+                            <option value="1">⭐ Sangat Buruk</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.5rem;">Ceritakan Pengalamanmu</label>
+                        <textarea name="komentar" rows="4" placeholder="Bagaimana LearnFit membantu cara belajarmu?" required style="width:100%;padding:.75rem 1rem;border:1px solid #E2E8F0;border-radius:10px;font-family:inherit;font-size:.85rem;outline:none;resize:vertical;background:#F8FAFC;"></textarea>
+                    </div>
+                    <button type="submit" class="quiz-banner__btn">Kirim Testimoni</button>
+                </form>
+            </div>
+        </section>
+
     </main>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 

@@ -12,7 +12,7 @@ class Jadwal extends Model
         'hari',
         'jam_mulai',
         'jam_selesai',
-        'ruang'
+        'ruang',
     ];
 
     public function kelas(): BelongsTo

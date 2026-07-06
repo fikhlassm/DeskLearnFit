@@ -59,8 +59,8 @@
                             <x-icon name="puzzle" class="h-5 w-5 text-brand-600" />
                         </div>
                         <div>
-                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Berbasis Riset</h4>
-                            <p class="text-[13px] leading-relaxed text-ink-600">Metode kami dirancang dari penelitian ilmu kognitif dan psikologi pendidikan.</p>
+                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Kolaborasi Tim</h4>
+                            <p class="text-[13px] leading-relaxed text-ink-600">Sinergi yang kuat antar anggota kelompok untuk mencapai hasil yang maksimal.</p>
                         </div>
                     </div>
 
@@ -69,8 +69,8 @@
                             <x-icon name="globe" class="h-5 w-5 text-brand-600" />
                         </div>
                         <div>
-                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Personal &amp; Adaptif</h4>
-                            <p class="text-[13px] leading-relaxed text-ink-600">Rekomendasi belajar yang terus berkembang sesuai progres dan kebutuhanmu.</p>
+                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Fokus Pembelajaran</h4>
+                            <p class="text-[13px] leading-relaxed text-ink-600">Dibuat dengan tujuan untuk mendalami pengembangan web tingkat lanjut.</p>
                         </div>
                     </div>
 
@@ -79,8 +79,8 @@
                             <x-icon name="shield-check" class="h-5 w-5 text-brand-600" />
                         </div>
                         <div>
-                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Terpercaya</h4>
-                            <p class="text-[13px] leading-relaxed text-ink-600">Dipercaya lebih dari 12.000 pelajar aktif di seluruh Indonesia.</p>
+                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Inovasi Teknologi</h4>
+                            <p class="text-[13px] leading-relaxed text-ink-600">Eksplorasi menggunakan kerangka kerja modern untuk menciptakan solusi yang efisien.</p>
                         </div>
                     </div>
 
@@ -89,39 +89,41 @@
                             <x-icon name="chart" class="h-5 w-5 text-brand-600" />
                         </div>
                         <div>
-                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Hasil Nyata</h4>
-                            <p class="text-[13px] leading-relaxed text-ink-600">98% pengguna melaporkan peningkatan nilai dan motivasi belajar.</p>
+                            <h4 class="mb-1 text-sm font-semibold text-ink-900">Pemecahan Masalah</h4>
+                            <p class="text-[13px] leading-relaxed text-ink-600">Menciptakan alur aplikasi yang benar-benar bermanfaat bagi penggunanya.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- Kanan: Stats & Misi --}}
-            <div data-animate="fade-left">
-                <div class="flex flex-col gap-3.5 rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 p-7">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="rounded-2xl border border-ink-200 bg-white p-4 transition-transform duration-200 hover:-translate-y-0.5">
-                            <span class="font-display block text-[28px] font-bold leading-none text-brand-600">2021</span>
-                            <span class="mt-1.5 block text-[11px] font-medium tracking-wide text-ink-400">Tahun Berdiri</span>
-                        </div>
-                        <div class="rounded-2xl border border-ink-200 bg-white p-4 transition-transform duration-200 hover:-translate-y-0.5">
-                            <span class="font-display block text-[28px] font-bold leading-none text-brand-600">12K+</span>
-                            <span class="mt-1.5 block text-[11px] font-medium tracking-wide text-ink-400">Pelajar Aktif</span>
-                        </div>
-                        <div class="rounded-2xl border border-ink-200 bg-white p-4 transition-transform duration-200 hover:-translate-y-0.5">
-                            <span class="font-display block text-[28px] font-bold leading-none text-brand-600">50+</span>
-                            <span class="mt-1.5 block text-[11px] font-medium tracking-wide text-ink-400">Kota di Indonesia</span>
-                        </div>
-                        <div class="rounded-2xl border border-ink-200 bg-white p-4 transition-transform duration-200 hover:-translate-y-0.5">
-                            <span class="font-display block text-[28px] font-bold leading-none text-brand-600">4.9 ★</span>
-                            <span class="mt-1.5 block text-[11px] font-medium tracking-wide text-ink-400">Rating Pengguna</span>
+            <div data-animate="fade-left" class="flex h-full flex-col">
+                <div class="flex h-full flex-col gap-3.5 rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 p-7">
+                    <div class="mb-4 flex flex-1 flex-col">
+                        <p class="mb-3 text-[11px] font-bold uppercase tracking-wider text-brand-600">Teknologi Utama</p>
+                        <div class="grid flex-1 grid-cols-2 gap-3">
+                            <span class="flex items-center justify-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-[14px] font-semibold text-ink-700 transition-all hover:-translate-y-0.5 hover:shadow-sm">
+                                <img src="https://cdn.simpleicons.org/laravel/FF2D20" class="h-5 w-5" alt="Laravel"> Laravel 12
+                            </span>
+                            <span class="flex items-center justify-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-[14px] font-semibold text-ink-700 transition-all hover:-translate-y-0.5 hover:shadow-sm">
+                                <img src="https://cdn.simpleicons.org/php/777BB4" class="h-5 w-5" alt="PHP"> PHP 8
+                            </span>
+                            <span class="flex items-center justify-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-[14px] font-semibold text-ink-700 transition-all hover:-translate-y-0.5 hover:shadow-sm">
+                                <img src="https://cdn.simpleicons.org/sqlite/003B57" class="h-5 w-5" alt="SQLite"> SQLite
+                            </span>
+                            <span class="flex items-center justify-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-[14px] font-semibold text-ink-700 transition-all hover:-translate-y-0.5 hover:shadow-sm">
+                                <img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" class="h-5 w-5" alt="Tailwind"> Tailwind CSS
+                            </span>
+                            <span class="col-span-2 flex items-center justify-center gap-2.5 rounded-2xl border border-ink-200 bg-white p-3 text-[14px] font-semibold text-ink-700 transition-all hover:-translate-y-0.5 hover:shadow-sm">
+                                <img src="https://cdn.simpleicons.org/vite/646CFF" class="h-5 w-5" alt="Vite"> Vite
+                            </span>
                         </div>
                     </div>
                     <div class="rounded-2xl bg-brand-600 p-5 text-white">
-                        <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] opacity-75">MISI KAMI</p>
+                        <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.12em] opacity-75">TUJUAN PROYEK</p>
                         <p class="text-sm italic leading-relaxed">
-                            "Memberdayakan setiap pelajar Indonesia untuk mencapai potensi terbaiknya
-                            melalui pendidikan yang personal dan berbasis data."
+                            "Menerapkan pembelajaran full-stack web development secara praktikal untuk 
+                            membangun platform pencatatan belajar yang modern dan interaktif."
                         </p>
                     </div>
                 </div>
@@ -134,45 +136,42 @@
                 <div>
                     <span class="section-badge">Kisah Kami</span>
                     <h2 class="font-display mb-4 text-[clamp(1.4rem,2.5vw,2rem)] font-bold leading-tight text-ink-900">
-                        Berawal dari<br>Sebuah Pertanyaan
+                        Proyek Praktikum<br>Pemrograman Web
                     </h2>
                     <p class="mb-4 text-[15px] leading-relaxed text-ink-600">
-                        LearnFit lahir ketika dua mahasiswa bertanya: "Mengapa cara belajar yang sama tidak bekerja
-                        untuk semua orang?" Dari pertanyaan sederhana itu, kami membangun platform yang memahami
-                        bahwa setiap pelajar itu unik.
+                        LearnFit dibangun sebagai bagian dari tugas akhir Praktikum Pemrograman Web oleh Kelompok 8 di Universitas Airlangga. Kami tidak hanya ingin membuat sekadar "tugas", tapi kami ingin menciptakan sesuatu yang fungsional.
                     </p>
                     <p class="text-[15px] leading-relaxed text-ink-600">
-                        Dengan dukungan riset psikologi pendidikan dan teknologi AI, kami terus berkembang
-                        menjadi platform belajar personal terpercaya di Indonesia.
+                        Melalui dedikasi dan kerja sama tim, kami merancang platform yang bertujuan untuk membantu mahasiswa/siswa mengenali gaya belajar yang paling cocok bagi mereka.
                     </p>
                 </div>
                 <div class="flex flex-col gap-4">
                     <div class="flex items-start gap-4">
-                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">21</div>
+                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">M1</div>
                         <div>
-                            <p class="mb-0.5 text-xs font-bold text-brand-600">2021 — Lahirnya Ide</p>
-                            <p class="text-sm leading-relaxed text-ink-600">LearnFit didirikan oleh dua mahasiswa UI dengan visi pendidikan personal.</p>
+                            <p class="mb-0.5 text-xs font-bold text-brand-600">Fase 1 — Ideasi & Desain</p>
+                            <p class="text-sm leading-relaxed text-ink-600">Menentukan konsep aplikasi dan merancang antarmuka pengguna.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">22</div>
+                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">M2</div>
                         <div>
-                            <p class="mb-0.5 text-xs font-bold text-brand-600">2022 — Beta Launch</p>
-                            <p class="text-sm leading-relaxed text-ink-600">Diluncurkan ke 500 pelajar pertama dan mendapat respons luar biasa.</p>
+                            <p class="mb-0.5 text-xs font-bold text-brand-600">Fase 2 — Pengembangan Tampilan</p>
+                            <p class="text-sm leading-relaxed text-ink-600">Membangun kerangka frontend interaktif untuk pengalaman pengguna terbaik.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">23</div>
+                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">M3</div>
                         <div>
-                            <p class="mb-0.5 text-xs font-bold text-brand-600">2023 — Ekspansi Nasional</p>
-                            <p class="text-sm leading-relaxed text-ink-600">Berkembang ke 50+ kota dengan 10.000+ pengguna aktif.</p>
+                            <p class="mb-0.5 text-xs font-bold text-brand-600">Fase 3 — Integrasi Sistem</p>
+                            <p class="text-sm leading-relaxed text-ink-600">Mengembangkan backend dan mengintegrasikan basis data.</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
-                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">24</div>
+                        <div class="flex h-9 w-9 min-w-[36px] items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">M4</div>
                         <div>
-                            <p class="mb-0.5 text-xs font-bold text-brand-600">2024 — AI Integration</p>
-                            <p class="text-sm leading-relaxed text-ink-600">Mengintegrasikan AI untuk rekomendasi yang semakin personal dan akurat.</p>
+                            <p class="mb-0.5 text-xs font-bold text-brand-600">Fase 4 — Evaluasi Akhir</p>
+                            <p class="text-sm leading-relaxed text-ink-600">Melakukan pengujian fitur sebelum dipresentasikan sebagai hasil praktikum.</p>
                         </div>
                     </div>
                 </div>
@@ -190,12 +189,9 @@
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 @php
                     $team = [
-                        ['initials' => 'AR', 'name' => 'Andi Rachman',    'role' => 'CEO & Co-founder', 'gradient' => 'linear-gradient(135deg,#667eea,#764ba2)', 'delay' => 0],
-                        ['initials' => 'SP', 'name' => 'Siti Pratiwi',    'role' => 'Head of Product',   'gradient' => 'linear-gradient(135deg,#2563EB,#0891b2)', 'delay' => 100],
-                        ['initials' => 'DH', 'name' => 'Dika Hermawan',   'role' => 'Lead Engineer',     'gradient' => 'linear-gradient(135deg,#10b981,#0891b2)', 'delay' => 200],
-                        ['initials' => 'NR', 'name' => 'Nina Rahayu',     'role' => 'UX Designer',       'gradient' => 'linear-gradient(135deg,#f093fb,#f5576c)', 'delay' => 300],
-                        ['initials' => 'BW', 'name' => 'Bayu Wicaksono',  'role' => 'Data Scientist',    'gradient' => 'linear-gradient(135deg,#4facfe,#00f2fe)', 'delay' => 400],
-                        ['initials' => 'FA', 'name' => 'Fira Aulia',      'role' => 'Marketing Lead',    'gradient' => 'linear-gradient(135deg,#fa709a,#fee140)', 'delay' => 500],
+                        ['initials' => 'MF', 'name' => 'Muhammad Fikhlas Hakim Arya Maulana<br><span class="text-sm font-normal text-ink-500">(187241034)</span>', 'gradient' => 'linear-gradient(135deg, #818CF8, #6366F1)', 'delay' => 0],
+                        ['initials' => 'MY', 'name' => 'Muhammad Yasiir Arafat<br><span class="text-sm font-normal text-ink-500">(187241061)</span>', 'gradient' => 'linear-gradient(135deg, #38BDF8, #0EA5E9)', 'delay' => 100],
+                        ['initials' => 'FZ',  'name' => 'Farhan Zuso Putra Jaya<br><span class="text-sm font-normal text-ink-500">(187241102)</span>',           'gradient' => 'linear-gradient(135deg,#10b981,#0891b2)', 'delay' => 200],
                     ];
                 @endphp
 
@@ -206,8 +202,7 @@
                              style="background: {{ $member['gradient'] }}">
                             {{ $member['initials'] }}
                         </div>
-                        <p class="mb-1 text-[15px] font-semibold text-ink-900">{{ $member['name'] }}</p>
-                        <p class="text-[13px] text-ink-400">{{ $member['role'] }}</p>
+                        <p class="mb-1 text-[15px] font-semibold text-ink-900">{!! $member['name'] !!}</p>
                     </div>
                 @endforeach
             </div>

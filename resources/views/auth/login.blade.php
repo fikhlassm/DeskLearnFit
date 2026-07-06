@@ -7,12 +7,12 @@
     <div class="auth-page__blob auth-page__blob--2"></div>
 
     <div class="auth-nav container">
-        <a href="/" class="navbar__brand">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <a href="/" class="navbar__brand flex items-center gap-2">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="shrink-0">
                 <rect width="28" height="28" rx="8" fill="#2563EB"/>
                 <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            <span class="navbar__brand-name">LearnFit</span>
+            <span class="font-display text-[22px] font-bold tracking-tight text-ink-900">LearnFit</span>
         </a>
         <a href="/" class="auth-nav__back">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

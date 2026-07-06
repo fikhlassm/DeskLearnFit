@@ -35,12 +35,12 @@
 
     {{-- CONTACT MAIN --}}
     <section class="py-20 lg:py-24">
-        <div class="container-page grid items-start gap-14 lg:grid-cols-[1fr_1.6fr]">
+        <div class="container-page grid items-stretch gap-14 lg:grid-cols-[1fr_1.6fr]">
 
             {{-- KIRI: Info Kontak --}}
-            <div data-animate="fade-up">
-                <span class="section-badge">Info Kontak</span>
-                <h2 class="font-display mb-3.5 text-[clamp(1.4rem,2.5vw,1.875rem)] font-bold leading-tight text-ink-900">
+            <div data-animate="fade-right" class="flex h-full flex-col">
+                <span class="section-badge self-start">Info Kontak</span>
+                <h2 class="font-display mb-4 text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight text-ink-900">
                     Kami Senang<br>Mendengarmu
                 </h2>
                 <p class="mb-9 text-[15px] leading-relaxed text-ink-600">
@@ -49,35 +49,7 @@
                 </p>
 
                 <div class="mb-10 flex flex-col gap-3.5">
-                    <a href="mailto:halo@learnfit.id" class="flex items-center gap-3.5 rounded-2xl border border-ink-200 bg-ink-100 p-4 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-brand-sm">
-                        <div class="flex h-11 w-11 min-w-[44px] items-center justify-center rounded-xl bg-brand-50">
-                            <x-icon name="envelope" class="h-5 w-5 text-brand-600" />
-                        </div>
-                        <div>
-                            <p class="mb-0.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">Email</p>
-                            <p class="text-sm font-semibold text-ink-900">halo@learnfit.id</p>
-                        </div>
-                    </a>
 
-                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="flex items-center gap-3.5 rounded-2xl border border-ink-200 bg-ink-100 p-4 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-brand-sm">
-                        <div class="flex h-11 w-11 min-w-[44px] items-center justify-center rounded-xl bg-emerald-50">
-                            <x-icon name="whatsapp" class="h-5 w-5 text-emerald-600" />
-                        </div>
-                        <div>
-                            <p class="mb-0.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">WhatsApp</p>
-                            <p class="text-sm font-semibold text-ink-900">+62 812-3456-7890</p>
-                        </div>
-                    </a>
-
-                    <div class="flex items-center gap-3.5 rounded-2xl border border-ink-200 bg-ink-100 p-4">
-                        <div class="flex h-11 w-11 min-w-[44px] items-center justify-center rounded-xl bg-orange-50">
-                            <x-icon name="clock" class="h-5 w-5 text-orange-500" />
-                        </div>
-                        <div>
-                            <p class="mb-0.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">Jam Operasional</p>
-                            <p class="text-sm font-semibold text-ink-900">Senin–Jumat, 09.00–17.00 WIB</p>
-                        </div>
-                    </div>
 
                     <div class="flex items-center gap-3.5 rounded-2xl border border-ink-200 bg-ink-100 p-4">
                         <div class="flex h-11 w-11 min-w-[44px] items-center justify-center rounded-xl bg-rose-50">
@@ -85,7 +57,7 @@
                         </div>
                         <div>
                             <p class="mb-0.5 text-[11px] font-bold uppercase tracking-wider text-ink-400">Alamat</p>
-                            <p class="text-sm font-semibold text-ink-900">Jl. Sudirman No. 12, Jakarta Pusat</p>
+                            <p class="text-sm font-semibold text-ink-900">Kampus C Universitas Airlangga, Surabaya</p>
                         </div>
                     </div>
                 </div>
@@ -110,15 +82,15 @@
                 </div>
 
                 {{-- Map card --}}
-                <div class="rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 p-7">
+                <div class="flex flex-1 flex-col rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 p-7">
                     <p class="mb-2 text-[11px] font-bold uppercase tracking-wider text-brand-600">Lokasi Kami</p>
-                    <p class="mb-1 text-base font-bold text-ink-900">Kantor LearnFit</p>
+                    <p class="mb-1 text-base font-bold text-ink-900">Universitas Airlangga Kampus C</p>
                     <p class="mb-4 text-[13px] leading-relaxed text-ink-600">
-                        Jl. Jend. Sudirman No. 12,<br>Jakarta Pusat, DKI Jakarta 10220
+                        Mulyorejo,<br>Surabaya, Jawa Timur 60115
                     </p>
-                    <div class="h-40 overflow-hidden rounded-xl bg-ink-200">
+                    <div class="min-h-[250px] flex-1 overflow-hidden rounded-xl bg-ink-200">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.8195613!3d-6.208763!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJl.%20Jend.%20Sudirman%2C%20Jakarta!5e0!3m2!1sid!2sid!4v1710000000000"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.691977073284!2d112.78201507421115!3d-7.271383271276077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7f9fa6974db3f%3A0xc3457199187ec2d7!2sUniversitas%20Airlangga%20Kampus%20C!5e0!3m2!1sid!2sid!4v1717316000000"
                             class="h-full w-full border-0 block"
                             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
@@ -127,12 +99,12 @@
             </div>
 
             {{-- KANAN: Form --}}
-            <div data-animate="fade-left">
-                <div class="form-card">
-                    <h3 class="font-display mb-1.5 text-[22px] font-bold text-ink-900">Kirim Pesan</h3>
-                    <p class="mb-7 text-sm leading-relaxed text-ink-600">Isi formulir di bawah dan tim kami akan menghubungimu segera.</p>
+            <div data-animate="fade-left" class="flex h-full flex-col">
+                <div class="form-card flex flex-1 flex-col">
 
-                    <form id="contactForm" data-contact-form novalidate>
+                    <form id="contactForm" data-contact-form novalidate class="flex flex-1 flex-col">
+                        <h3 class="font-display mb-1.5 text-[22px] font-bold text-ink-900">Kirim Pesan</h3>
+                        <p class="mb-7 text-sm leading-relaxed text-ink-600">Isi formulir di bawah dan tim kami akan menghubungimu segera.</p>
                         @csrf
                         <div class="form-row">
                             <div class="form-group">
@@ -170,9 +142,9 @@
                             <input class="form-input" type="text" id="subjek" name="subjek" placeholder="Tuliskan subjek pesanmu..." required>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group flex flex-1 flex-col">
                             <label class="form-label" for="pesan">Pesan <span>*</span></label>
-                            <textarea class="form-textarea" id="pesan" name="pesan" placeholder="Tuliskan pesanmu di sini..." required></textarea>
+                            <textarea class="form-textarea flex-1 resize-none" id="pesan" name="pesan" placeholder="Tuliskan pesanmu di sini..." required></textarea>
                         </div>
 
                         <div class="mt-2">
@@ -183,13 +155,15 @@
                         </div>
                     </form>
 
-                    <div class="hidden flex-col items-center gap-4 pt-6 text-center" data-contact-success id="formSuccess">
+                    <div class="hidden flex-1 flex-col items-center justify-center gap-4 text-center animate-fadeIn" data-contact-success id="formSuccess">
                         <div class="grid h-[72px] w-[72px] place-items-center rounded-full bg-emerald-100 animate-popIn">
-                            <x-icon name="check" style="solid" class="h-9 w-9 text-emerald-600" />
+                            <svg class="h-9 w-9 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
                         </div>
-                        <h4 class="font-display text-[22px] font-bold text-ink-900">Pesan Terkirim!</h4>
+                        <h4 class="font-display mt-2 text-[22px] font-bold text-ink-900">Pesan Terkirim!</h4>
                         <p class="max-w-[320px] text-sm leading-relaxed text-ink-600">Terima kasih sudah menghubungi kami. Tim LearnFit akan merespons dalam 1×24 jam kerja.</p>
-                        <button type="button" class="btn-ghost btn-lg mt-2" data-contact-reset>Kirim Pesan Lain</button>
+                        <button type="button" class="btn-ghost btn-lg mt-4" data-contact-reset>Kirim Pesan Lain</button>
                     </div>
                 </div>
             </div>
