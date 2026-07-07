@@ -61,6 +61,13 @@ Route::get('/kontak', function () {
 })->name('contact');
 Route::post('/kontak', [ContactController::class, 'submit'])->name('contact.submit');
 
+Route::get('/syarat-ketentuan', function () {
+    return view('pages.terms');
+})->name('terms');
+Route::get('/privasi', function () {
+    return view('pages.privacy');
+})->name('privacy');
+
 // ─── Guest-only ───────────────────────────────────────────────────────────────
 
 Route::middleware('guest')->group(function () {

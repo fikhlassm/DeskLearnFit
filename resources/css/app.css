@@ -393,7 +393,7 @@
         box-shadow: 0 8px 40px rgba(37,99,235,.1);
         position: relative;
         z-index: 2;
-        margin-inline: auto;
+        margin: auto;
     }
     
     .auth-card__header { margin-bottom: 28px; }

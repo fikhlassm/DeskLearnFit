@@ -14,7 +14,7 @@
          class="fixed left-1/2 top-4 z-[1000] -translate-x-1/2 rounded-2xl border {{ $map[$type]['border'] }} {{ $map[$type]['bg'] }} {{ $map[$type]['text'] }} px-4 py-3 shadow-[0_8px_24px_rgba(15,23,42,.08)] flex items-start gap-3 max-w-[560px]"
          role="alert">
         <x-icon :name="$map[$type]['icon']" class="h-5 w-5 mt-0.5 flex-shrink-0" />
-        <div class="text-sm leading-relaxed">
+        <div class="text-sm leading-relaxed break-words w-full">
             {{ session($type) ?: session('status') }}
         </div>
         <button type="button" class="ml-2 -mr-1 opacity-70 hover:opacity-100" onclick="this.closest('#flash-banner').remove()" aria-label="Tutup">

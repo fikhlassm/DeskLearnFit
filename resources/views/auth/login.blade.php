@@ -90,9 +90,6 @@
 
             <button type="submit" class="btn-submit">
                 Masuk
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
             </button>
         </form>
 

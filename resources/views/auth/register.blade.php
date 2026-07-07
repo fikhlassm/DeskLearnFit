@@ -129,14 +129,11 @@
             <label class="checkbox-label">
                 <input type="checkbox" name="terms" id="terms" class="checkbox-input" required {{ old('terms') ? 'checked':'' }}>
                 <span class="checkbox-box"></span>
-                <span class="checkbox-text">Saya setuju dengan <a href="#" class="form-link">syarat & ketentuan</a> serta <a href="#" class="form-link">Privasi LearnFit</a>.</span>
+                <span class="checkbox-text">Saya setuju dengan <a href="{{ route('terms') }}" target="_blank" class="form-link">syarat & ketentuan</a> serta <a href="{{ route('privacy') }}" target="_blank" class="form-link">Privasi LearnFit</a>.</span>
             </label>
 
             <button type="submit" class="btn-submit">
                 Buat Akun
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
             </button>
         </form>
 

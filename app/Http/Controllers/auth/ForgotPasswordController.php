@@ -47,9 +47,10 @@ class ForgotPasswordController extends Controller
             ],
         );
 
-        $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
+        // Kirim email reset password
+        $user->sendPasswordResetNotification($token);
 
         return redirect()->route('login')
-            ->with('success', 'Link reset password telah dibuat. (Mode dev: '.$resetUrl.')');
+            ->with('success', 'Tautan untuk mereset kata sandi telah dikirim ke email Anda. Silakan periksa kotak masuk (atau folder spam).');
     }
 }
