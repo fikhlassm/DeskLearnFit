@@ -3,7 +3,7 @@
 
 @php
 $metodeMap = [
-    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⏱️','desc'=>'25 menit fokus + 5 menit istirahat'],
+    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⌚','desc'=>'25 menit fokus + 5 menit istirahat'],
     'active_recall'=> ['label'=>'Active Recall',  'color'=>'#7C3AED','bg'=>'#F5F3FF','icon'=>'🧠','desc'=>'Uji dirimu sendiri tanpa melihat catatan'],
     'blurting'     => ['label'=>'Blurting',       'color'=>'#059669','bg'=>'#ECFDF5','icon'=>'✍️','desc'=>'Tulis semua yang kamu ingat di kertas kosong'],
     'feynman'      => ['label'=>'Feynman',         'color'=>'#D97706','bg'=>'#FFFBEB','icon'=>'🏫','desc'=>'Jelaskan konsep seolah mengajar orang lain'],
@@ -40,12 +40,12 @@ $metodeInfo = $metodeMap[$sesi->metode] ?? $metodeMap['pomodoro'];
                 @if($sesi->status !== 'selesai')
                 <form method="POST" action="{{ route('sesi.complete', $sesi) }}" onsubmit="return confirm('Tandai sesi ini selesai?')">
                     @csrf @method('PATCH')
-                    <button type="submit" class="btn-selesai-sesi">✓ Tandai Selesai</button>
+                    <button type="submit" class="btn-selesai-sesi">Tandai Selesai</button>
                 </form>
                 @endif
                 <form method="POST" action="{{ route('sesi.destroy', $sesi) }}" onsubmit="return confirm('Hapus sesi ini?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn-hapus-tool" style="background:#1E293B; color:#F87171; border-color:#7F1D1D;">🗑 Hapus Sesi</button>
+                    <button type="submit" class="btn-hapus-tool" style="background:#1E293B; color:#F87171; border-color:#7F1D1D;">Hapus Sesi</button>
                 </form>
             </div>
         </div>

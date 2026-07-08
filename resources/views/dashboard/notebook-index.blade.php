@@ -3,7 +3,7 @@
 
 @php
     $metodeInfo = [
-        'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB', 'bg'=>'#EFF6FF', 'icon'=>'⏱️', 'desc'=>'25 menit fokus + 5 menit istirahat'],
+        'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB', 'bg'=>'#EFF6FF', 'icon'=>'⌚', 'desc'=>'25 menit fokus + 5 menit istirahat'],
         'active_recall'=> ['label'=>'Active Recall',  'color'=>'#7C3AED', 'bg'=>'#F5F3FF', 'icon'=>'🧠', 'desc'=>'Uji dirimu dengan kartu flash'],
         'blurting'     => ['label'=>'Blurting',       'color'=>'#059669', 'bg'=>'#ECFDF5', 'icon'=>'✍️', 'desc'=>'Tulis semua yang kamu ingat'],
         'feynman'      => ['label'=>'Feynman',        'color'=>'#D97706', 'bg'=>'#FFFBEB', 'icon'=>'🏫', 'desc'=>'Jelaskan ke orang lain dengan bahasamu'],
@@ -17,7 +17,7 @@
         <div class="topbar">
             <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
             <div>
-                <h1 class="topbar__title">📓 Catatan Belajar</h1>
+                <h1 class="topbar__title">Catatan Belajar</h1>
                 <p class="topbar__sub">Semua sesi belajar yang pernah kamu buat, dikelompokkan per metode</p>
             </div>
             <div class="topbar__right">
@@ -71,11 +71,11 @@
                         </div>
                         <div class="notebook-item__right">
                             @if($sesi->status === 'selesai')
-                            <span class="notebook-status" data-tone="ok">✓ Selesai</span>
+                            <span class="notebook-status" data-tone="ok">Selesai</span>
                             @elseif($sesi->status === 'aktif')
-                            <span class="notebook-status" data-tone="primary">▶ Aktif</span>
+                            <span class="notebook-status" data-tone="primary">Aktif</span>
                             @else
-                            <span class="notebook-status" data-tone="neutral">✕ Batal</span>
+                            <span class="notebook-status" data-tone="neutral">Batal</span>
                             @endif
                             <span class="notebook-item__date">{{ $sesi->created_at->format('d M') }}</span>
                         </div>

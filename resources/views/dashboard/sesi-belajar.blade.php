@@ -3,7 +3,7 @@
 
 @php
 $metodeMap = [
-    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⏱️','desc'=>'25 menit fokus + 5 menit istirahat'],
+    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⌚','desc'=>'25 menit fokus + 5 menit istirahat'],
     'active_recall'=> ['label'=>'Active Recall',  'color'=>'#7C3AED','bg'=>'#F5F3FF','icon'=>'🧠','desc'=>'Uji dirimu sendiri tanpa melihat catatan'],
     'blurting'     => ['label'=>'Blurting',       'color'=>'#059669','bg'=>'#ECFDF5','icon'=>'✍️','desc'=>'Tulis semua yang kamu ingat di kertas kosong'],
     'feynman'      => ['label'=>'Feynman',         'color'=>'#D97706','bg'=>'#FFFBEB','icon'=>'🏫','desc'=>'Jelaskan konsep seolah mengajar orang lain'],
@@ -23,6 +23,13 @@ $metodeMap = [
 
         @if(session('success'))<div class="alert-success" id="flashMsg">{{ session('success') }}</div>@endif
         @if(session('error'))<div class="alert-error" id="flashMsg">{{ session('error') }}</div>@endif
+        @if($errors->any())
+            <div class="alert-error" style="margin-bottom:1rem;">
+                <ul style="margin-left:1.5rem">
+                    @foreach($errors->all() as $err) <li>{{ $err }}</li> @endforeach
+                </ul>
+            </div>
+        @endif
 
         <div class="method-selector">
             @foreach($metodeMap as $m => $info)
@@ -58,15 +65,19 @@ $metodeMap = [
                     <div class="form-row">
                         <div class="form-group">
                             <label>Durasi Fokus (menit)</label>
-                            <input type="number" name="durasi_fokus_menit" class="form-input" value="25" min="5" max="120">
+                            <input type="number" name="durasi_fokus_menit" class="form-input" value="25" min="1" max="120">
                         </div>
                         <div class="form-group">
                             <label>Istirahat (menit)</label>
-                            <input type="number" name="durasi_istirahat_menit" class="form-input" value="5" min="1" max="30">
+                            <input type="number" name="durasi_istirahat_menit" class="form-input" value="5" min="1" max="60">
+                        </div>
+                        <div class="form-group">
+                            <label>Siklus</label>
+                            <input type="number" name="jumlah_siklus" class="form-input" value="1" min="1" max="10">
                         </div>
                     </div>
                 @endif
-                <button type="submit" class="btn-primary" style="background:{{ $metodeMap[$selectedMetode]['color'] }}; align-self:flex-start;">Mulai Sesi Sekarang 🚀</button>
+                <button type="submit" class="btn-primary" style="background:{{ $metodeMap[$selectedMetode]['color'] }}; align-self:flex-start;">Mulai Sesi Sekarang</button>
             </form>
         </section>
 
@@ -85,9 +96,9 @@ $metodeMap = [
                         </div>
                         <h4 class="history-card__title">{{ $sesi->judul ?: 'Sesi ' . $infoList['label'] }}</h4>
                         <div class="history-card__meta">
-                            <span>📅 {{ $sesi->created_at->format('d M, H:i') }}</span>
+                            <span>{{ $sesi->created_at->format('d M, H:i') }}</span>
                             @if($sesi->status === 'aktif')
-                                <a href="{{ route('sesi.show', $sesi->id) }}" class="btn-lanjutkan" style="background:{{ $infoList['color'] }}">Lanjutkan ↗</a>
+                                <a href="{{ route('sesi.show', $sesi->id) }}" class="btn-lanjutkan" style="background:{{ $infoList['color'] }}">Lanjutkan</a>
                             @endif
                         </div>
                     </div>

@@ -20,7 +20,7 @@
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4l2.5 2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Sesi Belajar
         </a>
-        <a href="{{ route('notebook.index') }}" class="sidebar__link {{ ($active ?? '') === 'notebook' ? 'sidebar__link--active' : '' }}">
+        <a href="{{ route('catatan.index') }}" class="sidebar__link {{ ($active ?? '') === 'catatan' ? 'sidebar__link--active' : '' }}">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 4h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5"/><path d="M6 8h8M6 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             Catatan Belajar
         </a>

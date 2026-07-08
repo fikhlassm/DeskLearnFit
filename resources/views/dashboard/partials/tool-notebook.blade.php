@@ -18,7 +18,7 @@
         @csrf
         <textarea name="konten" rows="6" required minlength="5" maxlength="5000"
             placeholder="Mulai menulis di sini…">{{ old('konten') }}</textarea>
-        <button type="submit" class="tool-notebook__submit">📤 Kirim & Analisis</button>
+        <button type="submit" class="tool-notebook__submit">Kirim & Analisis</button>
     </form>
     @endif
 
@@ -38,7 +38,7 @@
                 </div>
                 <p class="tool-notebook__konten">{{ $entri->konten }}</p>
                 <div class="tool-notebook__analisis">
-                    <p class="tool-notebook__a-title">📊 Analisis Sistem</p>
+                    <p class="tool-notebook__a-title">Analisis Sistem</p>
                     <p class="tool-notebook__a-text">{{ $entri->analisis_sistem }}</p>
                     @if($entri->kata_kunci_cocok && count($entri->kata_kunci_cocok) > 0)
                     <div class="tool-notebook__keywords">
@@ -51,7 +51,7 @@
                 @if($sesi->status !== 'selesai')
                 <form method="POST" action="{{ route('notebook.destroy', $entri) }}" onsubmit="return confirm('Hapus entri ini?')" class="tool-notebook__entry-actions">
                     @csrf @method('DELETE')
-                    <button type="submit">🗑 Hapus</button>
+                    <button type="submit">Hapus</button>
                 </form>
                 @endif
             </div>

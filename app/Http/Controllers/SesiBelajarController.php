@@ -40,7 +40,7 @@ class SesiBelajarController extends Controller
             'riwayat',
             'totalSelesai',
             'selectedMetode',
-        ));
+        ) + ['active' => 'sesi']);
     }
 
     /** Buat sesi belajar baru. */
@@ -78,9 +78,9 @@ class SesiBelajarController extends Controller
         $validated['user_id'] = Auth::id();
         $validated['status'] = 'aktif';
         $validated['started_at'] = now();
-        $validated['durasi_fokus_menit'] = $validated['durasi_fokus_menit'] ?? 25;
-        $validated['durasi_istirahat_menit'] = $validated['durasi_istirahat_menit'] ?? 5;
-        $validated['jumlah_siklus'] = $validated['jumlah_siklus'] ?? 1;
+        $validated['durasi_fokus_menit'] = $request->input('durasi_fokus_menit', 25);
+        $validated['durasi_istirahat_menit'] = $request->input('durasi_istirahat_menit', 5);
+        $validated['jumlah_siklus'] = $request->input('jumlah_siklus', 1);
 
         $sesi = SesiBelajar::create($validated);
 
@@ -95,7 +95,8 @@ class SesiBelajarController extends Controller
         $sesi->load(['flashcards', 'entriNotebook']);
 
         return view('dashboard.sesi-show', [
-            'sesiAktif' => $sesi,
+            'sesi' => $sesi,
+            'active' => 'sesi',
         ]);
     }
 

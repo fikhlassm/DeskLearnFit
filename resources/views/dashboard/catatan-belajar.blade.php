@@ -3,7 +3,7 @@
 
 @php
 $metodeLabel = [
-    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⏱️'],
+    'pomodoro'     => ['label'=>'Pomodoro',      'color'=>'#2563EB','bg'=>'#EFF6FF','icon'=>'⌚'],
     'active_recall'=> ['label'=>'Active Recall',  'color'=>'#7C3AED','bg'=>'#F5F3FF','icon'=>'🧠'],
     'blurting'     => ['label'=>'Blurting',       'color'=>'#059669','bg'=>'#ECFDF5','icon'=>'✍️'],
     'feynman'      => ['label'=>'Feynman',         'color'=>'#D97706','bg'=>'#FFFBEB','icon'=>'🏫'],
@@ -53,7 +53,7 @@ $metodeLabel = [
             @endforeach
         </select>
         @if(request('metode'))
-        <a href="{{ route('catatan.index') }}" class="btn-reset-filter">✕ Reset</a>
+        <a href="{{ route('catatan.index') }}" class="btn-reset-filter">Reset</a>
         @endif
     </form>
 
@@ -85,7 +85,7 @@ $metodeLabel = [
                     </span>
                     @endif
                     @if($jurnal->durasi_menit)
-                    <span class="badge-durasi">⏱ {{ $jurnal->durasi_menit }} mnt</span>
+                    <span class="badge-durasi">{{ $jurnal->durasi_menit }} mnt</span>
                     @endif
                 </div>
             </div>
@@ -94,10 +94,10 @@ $metodeLabel = [
             @endif
             <p class="catatan-card__isi">{{ Str::limit($jurnal->isi_jurnal, 200) }}</p>
             <div class="catatan-card__actions">
-                <button class="btn-edit-catatan" onclick="openEditModal({{ $jurnal->id }})">✏ Edit</button>
+                <button class="btn-edit-catatan" onclick="openEditModal({{ $jurnal->id }})">Edit</button>
                 <form method="POST" action="{{ route('catatan.destroy', $jurnal) }}" style="display:inline" onsubmit="return confirm('Hapus catatan ini?')">
                     @csrf @method('DELETE')
-                    <button type="submit" class="btn-hapus-catatan">🗑 Hapus</button>
+                    <button type="submit" class="btn-hapus-catatan">Hapus</button>
                 </form>
             </div>
         </div>

@@ -6,7 +6,7 @@
     $akurasi      = $totalReviews > 0 ? (int) round(($benarCount / $totalReviews) * 100) : 0;
 @endphp
 <div class="tool-flashcard" data-sesi-id="{{ $sesi->id }}">
-    <p class="tool-flashcard__title">🃏 Deck Kartu Flash</p>
+    <p class="tool-flashcard__title">Deck Kartu Flash</p>
     <p class="tool-flashcard__sub">Total: <strong>{{ $cards->count() }}</strong> kartu
         @if($totalReviews > 0)
             · {{ $totalReviews }} review · {{ $akurasi }}% akurasi
@@ -15,7 +15,7 @@
 
     @if($cards->count() > 0)
     <a href="{{ route('flashcard.review', $sesi) }}" style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem;background:linear-gradient(135deg,#7C3AED,#6D28D9);color:#fff;text-decoration:none;border-radius:10px;font-size:.88rem;font-weight:700;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 12px rgba(124,58,237,.25);">
-        ▶ Mulai Review ({{ $cards->count() }} kartu)
+        Mulai Review ({{ $cards->count() }} kartu)
     </a>
     @endif
 
@@ -36,7 +36,7 @@
 
     @if($cards->isEmpty())
         <div class="tool-flashcard__empty">
-            <p>🃏</p>
+
             <p>Belum ada kartu. Tambahkan kartu pertama di atas.</p>
         </div>
     @else
@@ -54,10 +54,10 @@
                     </div>
                     @if($sesi->status !== 'selesai')
                     <div class="tool-flashcard__actions">
-                        <button type="button" class="tool-flashcard__edit" onclick="editFlashcard({{ $card->id }})">✎ Edit</button>
+                        <button type="button" class="tool-flashcard__edit" onclick="editFlashcard({{ $card->id }})">Edit</button>
                         <form method="POST" action="{{ route('flashcard.destroy', $card) }}" onsubmit="return confirm('Hapus kartu ini?')" style="display:inline">
                             @csrf @method('DELETE')
-                            <button type="submit" class="tool-flashcard__delete">🗑 Hapus</button>
+                            <button type="submit" class="tool-flashcard__delete">Hapus</button>
                         </form>
                     </div>
                     @endif

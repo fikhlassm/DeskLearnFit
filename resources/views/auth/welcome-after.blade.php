@@ -87,13 +87,13 @@
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
-                    <a href="{{ route('notebook.index') }}" class="quick-link">
+                    <a href="{{ route('profil.show') }}" class="quick-link">
                         <div class="quick-link__icon bg-purple-50">
-                            <x-icon name="pencil-square" class="h-[18px] w-[18px] text-purple-600" />
+                            <x-icon name="user" class="h-[18px] w-[18px] text-purple-600" />
                         </div>
                         <div>
-                            <p class="quick-link__title">Notebook</p>
-                            <p class="quick-link__sub">Blurting &amp; Feynman</p>
+                            <p class="quick-link__title">Profil</p>
+                            <p class="quick-link__sub">Kelola akun Anda</p>
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
