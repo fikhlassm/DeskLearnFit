@@ -98,7 +98,7 @@
                     <x-icon name="chart" class="h-6 w-6 text-brand-600" />
                 </div>
                 <h3 class="feature-card__title">Analisis Progres Nyata</h3>
-                <p class="feature-card__desc">Pantau perkembangan belajarmu secara real-time dengan dashboard yang intuitif.</p>
+                <p class="feature-card__desc">Pantau perkembangan belajarmu secara real-time dengan beranda yang intuitif.</p>
             </div>
         </div>
     </section>
@@ -128,7 +128,7 @@
                     @php
                         $colors = ['linear-gradient(135deg,#667eea,#764ba2)', 'linear-gradient(135deg,#f093fb,#f5576c)', 'linear-gradient(135deg,#4facfe,#00f2fe)', 'linear-gradient(135deg,#43e97b,#38f9d7)', 'linear-gradient(135deg,#fa709a,#fee140)'];
                         $bg = $colors[$loop->index % count($colors)];
-                        $initial = strtoupper(substr($testi->user->name, 0, 1));
+                        $initial = strtoupper(collect(explode(' ', trim($testi->user->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join(''));
                     @endphp
                     <div class="testi-card__avatar" style="background:{{ $bg }}">{{ $initial }}</div>
                     <div>

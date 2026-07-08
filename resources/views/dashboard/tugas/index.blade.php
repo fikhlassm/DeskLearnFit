@@ -6,7 +6,7 @@
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Tugas — {{ $kelas->nama_kelas }}</h1><p class="topbar__sub">Kelola tugas kelas ini</p></div>
-        <div class="topbar__right"><a href="{{ route('dashboard.kelas') }}" class="btn-back">← Kembali</a></div>
+        <div class="topbar__right"><a href="{{ route('kelas.show', $kelas) }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali ke Kelas</a></div>
     </div>
     @if(session('success'))<div class="alert-success" id="flashMsg">{{ session('success') }}</div>@endif
 
@@ -14,49 +14,25 @@
         <p class="section-card__title">Tambah Tugas Baru</p>
         <form method="POST" action="{{ route('tugas.store', $kelas) }}">
             @csrf
+            @if(request('topik') || old('topik_id'))
+                <input type="hidden" name="topik_id" value="{{ old('topik_id', request('topik')) }}">
+            @endif
             @if($errors->any())<div class="alert-error" style="margin-bottom:.75rem">{{ $errors->first() }}</div>@endif
             <div class="form-group"><label>Judul *</label><input type="text" name="judul" value="{{ old('judul') }}" required class="form-input"></div>
             <div class="form-group"><label>Deskripsi / Instruksi *</label><textarea name="deskripsi" rows="3" required class="form-input">{{ old('deskripsi') }}</textarea></div>
             <div class="form-group"><label>Deadline (opsional)</label><input type="datetime-local" name="deadline" value="{{ old('deadline') }}" class="form-input"></div>
-            <button type="submit" class="btn-primary">Simpan sebagai Draf</button>
+            <button type="submit" class="btn-primary">Simpan Tugas</button>
         </form>
     </div>
 
-    @if($tugasList->isEmpty())
-    <div class="empty-state"><div class="empty-state__icon">📝</div><p class="empty-state__title">Belum ada tugas</p></div>
-    @else
-    <div class="list-card">
-        @foreach($tugasList as $tugas)
-        <div class="list-item">
-            <div class="list-item__left">
-                <p class="list-item__judul">{{ $tugas->judul }}</p>
-                <p class="list-item__sub">
-                    {{ $tugas->deadline ? 'Deadline: ' . $tugas->deadline->format('d M Y H:i') : 'Tanpa deadline' }}
-                    · {{ $tugas->jawaban_tugas_count }} jawaban
-                </p>
-            </div>
-            <div class="list-item__right">
-                <span class="badge-status badge-status--{{ $tugas->status }}">{{ ucfirst($tugas->status) }}</span>
-                @if($tugas->status === 'draf')
-                <form method="POST" action="{{ route('tugas.publish', $tugas) }}" style="display:inline">@csrf @method('PATCH')
-                    <button class="btn-sm btn-publish">Publish</button></form>
-                @endif
-                <a href="{{ route('tugas.jawaban.index', $tugas) }}" class="btn-sm btn-lihat">Jawaban</a>
-                <a href="{{ route('tugas.edit', $tugas) }}" class="btn-sm btn-edit">Edit</a>
-                <form method="POST" action="{{ route('tugas.destroy', $tugas) }}" onsubmit="return confirm('Hapus tugas ini?')" style="display:inline">@csrf @method('DELETE')
-                    <button class="btn-sm btn-hapus">Hapus</button></form>
-            </div>
-        </div>
-        @endforeach
-    </div>
-    <div style="margin-top:.75rem">{{ $tugasList->links() }}</div>
-    @endif
+
 </main>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 </div>
 @include('dashboard._dash_styles')
 <style>
-.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .section-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.5rem;}
 .section-card__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:1rem;}
 .form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem;}
@@ -75,10 +51,20 @@
 .badge-status--terbit{background:#DCFCE7;color:#15803D;}
 .badge-status--ditutup{background:#FEE2E2;color:#DC2626;}
 .btn-sm{padding:.3rem .75rem;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;border:none;font-family:inherit;}
-.btn-publish{background:#DCFCE7;color:#15803D;}
-.btn-edit{background:#EFF6FF;color:#2563EB;text-decoration:none;}
-.btn-lihat{background:#F5F3FF;color:#7C3AED;text-decoration:none;}
-.btn-hapus{background:#FEF2F2;color:#DC2626;}
+
+
+
+
+
+.btn-edit{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .85rem;border:1.5px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;text-decoration:none;}
+.btn-edit:hover{background:#DBEAFE;border-color:#93C5FD;transform:translateY(-1px);}
+.btn-hapus{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .85rem;border:1.5px solid #FECACA;background:#FEF2F2;color:#DC2626;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;}
+.btn-hapus:hover{background:#FEE2E2;border-color:#FCA5A5;transform:translateY(-1px);}
+.btn-publish{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .85rem;border:1.5px solid #bbf7d0;background:#f0fdf4;color:#15803d;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;}
+.btn-publish:hover{background:#dcfce7;border-color:#86efac;transform:translateY(-1px);}
+.btn-lihat{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .85rem;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;text-decoration:none;}
+.btn-lihat:hover{background:#f1f5f9;border-color:#cbd5e1;transform:translateY(-1px);}
+
 </style>
 <script>
 const sidebar=document.querySelector('.sidebar'),overlay=document.getElementById('sidebarOverlay'),hamburger=document.getElementById('hamburgerBtn');

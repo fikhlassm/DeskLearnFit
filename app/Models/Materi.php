@@ -14,6 +14,7 @@ class Materi extends Model
 
     protected $fillable = [
         'kelas_id',
+        'topik_id',
         'pengajar_id',
         'judul',
         'deskripsi',
@@ -40,6 +41,11 @@ class Materi extends Model
     public function pengajar(): BelongsTo
     {
         return $this->belongsTo(User::class, 'pengajar_id');
+    }
+
+    public function topik(): BelongsTo
+    {
+        return $this->belongsTo(Topik::class);
     }
 
     public function isTerbit(): bool

@@ -20,18 +20,6 @@
                 <p class="topbar__sub">Kelola semua kelas yang Anda ampu</p>
             </div>
             <div class="topbar__right">
-                <button class="topbar__icon-btn" aria-label="Notifikasi">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v2.586l-1.707 1.707A1 1 0 003 14h14a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z" stroke="#475569" stroke-width="1.5"/><path d="M8 14a2 2 0 004 0" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="topbar__icon-btn" aria-label="Pengaturan">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="#475569" stroke-width="1.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0">
-                    @csrf
-                    <button type="submit" class="topbar__icon-btn" title="Logout">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                </form>
             </div>
         </div>
 
@@ -54,45 +42,64 @@
             </div>
         </div>
 
-        {{-- TABEL --}}
-        <div class="table-wrap">
-            <table class="kelas-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Kelas</th>
-                        <th>Mata Pelajaran</th>
-                        <th>Kode Kelas</th>
-                        <th>Kapasitas</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="kelasBody">
-                    @foreach($kelasList as $index => $kelas)
-                    <tr class="kelas-row">
-                        <td>{{ $index + 1 }}</td>
-                        <td><strong>{{ $kelas->nama_kelas }}</strong></td>
-                        <td>{{ $kelas->mata_pelajaran }}</td>
-                        <td><span class="badge-kode">{{ $kelas->kode_kelas }}</span></td>
-                        <td>{{ $kelas->kapasitas }} siswa</td>
-                        <td><span class="badge-status badge-{{ $kelas->status }}">{{ ucfirst($kelas->status) }}</span></td>
-                        <td class="aksi-col">
-                            <button class="btn-edit" onclick="openEdit({{ $kelas->id }},'{{ addslashes($kelas->nama_kelas) }}','{{ addslashes($kelas->mata_pelajaran) }}','{{ $kelas->kode_kelas }}','{{ addslashes($kelas->deskripsi) }}',{{ $kelas->kapasitas }},'{{ $kelas->status }}')">✏ Edit</button>
-                            <a href="{{ route('kelas.peserta', $kelas->id) }}" class="btn-edit" style="text-decoration:none;">👥 Peserta</a>
-                            <a href="{{ route('materi.index', $kelas->id) }}" class="btn-edit" style="text-decoration:none;background:#F5F3FF;border-color:#DDD6FE;color:#7C3AED;">📚 Materi</a>
-                            <a href="{{ route('tugas.index', $kelas->id) }}" class="btn-edit" style="text-decoration:none;background:#FFFBEB;border-color:#FDE68A;color:#D97706;">📝 Tugas</a>
-                            <form method="POST" action="{{ route('kelas.destroy', $kelas->id) }}" style="display:inline" onsubmit="return confirm('Hapus kelas ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-hapus">🗑 Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        {{-- DAFTAR KELAS (Grid) --}}
+        @if($kelasList->isEmpty())
+        <div class="empty-state">
+            <div class="empty-state__icon" style="display:flex;justify-content:center;color:#94A3B8;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <p class="empty-state__title">Belum ada kelas</p>
+            <p class="empty-state__sub">Buat kelas pertama Anda dengan mengklik "Tambah Kelas".</p>
         </div>
+        @else
+        <div class="kelas-grid">
+            @foreach($kelasList as $kelas)
+            <div class="kelas-card">
+                @if($kelas->cover_image)
+                    <div class="kelas-card__cover" style="background-image: url('{{ asset($kelas->cover_image) }}')">
+                        <span class="badge-status badge-{{ $kelas->status }}" style="position:absolute;top:1rem;right:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);">{{ ucfirst($kelas->status) }}</span>
+                    </div>
+                @else
+                    <div class="kelas-card__cover" style="background-color: {{ $kelas->theme_color ?? '#4F46E5' }}">
+                        <span class="badge-status badge-{{ $kelas->status }}" style="position:absolute;top:1rem;right:1rem;box-shadow:0 2px 4px rgba(0,0,0,0.1);">{{ ucfirst($kelas->status) }}</span>
+                    </div>
+                @endif
+                <div class="kelas-card__body">
+                    <p class="kelas-card__nama">{{ $kelas->nama_kelas }}</p>
+                    <p class="kelas-card__kode">{{ $kelas->mata_pelajaran }}</p>
+                    <p class="kelas-card__kode" style="margin-top:.25rem">Kode: <code>{{ $kelas->kode_kelas }}</code> &middot; {{ $kelas->kapasitas }} siswa</p>
+                    
+                    <div class="kelas-card__actions">
+                        <a href="{{ route('kelas.show', $kelas->id) }}" class="btn-masuk-kelas">
+                            Masuk Kelas
+                        </a>
+                        <div style="display:flex;gap:.5rem;width:100%;">
+                            @php
+                                $jadwal = $kelas->jadwals->first();
+                                $hari = $jadwal->hari ?? 'Senin';
+                                $jm = $jadwal ? substr($jadwal->jam_mulai, 0, 5) : '08:00';
+                                $js = $jadwal ? substr($jadwal->jam_selesai, 0, 5) : '10:00';
+                                $ruang = addslashes($jadwal->ruang ?? '');
+                            @endphp
+                            <button class="btn-edit-card" onclick="openEdit({{ $kelas->id }},'{{ addslashes($kelas->nama_kelas) }}','{{ addslashes($kelas->mata_pelajaran) }}','{{ addslashes($kelas->deskripsi) }}','{{ $kelas->status }}','{{ $kelas->theme_color }}','{{ $hari }}','{{ $jm }}','{{ $js }}','{{ $ruang }}', {{ $kelas->kapasitas }})" title="Edit">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            </button>
+                            <a href="{{ route('kelas.peserta', $kelas->id) }}" class="btn-edit-card" title="Peserta">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            </a>
+                            <form method="POST" action="{{ route('kelas.destroy', $kelas->id) }}" style="display:contents" onsubmit="return confirm('Hapus kelas ini?')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn-hapus-card" title="Hapus">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
 
     </main>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -105,34 +112,56 @@
             <h2 class="modal__title">Tambah Kelas Baru</h2>
             <button class="modal__close" onclick="closeModal('modalTambah')">✕</button>
         </div>
-        <form method="POST" action="{{ route('kelas.store') }}">
+        <form method="POST" action="{{ route('kelas.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="modal__body">
                 <div class="form-group">
-                    <label>Nama Kelas</label>
+                    <label>Gambar Sampul <span style="color:#94a3b8;font-weight:400">(Ukuran disarankan 600x300 px / Rasio 2:1)</span></label>
+                    <input type="file" name="cover_image" accept="image/png, image/jpeg, image/jpg">
+                </div>
+                <div class="form-group">
+                    <label>Warna Tema <span style="color:#94a3b8;font-weight:400">(Jika tidak ada gambar sampul)</span></label>
+                    <input type="color" name="theme_color" value="#4F46E5" style="width:100%;height:40px;padding:0;cursor:pointer;">
+                </div>
+                <div class="form-group">
+                    <label>Nama Kelas <span class="req">*</span></label>
                     <input type="text" name="nama_kelas" required placeholder="cth: Matematika Dasar A">
                 </div>
                 <div class="form-group">
-                    <label>Mata Pelajaran</label>
+                    <label>Mata Pelajaran <span class="req">*</span></label>
                     <input type="text" name="mata_pelajaran" required placeholder="cth: Matematika">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Kode Kelas</label>
-                        <input type="text" name="kode_kelas" required placeholder="cth: MTK-A-01">
+                        <label>Jadwal Hari Rutin <span class="req">*</span></label>
+                        <select name="hari" required>
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                            <option value="Minggu">Minggu</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Kapasitas</label>
-                        <input type="number" name="kapasitas" required min="1" max="100" value="30">
+                        <label>Ruang / Lokasi <span class="req">*</span></label>
+                        <input type="text" name="ruang" required placeholder="cth: Lab Komputer 1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Jam Mulai <span class="req">*</span></label>
+                        <input type="time" name="jam_mulai" required value="08:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai <span class="req">*</span></label>
+                        <input type="time" name="jam_selesai" required value="10:00">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Status</label>
-                    <select name="status">
-                        <option value="aktif">Aktif</option>
-                        <option value="draf">Draf</option>
-                        <option value="selesai">Selesai</option>
-                    </select>
+                    <label>Kapasitas Siswa <span class="req">*</span></label>
+                    <input type="number" name="kapasitas" required min="1" max="100" value="30">
                 </div>
                 <div class="form-group">
                     <label>Deskripsi <span style="color:#94a3b8">(opsional)</span></label>
@@ -154,35 +183,65 @@
             <h2 class="modal__title">Edit Kelas</h2>
             <button class="modal__close" onclick="closeModal('modalEdit')">✕</button>
         </div>
-        <form method="POST" id="formEdit" action="">
+        <form method="POST" id="formEdit" action="" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="modal__body">
                 <div class="form-group">
-                    <label>Nama Kelas</label>
+                    <label>Gambar Sampul <span style="color:#94a3b8;font-weight:400">(Ukuran disarankan 600x300 px / Rasio 2:1)</span></label>
+                    <input type="file" name="cover_image" accept="image/png, image/jpeg, image/jpg">
+                </div>
+                <div class="form-group">
+                    <label>Warna Tema <span style="color:#94a3b8;font-weight:400">(Jika tidak ada gambar sampul)</span></label>
+                    <input type="color" name="theme_color" id="e_theme" value="#4F46E5" style="width:100%;height:40px;padding:0;cursor:pointer;">
+                </div>
+                <div class="form-group">
+                    <label>Nama Kelas <span class="req">*</span></label>
                     <input type="text" name="nama_kelas" id="e_nama" required>
                 </div>
                 <div class="form-group">
-                    <label>Mata Pelajaran</label>
+                    <label>Mata Pelajaran <span class="req">*</span></label>
                     <input type="text" name="mata_pelajaran" id="e_mapel" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Kode Kelas</label>
-                        <input type="text" name="kode_kelas" id="e_kode" required>
+                        <label>Jadwal Hari Rutin <span class="req">*</span></label>
+                        <select name="hari" id="e_hari" required>
+                            <option value="Senin">Senin</option>
+                            <option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option>
+                            <option value="Kamis">Kamis</option>
+                            <option value="Jumat">Jumat</option>
+                            <option value="Sabtu">Sabtu</option>
+                            <option value="Minggu">Minggu</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Kapasitas</label>
-                        <input type="number" name="kapasitas" id="e_kap" required min="1" max="100">
+                        <label>Ruang / Lokasi <span class="req">*</span></label>
+                        <input type="text" name="ruang" id="e_ruang" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Jam Mulai <span class="req">*</span></label>
+                        <input type="time" name="jam_mulai" id="e_jam_mulai" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Selesai <span class="req">*</span></label>
+                        <input type="time" name="jam_selesai" id="e_jam_selesai" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Status</label>
+                    <label>Status <span class="req">*</span></label>
                     <select name="status" id="e_status">
                         <option value="aktif">Aktif</option>
                         <option value="draf">Draf</option>
                         <option value="selesai">Selesai</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Kapasitas Siswa <span class="req">*</span></label>
+                    <input type="number" name="kapasitas" id="e_kap" required min="1" max="100">
                 </div>
                 <div class="form-group">
                     <label>Deskripsi <span style="color:#94a3b8">(opsional)</span></label>
@@ -246,9 +305,7 @@
     border-top:1px solid #F1F5F9;
     margin:.5rem .75rem 0;
     border-radius:10px;
-    transition:background .18s;cursor:pointer;
 }
-.sidebar__user:hover{background:#F8FAFC;}
 .sidebar__avatar{
     width:36px;height:36px;border-radius:50%;
     background:#E2E8F0;display:flex;
@@ -260,7 +317,9 @@
 /* ── MAIN ── */
 .dash-main{
     flex:1;display:flex;flex-direction:column;
-    padding:1.5rem 2rem;gap:1.5rem;overflow-x:hidden;
+    justify-content:flex-start;
+    padding:1.5rem 2rem;gap:.65rem;
+    overflow-x:hidden;
 }
 
 /* ── TOPBAR ── */
@@ -324,53 +383,29 @@
 .btn-tambah-kelas:hover{background:#1d4ed8;box-shadow:0 4px 14px rgba(37,99,235,.3);transform:translateY(-1px);}
 .btn-tambah-kelas:active{transform:scale(.96);background:#1e40af;}
 
-/* ── TABLE ── */
-.table-wrap{overflow-x:auto;}
-.kelas-table{
-    width:100%;border-collapse:collapse;
-    font-size:.85rem;background:#fff;
-    border-radius:16px;overflow:hidden;
-    border:1px solid #E2E8F0;
-}
-.kelas-table thead tr{background:#F8FAFC;border-bottom:1px solid #E2E8F0;}
-.kelas-table th{
-    padding:.75rem 1rem;text-align:left;
-    font-weight:600;color:#475569;
-    font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;
-}
-.kelas-table td{
-    padding:.85rem 1rem;color:#0F172A;
-    border-bottom:1px solid #F1F5F9;vertical-align:middle;
-}
-.kelas-table tbody tr:last-child td{border-bottom:none;}
-.kelas-table tbody tr{transition:background .18s;}
-.kelas-table tbody tr:hover{background:#F8FAFC;}
-.badge-kode{
-    background:#EFF6FF;color:#1D4ED8;
-    padding:.2rem .65rem;border-radius:99px;
-    font-size:.72rem;font-weight:600;font-family:monospace;
-}
-.badge-status{padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:600;}
+/* ── GRID KELAS ── */
+.kelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+.kelas-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .2s,transform .2s;}
+.kelas-card:hover{box-shadow:0 6px 20px rgba(15,23,42,.08);transform:translateY(-3px);}
+.kelas-card__cover{height:140px;background-size:cover;background-position:center;position:relative;}
+.kelas-card__body{padding:1.25rem;display:flex;flex-direction:column;flex:1;}
+.kelas-badge{font-size:.72rem;font-weight:700;background:#EFF6FF;color:#2563EB;padding:.22rem .65rem;border-radius:99px;}
+.kelas-card__nama{font-size:1.05rem;font-weight:700;color:#0F172A;line-height:1.4;margin-bottom:.3rem;}
+.kelas-card__kode{font-size:.8rem;color:#64748B;}
+.badge-status{font-size:.7rem;font-weight:700;padding:.25rem .65rem;border-radius:99px;}
 .badge-aktif{background:#DCFCE7;color:#15803D;}
-.badge-draf{background:#FFF7ED;color:#92400E;}
-.badge-selesai{background:#F1F5F9;color:#475569;}
-.aksi-col{white-space:nowrap;}
-.btn-edit{
-    padding:.35rem .85rem;border:1.5px solid #BFDBFE;
-    background:#EFF6FF;color:#1D4ED8;border-radius:8px;
-    font-size:.75rem;font-weight:600;cursor:pointer;
-    margin-right:.35rem;transition:all .15s;font-family:inherit;
-}
-.btn-edit:hover{background:#DBEAFE;border-color:#93C5FD;transform:translateY(-1px);}
-.btn-edit:active{transform:scale(.96);}
-.btn-hapus{
-    padding:.35rem .85rem;border:1.5px solid #FECACA;
-    background:#FEF2F2;color:#DC2626;border-radius:8px;
-    font-size:.75rem;font-weight:600;cursor:pointer;
-    transition:all .15s;font-family:inherit;
-}
-.btn-hapus:hover{background:#FEE2E2;border-color:#FCA5A5;transform:translateY(-1px);}
-.btn-hapus:active{transform:scale(.96);}
+.badge-tutup{background:#FEE2E2;color:#B91C1C;}
+.kelas-card__actions{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem;}
+.btn-lihat-materi{padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+.btn-lihat-materi:hover{background:#7C3AED!important;}
+.btn-masuk-kelas{padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s;display:flex;align-items:center;justify-content:center;gap:.4rem;background:#8B5CF6;color:#fff;flex:1;text-align:center;}
+.btn-masuk-kelas:hover{background:#7C3AED;}
+.btn-edit-card,.btn-hapus-card{flex:1;display:flex;align-items:center;justify-content:center;padding:.4rem;border-radius:8px;border:1px solid #E2E8F0;background:#fff;color:#64748B;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-edit-card:hover{background:#EFF6FF;color:#2563EB;border-color:#BFDBFE;}
+.btn-hapus-card:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA;}
+.empty-state{text-align:center;padding:3rem 1rem;background:#fff;border:1px dashed #E2E8F0;border-radius:16px;margin-top:1rem;}
+.empty-state__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-top:.5rem;}
+.empty-state__sub{font-size:.8rem;color:#64748B;}
 
 /* ── MODAL ── */
 .modal-overlay{
@@ -382,14 +417,18 @@
 .modal{
     background:#fff;border-radius:16px;
     width:100%;max-width:520px;
+    max-height:90vh;display:flex;flex-direction:column;
     box-shadow:0 8px 32px rgba(0,0,0,.16);
     animation:slideUp .2s ease;
+    overflow:hidden;
 }
+.modal form{display:flex;flex-direction:column;overflow:hidden;}
 @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .modal__header{
     display:flex;align-items:center;
     justify-content:space-between;
-    padding:1.25rem 1.5rem 0;
+    padding:1.25rem 1.5rem;
+    border-bottom:1px solid #E2E8F0;
 }
 .modal__title{font-size:1rem;font-weight:700;color:#0F172A;}
 .modal__close{
@@ -398,9 +437,13 @@
     border-radius:6px;transition:color .15s;
 }
 .modal__close:hover{color:#0F172A;}
-.modal__body{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;}
+.modal__body{
+    padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.9rem;
+    overflow-y:auto;
+}
 .modal__footer{
-    padding:0 1.5rem 1.25rem;
+    padding:1.25rem 1.5rem;
+    border-top:1px solid #E2E8F0;
     display:flex;justify-content:flex-end;gap:.6rem;
 }
 .form-group{display:flex;flex-direction:column;gap:.3rem;}
@@ -488,21 +531,27 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
 });
 
 // ── EDIT ──
-function openEdit(id, nama, mapel, kode, desk, kap, status) {
+function openEdit(id, nama, mapel, desk, status, theme, hari, jm, js, ruang, kap) {
     document.getElementById('formEdit').action = '/dashboard/kelas/' + id;
     document.getElementById('e_nama').value   = nama;
     document.getElementById('e_mapel').value  = mapel;
-    document.getElementById('e_kode').value   = kode;
     document.getElementById('e_desk').value   = desk;
-    document.getElementById('e_kap').value    = kap;
     document.getElementById('e_status').value = status;
+    document.getElementById('e_kap').value    = kap;
+    if (theme) document.getElementById('e_theme').value = theme;
+    
+    document.getElementById('e_hari').value = hari;
+    document.getElementById('e_jam_mulai').value = jm;
+    document.getElementById('e_jam_selesai').value = js;
+    document.getElementById('e_ruang').value = ruang;
+    
     openModal('modalEdit');
 }
 
 // ── SEARCH ──
 document.getElementById('searchKelas').addEventListener('input', function(){
     const q = this.value.toLowerCase();
-    document.querySelectorAll('.kelas-row').forEach(row => {
+    document.querySelectorAll('.kelas-card').forEach(row => {
         row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
     });
 });

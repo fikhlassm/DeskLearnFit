@@ -6,7 +6,7 @@
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Detail Materi</h1></div>
-        <div class="topbar__right"><a href="{{ route('siswa.materi.index', $materi->kelas_id) }}" class="btn-back">← Kembali</a></div>
+        <div class="topbar__right"><a href="{{ route('siswa.materi.index', $materi->kelas_id) }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali</a></div>
     </div>
 
     <div class="materi-card">
@@ -32,7 +32,8 @@
 </div>
 @include('dashboard._dash_styles')
 <style>
-.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .materi-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.75rem;}
 .materi-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
 .materi-card__date{font-size:.78rem;color:#94A3B8;}

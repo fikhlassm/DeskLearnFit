@@ -6,12 +6,12 @@
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Jawaban — {{ $tugas->judul }}</h1><p class="topbar__sub">{{ $jawaban->total() }} jawaban terkumpul</p></div>
-        <div class="topbar__right"><a href="{{ route('tugas.index', $tugas->kelas_id) }}" class="btn-back">← Tugas</a></div>
+        <div class="topbar__right"><a href="{{ route('kelas.show', $tugas->kelas_id) }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali ke Kelas</a></div>
     </div>
     @if(session('success'))<div class="alert-success" id="flashMsg">{{ session('success') }}</div>@endif
 
     @if($jawaban->isEmpty())
-    <div class="empty-state"><div class="empty-state__icon">📭</div><p class="empty-state__title">Belum ada jawaban</p></div>
+    <div class="empty-state"><div class="empty-state__icon" style="display:flex;justify-content:center;color:#94A3B8;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg></div><p class="empty-state__title">Belum ada jawaban</p></div>
     @else
     @foreach($jawaban as $j)
     <div class="jawaban-card">
@@ -43,7 +43,8 @@
 </div>
 @include('dashboard._dash_styles')
 <style>
-.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .jawaban-card{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.25rem;margin-bottom:.75rem;}
 .jawaban-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
 .jawaban-card__nama{font-size:.92rem;font-weight:700;color:#0F172A;}
@@ -54,7 +55,8 @@
 .nilai-row{display:flex;gap:.5rem;flex-wrap:wrap;}
 .nilai-input{width:100px;padding:.45rem .75rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.83rem;font-family:inherit;outline:none;}
 .feedback-input{flex:1;min-width:150px;padding:.45rem .75rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.83rem;font-family:inherit;outline:none;}
-.btn-nilai{padding:.45rem 1rem;background:#2563EB;color:#fff;border:none;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.btn-nilai{padding:.45rem 1rem;background:#2563EB;color:#fff;border:none;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .18s;}
+.btn-nilai:hover{background:#1d4ed8;box-shadow:0 4px 14px rgba(37,99,235,.25);transform:translateY(-1px);}
 .badge-status{font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;}
 .badge-status--terkirim{background:#DBEAFE;color:#1D4ED8;}
 .badge-status--dinilai{background:#DCFCE7;color:#15803D;}

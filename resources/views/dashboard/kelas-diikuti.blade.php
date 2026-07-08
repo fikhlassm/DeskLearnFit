@@ -9,9 +9,6 @@
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Kelas Saya</h1><p class="topbar__sub">Kelas yang kamu ikuti</p></div>
         <div class="topbar__right">
-            <form method="POST" action="{{ route('logout') }}" style="margin:0">@csrf
-                <button type="submit" class="topbar__icon-btn" title="Logout"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            </form>
         </div>
     </div>
 
@@ -35,7 +32,7 @@
     {{-- Daftar Kelas --}}
     @if($kelasDiikuti->isEmpty())
     <div class="empty-state">
-        <div class="empty-state__icon">🎓</div>
+        <div class="empty-state__icon" style="display:flex;justify-content:center;color:#94A3B8;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
         <p class="empty-state__title">Belum ada kelas</p>
         <p class="empty-state__sub">Masukkan kode kelas di atas untuk bergabung.</p>
     </div>
@@ -43,20 +40,26 @@
     <div class="kelas-grid">
         @foreach($kelasDiikuti as $kelas)
         <div class="kelas-card">
-            <div class="kelas-card__header">
-                <span class="kelas-badge">{{ $kelas->mata_pelajaran }}</span>
-                <span class="kelas-anggota">{{ $kelas->siswa_count }} siswa</span>
-            </div>
-            <p class="kelas-card__nama">{{ $kelas->nama_kelas }}</p>
-            <p class="kelas-card__pengajar">Pengajar: {{ $kelas->pengajar->name ?? '-' }}</p>
-            <p class="kelas-card__kode">Kode: <code>{{ $kelas->kode_kelas }}</code></p>
-            <div class="kelas-card__actions">
-                <a href="{{ route('siswa.materi.index', $kelas) }}" class="btn-lihat-materi">📚 Materi</a>
-                <a href="{{ route('siswa.tugas.index', $kelas) }}" class="btn-lihat-tugas">📝 Tugas</a>
-                <form method="POST" action="{{ route('siswa.kelas.leave', $kelas) }}" onsubmit="return confirm('Keluar dari kelas {{ $kelas->nama_kelas }}?')" style="display:inline">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn-leave">Keluar</button>
-                </form>
+            @if($kelas->cover_image)
+                <div class="kelas-card__cover" style="background-image: url('{{ asset($kelas->cover_image) }}')"></div>
+            @else
+                <div class="kelas-card__cover" style="background-color: {{ $kelas->theme_color ?? '#4F46E5' }}"></div>
+            @endif
+            <div class="kelas-card__body">
+                <p class="kelas-card__nama">{{ $kelas->nama_kelas }}</p>
+                <p class="kelas-card__pengajar">{{ $kelas->mata_pelajaran }} &middot; Pengajar: {{ $kelas->pengajar->name ?? '-' }}</p>
+                <p class="kelas-card__kode" style="margin-top:.25rem">Kode: <code>{{ $kelas->kode_kelas }}</code></p>
+                
+                <div class="kelas-card__actions">
+                    <a href="{{ route('siswa.kelas.show', $kelas) }}" class="btn-masuk-kelas">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        Masuk Kelas
+                    </a>
+                    <form method="POST" action="{{ route('siswa.kelas.leave', $kelas) }}" onsubmit="return confirm('Keluar dari kelas {{ $kelas->nama_kelas }}?')" style="display:inline">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn-leave">Keluar</button>
+                    </form>
+                </div>
             </div>
         </div>
         @endforeach
@@ -74,8 +77,12 @@
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
 .topbar__sub{font-size:.83rem;color:#64748B;}
 .topbar__right{display:flex;align-items:center;gap:.6rem;}
-.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s, transform .15s;}
+.topbar__icon-btn:hover{background:#F1F5F9;}
+.topbar__icon-btn:active{background:#E2E8F0;transform:scale(.93);}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .alert-success{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:.65rem 1rem;color:#065F46;font-size:.83rem;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:.65rem 1rem;color:#991B1B;font-size:.83rem;}
 .join-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.25rem 1.5rem;}
@@ -88,20 +95,24 @@
 .btn-join{padding:.6rem 1.25rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:background .18s;}
 .btn-join:hover{background:#1d4ed8;}
 .form-error{font-size:.78rem;color:#EF4444;}
-.kelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
-.kelas-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.25rem;display:flex;flex-direction:column;gap:.6rem;transition:box-shadow .2s,transform .2s;}
-.kelas-card:hover{box-shadow:0 4px 18px rgba(15,23,42,.08);transform:translateY(-2px);}
-.kelas-card__header{display:flex;align-items:center;justify-content:space-between;}
+.kelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+.kelas-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .2s,transform .2s;}
+.kelas-card:hover{box-shadow:0 6px 20px rgba(15,23,42,.08);transform:translateY(-3px);}
+.kelas-card__cover{height:140px;background-size:cover;background-position:center;position:relative;}
+.kelas-card__body{padding:1.25rem;display:flex;flex-direction:column;flex:1;}
 .kelas-badge{font-size:.72rem;font-weight:700;background:#EFF6FF;color:#2563EB;padding:.22rem .65rem;border-radius:99px;}
 .kelas-anggota{font-size:.72rem;color:#94A3B8;}
-.kelas-card__nama{font-size:1rem;font-weight:700;color:#0F172A;}
+.kelas-card__nama{font-size:1.05rem;font-weight:700;color:#0F172A;line-height:1.4;margin-bottom:.3rem;}
 .kelas-card__pengajar{font-size:.8rem;color:#64748B;}
-.kelas-card__kode{font-size:.78rem;color:#94A3B8;}code{background:#F1F5F9;padding:.1rem .4rem;border-radius:5px;font-size:.75rem;}
+.kelas-card__kode{font-size:.8rem;color:#64748B;}code{background:#F1F5F9;padding:.1rem .4rem;border-radius:5px;font-size:.75rem;}
 .kelas-card__actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.35rem;}
 .btn-lihat-materi,.btn-lihat-tugas{padding:.38rem .75rem;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none;transition:background .18s;}
 .btn-lihat-materi{background:#EFF6FF;color:#2563EB;}
 .btn-lihat-tugas{background:#F5F3FF;color:#7C3AED;}
-.btn-leave{padding:.38rem .75rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.btn-masuk-kelas{padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s;display:flex;align-items:center;justify-content:center;gap:.4rem;background:#8B5CF6;color:#fff;}
+.btn-masuk-kelas:hover{background:#7C3AED;}
+.btn-leave{padding:.38rem .75rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-leave:hover{background:#FEE2E2;border-color:#FCA5A5;}
 .empty-state{text-align:center;padding:3rem 1rem;background:#fff;border:1px dashed #E2E8F0;border-radius:16px;}
 .empty-state__icon{font-size:2.5rem;margin-bottom:.65rem;}
 .empty-state__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:.3rem;}

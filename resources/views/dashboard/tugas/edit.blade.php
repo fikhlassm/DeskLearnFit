@@ -6,11 +6,12 @@
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Edit Tugas</h1></div>
-        <div class="topbar__right"><a href="{{ route('tugas.index', $tugas->kelas_id) }}" class="btn-back">← Kembali</a></div>
+        <div class="topbar__right"><a href="{{ route('kelas.show', $tugas->kelas_id) }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Batal</a></div>
     </div>
     <div class="section-card">
         <form method="POST" action="{{ route('tugas.update', $tugas) }}">
             @csrf @method('PUT')
+            <input type="hidden" name="topik_id" value="{{ $tugas->topik_id }}">
             @if($errors->any())<div class="alert-error" style="margin-bottom:.75rem">{{ $errors->first() }}</div>@endif
             <div class="form-group"><label>Judul *</label><input type="text" name="judul" value="{{ old('judul', $tugas->judul) }}" required class="form-input"></div>
             <div class="form-group"><label>Deskripsi *</label><textarea name="deskripsi" rows="4" required class="form-input">{{ old('deskripsi', $tugas->deskripsi) }}</textarea></div>
@@ -22,7 +23,8 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 </div>
 @include('dashboard._dash_styles')
-<style>.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}.section-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.5rem;}.form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem;}.form-group label{font-size:.8rem;font-weight:600;color:#374151;}.form-input{padding:.55rem .85rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.85rem;font-family:inherit;outline:none;}.btn-primary{padding:.65rem 1.4rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;}</style>
+<style>.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}.section-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.5rem;}.form-group{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.85rem;}.form-group label{font-size:.8rem;font-weight:600;color:#374151;}.form-input{padding:.55rem .85rem;border:1px solid #E2E8F0;border-radius:9px;font-size:.85rem;font-family:inherit;outline:none;}.btn-primary{padding:.65rem 1.4rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;}</style>
 <script>
 const s=document.querySelector('.sidebar'),o=document.getElementById('sidebarOverlay'),h=document.getElementById('hamburgerBtn');
 if(h)h.addEventListener('click',()=>{s.classList.add('sidebar--open');o.classList.add('overlay--show');});

@@ -22,9 +22,6 @@
             </div>
             <div class="topbar__right">
                 <a href="{{ route('sesi.index') }}" class="btn-mulai">+ Sesi Baru</a>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0">@csrf
-                    <button type="submit" class="topbar__icon-btn"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-                </form>
             </div>
         </div>
 
@@ -106,8 +103,12 @@
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
 .topbar__sub{font-size:.83rem;color:#64748B;margin-top:.1rem;}
 .topbar__right{display:flex;align-items:center;gap:.6rem;}
-.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s, transform .15s;}
+.topbar__icon-btn:hover{background:#F1F5F9;}
+.topbar__icon-btn:active{background:#E2E8F0;transform:scale(.93);}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .btn-mulai{padding:.6rem 1.2rem;background:#2563EB;color:#fff;text-decoration:none;border-radius:10px;font-size:.85rem;font-weight:600;transition:background .15s;}
 .btn-mulai:hover{background:#1d4ed8;}
 .alert-success{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:.65rem 1rem;color:#065F46;font-size:.83rem;}

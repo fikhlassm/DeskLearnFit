@@ -24,6 +24,33 @@ class AnggotaKelasController extends Controller
         return view('dashboard.kelas-diikuti', compact('kelasDiikuti'));
     }
 
+    /** Tampilkan halaman detail kelas (Moodle style) untuk Siswa. */
+    public function show(Kelas $kelas): View
+    {
+        // Pastikan siswa terdaftar di kelas ini
+        $sudahJoin = AnggotaKelas::where('kelas_id', $kelas->id)
+            ->where('siswa_id', Auth::id())
+            ->exists();
+
+        if (! $sudahJoin) {
+            abort(403, 'Kamu tidak terdaftar di kelas ini.');
+        }
+
+        // Load relasi Topik beserta materi (published) dan tugas (published)
+        $kelas->load(['topiks' => function ($query) {
+            $query->orderBy('urutan', 'asc')->with([
+                'materi' => function($q) { $q->where('status', 'terbit'); },
+                'tugas' => function($q) { $q->where('status', 'terbit'); }
+            ]);
+        }]);
+
+        // Cek materi & tugas general (uncategorized) yang sudah terbit
+        $generalMateri = $kelas->materi()->whereNull('topik_id')->where('status', 'terbit')->get();
+        $generalTugas = $kelas->tugas()->whereNull('topik_id')->where('status', 'terbit')->get();
+
+        return view('dashboard.siswa.kelas-detail', compact('kelas', 'generalMateri', 'generalTugas'));
+    }
+
     /** Siswa join kelas menggunakan kode_kelas. */
     public function join(Request $request): RedirectResponse
     {

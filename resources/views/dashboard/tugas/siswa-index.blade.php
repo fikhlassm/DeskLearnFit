@@ -6,11 +6,11 @@
     <div class="topbar">
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Tugas — {{ $kelas->nama_kelas }}</h1><p class="topbar__sub">Tugas dari kelas ini</p></div>
-        <div class="topbar__right"><a href="{{ route('siswa.kelas.index') }}" class="btn-back">← Kelas Saya</a></div>
+        <div class="topbar__right"><a href="{{ route('siswa.kelas.index') }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kelas Saya</a></div>
     </div>
 
     @if($tugasList->isEmpty())
-    <div class="empty-state"><div class="empty-state__icon">📝</div><p class="empty-state__title">Belum ada tugas</p><p class="empty-state__sub">Pengajar belum mempublikasikan tugas.</p></div>
+    <div class="empty-state"><div class="empty-state__icon" style="display:flex;justify-content:center;color:#94A3B8;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><p class="empty-state__title">Belum ada tugas</p><p class="empty-state__sub">Pengajar belum mempublikasikan tugas.</p></div>
     @else
     <div class="list-card">
         @foreach($tugasList as $tugas)
@@ -42,7 +42,8 @@
 </div>
 @include('dashboard._dash_styles')
 <style>
-.btn-back{padding:.5rem 1rem;background:#F1F5F9;color:#475569;border-radius:10px;text-decoration:none;font-size:.82rem;font-weight:600;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .list-card{display:flex;flex-direction:column;gap:.65rem;}
 .list-item{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:box-shadow .2s,transform .2s;}
 .list-item--link{text-decoration:none;color:inherit;cursor:pointer;}

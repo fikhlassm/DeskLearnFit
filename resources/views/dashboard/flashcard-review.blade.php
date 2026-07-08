@@ -54,7 +54,7 @@
         </div>
 
         <div class="review-controls">
-            <button type="button" class="review-nav review-nav--prev" id="btnPrev" disabled onclick="navigateCard(-1)">← Sebelumnya</button>
+            <button type="button" class="review-nav review-nav--prev" id="btnPrev" disabled onclick="navigateCard(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Sebelumnya</button>
             <span class="review-hint" id="reviewHint">Klik "Lihat Jawaban" untuk membalik kartu</span>
             <button type="button" class="review-nav review-nav--next" id="btnNext" onclick="navigateCard(1)">Selanjutnya →</button>
         </div>

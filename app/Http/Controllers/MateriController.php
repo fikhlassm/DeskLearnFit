@@ -34,7 +34,7 @@ class MateriController extends Controller
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
-            'konten' => ['nullable', 'string'],
+            'topik_id' => ['required', 'exists:topiks,id'],
             'tipe' => ['required', 'in:teks,link,file'],
             'link_url' => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
             'file' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
@@ -52,15 +52,16 @@ class MateriController extends Controller
             'pengajar_id' => Auth::id(),
             'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'] ?? null,
-            'konten' => $validated['konten'] ?? null,
+            'topik_id' => $validated['topik_id'] ?? null,
             'tipe' => $validated['tipe'],
             'link_url' => $validated['link_url'] ?? null,
             'file_path' => $filePath,
-            'status' => 'draf',
+            'status' => 'terbit',
+            'published_at' => now(),
         ]);
 
-        return redirect()->route('materi.index', $kelas)
-            ->with('success', 'Materi berhasil ditambahkan sebagai draf.');
+        return redirect()->route('kelas.show', $kelas)
+            ->with('success', 'Materi berhasil ditambahkan.');
     }
 
     /** Form edit materi. */
@@ -79,7 +80,7 @@ class MateriController extends Controller
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
-            'konten' => ['nullable', 'string'],
+            'topik_id' => ['required', 'exists:topiks,id'],
             'tipe' => ['required', 'in:teks,link,file'],
             'link_url' => ['nullable', 'url', 'max:500', 'required_if:tipe,link'],
             'file' => ['nullable', 'file', 'max:10240', 'mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png,zip'],
@@ -96,13 +97,13 @@ class MateriController extends Controller
         $materi->update([
             'judul' => $validated['judul'],
             'deskripsi' => $validated['deskripsi'] ?? null,
-            'konten' => $validated['konten'] ?? null,
+            'topik_id' => $validated['topik_id'] ?? $materi->topik_id,
             'tipe' => $validated['tipe'],
             'link_url' => $validated['link_url'] ?? null,
             'file_path' => $filePath,
         ]);
 
-        return redirect()->route('materi.index', $materi->kelas_id)
+        return redirect()->route('kelas.show', $materi->kelas_id)
             ->with('success', 'Materi berhasil diperbarui.');
     }
 
@@ -118,7 +119,7 @@ class MateriController extends Controller
 
         $materi->delete();
 
-        return redirect()->route('materi.index', $kelasId)
+        return redirect()->route('kelas.show', $kelasId)
             ->with('success', 'Materi berhasil dihapus.');
     }
 
@@ -132,8 +133,8 @@ class MateriController extends Controller
             'published_at' => now(),
         ]);
 
-        return redirect()->route('materi.index', $materi->kelas_id)
-            ->with('success', 'Materi berhasil dipublikasikan.');
+        return redirect()->route('kelas.show', $materi->kelas_id)
+            ->with('success', 'Materi berhasil diterbitkan.');
     }
 
     // ── SISWA ─────────────────────────────────────────────────────────────────

@@ -27,29 +27,17 @@
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
                     </button>
                 </div>
-                <button class="topbar__icon-btn search-toggle" id="searchToggle" aria-label="Cari">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#475569" stroke-width="1.5"/><path d="M13 13l3.5 3.5" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="topbar__icon-btn" aria-label="Notifikasi">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v2.586l-1.707 1.707A1 1 0 003 14h14a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z" stroke="#475569" stroke-width="1.5"/><path d="M8 14a2 2 0 004 0" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0">
-                    @csrf
-                    <button type="submit" class="topbar__icon-btn" title="Logout">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                </form>
             </div>
         </div>
 
         {{-- RINGKASAN --}}
-        <section class="section">
+        <section class="dash-section">
             <h2 class="section__title">Ringkasan Pengajaran</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-card__top">
-                        <div class="stat-card__icon" style="background:#EFF6FF;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#2563EB" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        <div class="stat-card__icon" style="background:#F3E8FF;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#9333EA" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#9333EA" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#9333EA" stroke-width="1.8" stroke-linecap="round"/></svg>
                         </div>
                     </div>
                     <p class="stat-card__label">Total Siswa</p>
@@ -57,8 +45,8 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-card__top">
-                        <div class="stat-card__icon" style="background:#EFF6FF;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#2563EB" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        <div class="stat-card__icon" style="background:#ECFDF5;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#10B981" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#10B981" stroke-width="1.8" stroke-linecap="round"/></svg>
                         </div>
                     </div>
                     <p class="stat-card__label">Kelas Aktif</p>
@@ -66,15 +54,15 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-card__top">
-                        <div class="stat-card__icon" style="background:#EFF6FF;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2563EB" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="stat-card__icon" style="background:#FFFBEB;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F59E0B" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         @if(($totalJawabanBelumDinilai ?? 0) > 0)
                         <span class="stat-card__badge stat-card__badge--red">{{ $totalJawabanBelumDinilai }} belum dinilai</span>
                         @endif
                     </div>
-                    <p class="stat-card__label">Jawaban Masuk</p>
-                    <p class="stat-card__value">{{ $totalTugasTerbit ?? 0 }} <span style="font-size:1rem;font-weight:500;color:#64748b;">tugas terbit</span></p>
+                    <p class="stat-card__label">Tugas Terbit</p>
+                    <p class="stat-card__value">{{ $totalTugasTerbit ?? 0 }}</p>
                 </div>
             </div>
         </section>
@@ -83,15 +71,19 @@
         <div class="bottom-grid">
 
             {{-- Jadwal --}}
-            <section class="section">
+            <section class="dash-section" style="display:flex; flex-direction:column;">
                 <div class="section__head">
                     <h2 class="section__title">Jadwal Mengajar Hari Ini</h2>
                     <!-- <a href="#" class="section__link">Lihat Semua</a> -->
                 </div>
-                <div class="schedule-list">
+                <div class="schedule-list" style="flex:1; display:flex; flex-direction:column;">
                     @if($jadwalHariIni->isEmpty())
-                        <div style="background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.5rem;text-align:center;">
-                            <p style="color:#64748B;font-size:0.85rem;">Tidak ada jadwal mengajar hari ini.</p>
+                        <div style="flex:1; background:#fff;border:2px dashed #E2E8F0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;min-height:250px;text-align:center;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" opacity="0.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <div>
+                                <p style="color:#334155;font-weight:600;font-size:0.9rem;">Waktu Bebas!</p>
+                                <p style="color:#64748B;font-size:0.85rem;">Tidak ada jadwal mengajar untuk hari ini.</p>
+                            </div>
                         </div>
                     @else
                         @foreach($jadwalHariIni as $jadwal)
@@ -100,10 +92,11 @@
                                 $mulai = \Carbon\Carbon::parse($jadwal->jam_mulai);
                                 $selesai = \Carbon\Carbon::parse($jadwal->jam_selesai);
                                 $isActive = $now->between($mulai, $selesai);
+                                $theme = $jadwal->kelas->theme_color ?? '#4F46E5';
                             @endphp
-                            <div class="sched-card {{ $isActive ? 'sched-card--active' : '' }}">
+                            <div class="sched-card {{ $isActive ? 'sched-card--active' : '' }}" style="--theme: {{ $theme }};">
                                 <div class="sched-card__time">
-                                    <span class="sched-card__hour">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}</span>
+                                    <span class="sched-card__hour" style="color: var(--theme);">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}</span>
                                     <span class="sched-card__end">{{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</span>
                                 </div>
                                 <div class="sched-card__body">
@@ -118,7 +111,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <a href="{{ route('materi.index', $jadwal->kelas_id) }}" class="sched-btn {{ $isActive ? 'sched-btn--primary' : 'sched-btn--ghost' }}" style="text-decoration:none; display:inline-block; text-align:center;">Masuk Kelas</a>
+                                <a href="{{ route('materi.index', $jadwal->kelas_id) }}" class="sched-btn {{ $isActive ? 'sched-btn--primary' : 'sched-btn--ghost' }}">Masuk Kelas</a>
                             </div>
                         @endforeach
                     @endif
@@ -126,12 +119,16 @@
             </section>
 
             {{-- Tugas --}}
-            <section class="section">
+            <section class="dash-section" style="display:flex; flex-direction:column;">
                 <h2 class="section__title">Tugas Menunggu Dinilai</h2>
-                <div class="task-card">
+                <div class="task-card" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
                     @if($tugasTerbaru->isEmpty())
-                        <div style="text-align:center; padding: 1rem 0;">
-                            <p style="color:#64748B;font-size:0.85rem;">Belum ada tugas.</p>
+                        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:0.75rem; padding: 2rem 1rem;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" opacity="0.5"><path d="M12 20h9M9 20v-2a3 3 0 013-3h.5m-6.5 5H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v7.5M9 8h6m-6 4h6" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <div>
+                                <p style="color:#334155;font-weight:600;font-size:0.9rem;">Semua Tugas Selesai</p>
+                                <p style="color:#64748B;font-size:0.85rem;">Belum ada tugas baru yang perlu dinilai.</p>
+                            </div>
                         </div>
                     @else
                         @foreach($tugasTerbaru as $tugas)
@@ -139,19 +136,20 @@
                                 $totalSiswa = $tugas->kelas->siswa()->count();
                                 $dikumpulkan = $tugas->jawaban_tugas_count;
                                 $pct = $totalSiswa > 0 ? round(($dikumpulkan / $totalSiswa) * 100) : 0;
+                                $theme = $tugas->kelas->theme_color ?? '#4F46E5';
                             @endphp
-                            <div class="task-item">
+                            <a href="{{ route('tugas.jawaban.index', $tugas->id) }}" class="task-item task-item-link" style="--theme: {{ $theme }}; text-decoration: none;">
                                 <div class="task-item__head">
                                     <p class="task-item__name">{{ $tugas->judul }}</p>
-                                    <span class="task-badge task-badge--blue">{{ $dikumpulkan }}/{{ $totalSiswa }}</span>
+                                    <span class="task-badge" style="background: {{ $theme }}1a; color: {{ $theme }}; border: 1px solid {{ $theme }}33;">{{ $dikumpulkan }}/{{ $totalSiswa }}</span>
                                 </div>
-                                <p class="task-item__class">{{ $tugas->kelas->nama_kelas }}</p>
-                                <div class="task-bar"><div class="task-bar__fill task-bar__fill--blue" style="width:{{ $pct }}%"></div></div>
+                                <p class="task-item__class" style="color: {{ $theme }}; opacity: 0.8; font-weight: 600;">{{ $tugas->kelas->nama_kelas }}</p>
+                                <div class="task-bar"><div class="task-bar__fill" style="width:{{ $pct }}%; background: {{ $theme }};"></div></div>
                                 <div class="task-item__foot">
-                                    <span class="task-item__deadline">Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->diffForHumans() }}</span>
+                                    <span class="task-item__deadline" data-deadline="{{ \Carbon\Carbon::parse($tugas->deadline)->toIso8601String() }}">Tenggat: {{ \Carbon\Carbon::parse($tugas->deadline)->diffForHumans(['parts' => 3]) }}</span>
                                     <span class="task-item__pct">{{ $pct }}% Dikumpulkan</span>
                                 </div>
-                            </div>
+                            </a>
                         @endforeach
                         <!-- <a href="#" class="btn-all-tasks">Lihat Semua Tugas</a> -->
                     @endif
@@ -248,8 +246,9 @@
     flex:1;
     display:flex;
     flex-direction:column;
+    justify-content:flex-start;
     padding:1.5rem 2rem;
-    gap:1.5rem;
+    gap:.65rem;
     overflow-x:hidden;
 }
 
@@ -290,7 +289,7 @@
 .topbar__icon-btn:hover{background:#F1F5F9;}
 
 /* ── SECTION ── */
-.section{display:flex;flex-direction:column;gap:.85rem;}
+.dash-section{display:flex;flex-direction:column;gap:.85rem;}
 .section__head{display:flex;align-items:center;justify-content:space-between;}
 .section__title{font-size:1rem;font-weight:700;color:#0F172A;}
 .section__link{font-size:.82rem;font-weight:600;color:#2563EB;text-decoration:none;}
@@ -315,7 +314,7 @@
 .stat-card__value{font-size:2rem;font-weight:800;color:#0F172A;letter-spacing:-.04em;line-height:1;}
 
 /* ── BOTTOM GRID ── */
-.bottom-grid{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;}
+.bottom-grid{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;align-items:stretch;}
 
 /* ── SCHEDULE ── */
 .schedule-list{display:flex;flex-direction:column;gap:.75rem;}
@@ -352,13 +351,17 @@
     border-radius:9px;padding:.5rem 1rem;
     border:none;cursor:pointer;
     font-family:inherit;
-    transition:background .18s,transform .15s;
+    transition:all .18s;
     white-space:nowrap;
+    text-decoration:none;
+    display:inline-block;
+    text-align:center;
 }
-.sched-btn--primary{background:#2563EB;color:#fff;}
-.sched-btn--primary:hover{background:#1d4ed8;transform:translateY(-1px);}
-.sched-btn--ghost{background:#fff;color:#475569;border:1.5px solid #e2e8f0;}
-.sched-btn--ghost:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);transform:translateY(-1px);}
+.sched-btn--primary{background:var(--theme);color:#fff;border:1.5px solid var(--theme);}
+.sched-btn--primary:hover{opacity:0.85;transform:translateY(-1px);}
+.sched-btn--ghost{background:#fff;color:var(--theme);border:1.5px solid var(--theme);}
+.sched-btn--ghost:hover{background:var(--theme);color:#fff;transform:translateY(-1px);box-shadow:0 2px 8px color-mix(in srgb, var(--theme) 30%, transparent);}
+
 
 /* ── TUGAS ── */
 .task-card{
@@ -379,8 +382,8 @@
 .task-bar__fill--blue{background:#2563EB;}
 .task-bar__fill--red{background:#EF4444;}
 .task-bar__fill--green{background:#22C55E;}
-.task-item__foot{display:flex;justify-content:space-between;}
-.task-item__deadline{font-size:.7rem;color:#64748B;}
+.task-item__foot{display:flex;flex-direction:column;gap:.35rem;}
+.task-item__deadline{font-size:.7rem;color:#64748B;font-variant-numeric:tabular-nums;}
 .task-item__deadline--urgent{color:#EF4444;font-weight:600;}
 .task-item__pct{font-size:.7rem;color:#94A3B8;}
 
@@ -401,9 +404,11 @@
 .stat-card:hover{box-shadow:0 6px 24px rgba(37,99,235,.10);transform:translateY(-2px);}
 
 /* Schedule cards */
-.sched-card{transition:box-shadow .2s,transform .2s,border-color .2s;}
+.sched-card{--theme:#4F46E5; border-left: 4px solid var(--theme); transition:box-shadow .2s,transform .2s,border-color .2s;}
 .sched-card:hover{box-shadow:0 4px 18px rgba(15,23,42,.08);transform:translateY(-1px);}
-.sched-card--active:hover{border-left-color:#1d4ed8;}
+.sched-card--active{border-color:var(--theme);box-shadow:0 4px 12px color-mix(in srgb, var(--theme) 15%, transparent);}
+.sched-card--active:hover{border-left-color:var(--theme);box-shadow:0 6px 18px color-mix(in srgb, var(--theme) 25%, transparent);}
+.sched-badge--live{background:color-mix(in srgb, var(--theme) 15%, transparent);color:var(--theme);}
 
 /* Schedule buttons active (klik) */
 .sched-btn:active{transform:scale(.96);}
@@ -411,8 +416,9 @@
 .sched-btn--ghost:active{background:#CBD5E1;}
 
 /* Task items */
-.task-item{padding:.5rem .35rem;border-radius:10px;transition:background .18s;}
-.task-item:hover{background:#F8FAFC;}
+.task-item{--theme:#4F46E5; border-left: 4px solid var(--theme); padding:.8rem 1rem; border-radius:10px; transition:background .18s, border-color .2s, box-shadow .2s; border-top:1px solid #E2E8F0; border-right:1px solid #E2E8F0; border-bottom:1px solid #E2E8F0;}
+.task-item:hover{background:#F8FAFC; border-color:var(--theme); box-shadow:0 4px 12px color-mix(in srgb, var(--theme) 10%, transparent);}
+.task-item-link:hover .task-item__name{color:var(--theme);}
 
 /* Lihat Semua Tugas button */
 .btn-all-tasks:active{background:#E2E8F0;transform:scale(.98);}
@@ -420,9 +426,7 @@
 /* Sidebar links active */
 .sidebar__link:active{background:#DBEAFE;}
 
-/* Sidebar user hover */
-.sidebar__user{border-radius:10px;margin:.5rem .75rem 0;transition:background .18s;cursor:pointer;padding:.85rem 1.25rem;}
-.sidebar__user:hover{background:#F8FAFC;}
+.sidebar__user{border-radius:10px;margin:.5rem .75rem 0;padding:.85rem 1.25rem;}
 
 /* Topbar icon buttons active */
 .topbar__icon-btn:active{background:#E2E8F0;transform:scale(.93);}
@@ -504,17 +508,47 @@ document.querySelectorAll('.sidebar__link').forEach(link => {
 });
 
 const searchBox = document.getElementById('searchBox');
-const searchToggle = document.getElementById('searchToggle');
 const searchClose = document.getElementById('searchClose');
 const searchInput = document.getElementById('searchInput');
 
-searchToggle.addEventListener('click', () => {
-    searchBox.classList.add('search-box--open');
-    searchInput.focus();
-});
 searchClose.addEventListener('click', () => {
     searchBox.classList.remove('search-box--open');
     searchInput.value = '';
 });
+
+// Real-time Countdown
+function updateDeadlines() {
+    document.querySelectorAll('[data-deadline]').forEach(el => {
+        const deadline = new Date(el.getAttribute('data-deadline'));
+        const now = new Date();
+        const diff = deadline - now;
+        
+        if (diff <= 0) {
+            el.textContent = 'Tenggat: Waktu habis';
+            el.classList.add('task-item__deadline--urgent');
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        let text = 'Tenggat: ';
+        if(days > 0) text += days + ' hari ';
+        if(hours > 0 || days > 0) text += hours + ' jam ';
+        if(minutes > 0 || hours > 0 || days > 0) text += minutes + ' menit ';
+        text += seconds + ' detik dari sekarang';
+        
+        el.textContent = text;
+        
+        // Add urgent styling if less than 24 hours
+        if (days < 1 && !el.classList.contains('task-item__deadline--urgent')) {
+            el.classList.add('task-item__deadline--urgent');
+        }
+    });
+}
+setInterval(updateDeadlines, 1000);
+updateDeadlines();
 </script>
 @endsection

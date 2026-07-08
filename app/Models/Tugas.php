@@ -15,6 +15,7 @@ class Tugas extends Model
 
     protected $fillable = [
         'kelas_id',
+        'topik_id',
         'pengajar_id',
         'judul',
         'deskripsi',
@@ -44,7 +45,12 @@ class Tugas extends Model
 
     public function jawabanTugas(): HasMany
     {
-        return $this->hasMany(JawabanTugas::class);
+        return $this->hasMany(JawabanTugas::class, 'tugas_id');
+    }
+
+    public function topik(): BelongsTo
+    {
+        return $this->belongsTo(Topik::class);
     }
 
     public function isTerbit(): bool

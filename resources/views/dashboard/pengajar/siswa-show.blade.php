@@ -18,14 +18,14 @@
         <div class="topbar">
             <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
             <div>
-                <a href="{{ route('siswa.index') }}" style="color:#64748B;text-decoration:none;font-size:.78rem;">← Kembali ke daftar siswa</a>
+                <a href="{{ route('siswa.index') }}" style="color:#64748B;text-decoration:none;font-size:.78rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali ke daftar siswa</a>
                 <h1 class="topbar__title">Profil Siswa</h1>
             </div>
             <div class="topbar__right"></div>
         </div>
 
         <div class="profile-card">
-            <div class="profile-card__avatar">{{ strtoupper(substr($siswa->name, 0, 1)) }}</div>
+            <div class="profile-card__avatar">{{ strtoupper(collect(explode(' ', trim($siswa->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
             <div class="profile-card__body">
                 <h2 class="profile-card__name">{{ $siswa->name }}</h2>
                 <p class="profile-card__email">{{ $siswa->email }}</p>
@@ -49,7 +49,7 @@
         </div>
 
         @if($sesiByMetode->count() > 0)
-        <section class="section">
+        <section class="dash-section">
             <h2 class="section__title">Distribusi Metode Belajar</h2>
             <div class="metode-list">
                 @foreach($metodeInfo as $key => $info)
@@ -66,7 +66,7 @@
         </section>
         @endif
 
-        <section class="section">
+        <section class="dash-section">
             <h2 class="section__title">5 Sesi Terbaru</h2>
             @if($sesiTerbaru->isEmpty())
             <div class="empty-state"><p class="empty-state__sub">Belum ada sesi belajar.</p></div>
@@ -95,7 +95,9 @@
 .dash-main{flex:1;display:flex;flex-direction:column;padding:1.5rem 2rem;gap:1.25rem;overflow-x:hidden;}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .profile-card{background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:1.5rem;display:flex;align-items:center;gap:1.25rem;}
 .profile-card__avatar{width:72px;height:72px;border-radius:50%;background:#2563EB;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;flex-shrink:0;}
 .profile-card__name{font-size:1.25rem;font-weight:800;color:#0F172A;}
@@ -108,7 +110,7 @@
 .stat-box[data-tone="primary"]{background:#EFF6FF;border-color:#93C5FD;}
 .stat-box__num{font-size:1.4rem;font-weight:800;color:#0F172A;}
 .stat-box__label{font-size:.7rem;color:#64748B;font-weight:600;}
-.section{display:flex;flex-direction:column;gap:.85rem;}
+.dash-section{display:flex;flex-direction:column;gap:.85rem;}
 .section__title{font-size:1rem;font-weight:700;color:#0F172A;}
 .metode-list,.sesi-list{display:flex;flex-direction:column;gap:.5rem;}
 .metode-row,.sesi-row{background:#fff;border:1px solid #E2E8F0;border-radius:12px;padding:.85rem 1.1rem;display:flex;align-items:center;gap:1rem;}

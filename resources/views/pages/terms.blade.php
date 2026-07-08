@@ -26,7 +26,7 @@
             </ul>
 
             <h2 class="text-xl font-semibold mt-8 mb-4 text-ink-900">5. Perubahan Syarat</h2>
-            <p class="mb-4">LearnFit dapat memperbarui syarat dan ketentuan ini sewaktu-waktu. Perubahan akan diberitahukan melalui email atau notifikasi di dashboard.</p>
+            <p class="mb-4">LearnFit dapat memperbarui syarat dan ketentuan ini sewaktu-waktu. Perubahan akan diberitahukan melalui email atau notifikasi di beranda.</p>
             
             <div class="mt-12 pt-8 border-t border-slate-200">
                 <a href="/" class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center gap-2">

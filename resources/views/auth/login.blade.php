@@ -114,8 +114,8 @@
 <style>
 .auth-card__divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;color:#94A3B8;font-size:.78rem;}
 .auth-card__divider::before,.auth-card__divider::after{content:"";flex:1;height:1px;background:#E2E8F0;}
-.btn-google{display:flex;align-items:center;justify-content:center;gap:.65rem;width:100%;padding:.8rem;background:#fff;color:#0F172A;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .18s,border-color .18s;}
-.btn-google:hover{background:#F8FAFC;border-color:#94A3B8;}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:.65rem;width:100%;padding:.8rem;background:#fff;color:#0F172A;border:1.5px solid #E2E8F0;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;transition:background .18s,border-color .18s, transform .18s, box-shadow .18s;}
+.btn-google:hover{background:#F8FAFC;border-color:#94A3B8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(148,163,184,.15);}
 </style>
 
 <script>

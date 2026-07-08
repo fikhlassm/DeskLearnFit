@@ -21,9 +21,9 @@
                 <p class="topbar__sub">Siswa yang mengikuti kelas Anda</p>
             </div>
             <div class="topbar__right">
-                <form method="GET" action="{{ route('siswa.index') }}" class="topbar__search">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama / email..." class="topbar__search-input">
-                    <button type="submit" class="topbar__search-btn">🔍</button>
+                <form method="GET" action="{{ route('siswa.index') }}" class="search-box-kelas">
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#94a3b8" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama / email...">
                 </form>
             </div>
         </div>
@@ -34,7 +34,7 @@
         <div class="siswa-list">
             @forelse($siswa as $s)
             <a href="{{ route('siswa.show', $s) }}" class="siswa-card">
-                <div class="siswa-card__avatar">{{ strtoupper(substr($s->name, 0, 1)) }}</div>
+                <div class="siswa-card__avatar">{{ strtoupper(collect(explode(' ', trim($s->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
                 <div class="siswa-card__body">
                     <p class="siswa-card__name">{{ $s->name }}</p>
                     <p class="siswa-card__email">{{ $s->email }}</p>
@@ -75,10 +75,13 @@
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
 .topbar__sub{font-size:.83rem;color:#64748B;margin-top:.1rem;}
 .topbar__right{display:flex;align-items:center;gap:.6rem;}
-.topbar__search{display:flex;align-items:center;gap:.4rem;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.3rem .5rem .3rem .85rem;}
-.topbar__search-input{border:none;outline:none;font-size:.85rem;font-family:inherit;width:220px;background:transparent;color:#0F172A;}
-.topbar__search-btn{background:none;border:none;cursor:pointer;font-size:1rem;padding:0 .25rem;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.search-box-kelas{display:flex;align-items:center;gap:.5rem;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.5rem .9rem;width:260px;transition:border-color .18s,box-shadow .18s;}
+.search-box-kelas:focus-within{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
+.search-box-kelas input{border:none;outline:none;font-size:.83rem;color:#0F172A;font-family:inherit;width:100%;background:transparent;}
+.search-box-kelas input::placeholder{color:#94A3B8;}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .alert-success{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:.65rem 1rem;color:#065F46;font-size:.83rem;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:.65rem 1rem;color:#991B1B;font-size:.83rem;}
 .siswa-list{display:flex;flex-direction:column;gap:.75rem;}
@@ -97,6 +100,6 @@
 .empty-state__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:.3rem;}
 .empty-state__sub{font-size:.8rem;color:#64748B;}
 .pagination-wrap{margin-top:.5rem;}
-@media(max-width:700px){.topbar__search-input{width:140px;}.siswa-card{flex-wrap:wrap;}.siswa-card__stats{width:100%;flex-direction:row;align-items:center;}}
+@media(max-width:700px){.search-box-kelas{width:200px;}.siswa-card{flex-wrap:wrap;}.siswa-card__stats{width:100%;flex-direction:row;align-items:center;}}
 </style>
 @endsection

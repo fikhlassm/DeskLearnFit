@@ -35,7 +35,7 @@
 
         <div class="public-nav__actions">
             @auth
-                <a href="{{ url('/welcome') }}" class="btn-ghost">Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="btn-ghost">Beranda</a>
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
                     <button type="submit" class="btn-primary">Keluar</button>
@@ -57,7 +57,7 @@
         @endforeach
         <div class="public-nav__mobile-actions">
             @auth
-                <a href="{{ url('/welcome') }}" class="btn-ghost">Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="btn-ghost">Beranda</a>
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
                     <button type="submit" class="btn-primary">Keluar</button>

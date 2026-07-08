@@ -53,12 +53,6 @@ $userName = Auth::user()->name;
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v2.586l-1.707 1.707A1 1 0 003 14h14a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z" stroke="#475569" stroke-width="1.5"/><path d="M8 14a2 2 0 004 0" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
                     <span class="notif-dot"></span>
                 </button>
-                <form method="POST" action="{{ route('logout') }}" style="margin:0">
-                    @csrf
-                    <button type="submit" class="topbar__icon-btn" title="Logout">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                </form>
             </div>
         </div>
 
@@ -90,7 +84,7 @@ $userName = Auth::user()->name;
 
         {{-- METODE BELAJAR (hanya jika sudah quiz) --}}
         @if($method)
-        <section class="section">
+        <section class="dash-section">
             <div class="section__head">
                 <h2 class="section__title">Metode Belajarmu</h2>
                 @if($result)
@@ -108,7 +102,7 @@ $userName = Auth::user()->name;
             </div>
         </section>
         @else
-        <section class="section">
+        <section class="dash-section">
             <div class="quiz-banner">
                 <div>
                     <p class="quiz-banner__title">Temukan Metode Belajarmu! 🎯</p>
@@ -120,7 +114,7 @@ $userName = Auth::user()->name;
         @endif
 
         {{-- RIWAYAT BELAJAR --}}
-        <section class="section">
+        <section class="dash-section">
             <div class="section__head">
                 <h2 class="section__title">Tugas Perlu Dikumpulkan</h2>
                 <a href="{{ route('siswa.kelas.index') }}" class="section__link">Lihat Semua Kelas</a>
@@ -155,7 +149,7 @@ $userName = Auth::user()->name;
         </section>
 
         {{-- TESTIMONI FORM --}}
-        <section class="section" style="margin-top: 2rem;">
+        <section class="dash-section" style="margin-top: 2rem;">
             <div class="section__head">
                 <h2 class="section__title">Bagikan Pengalaman Belajarmu</h2>
             </div>
@@ -238,9 +232,7 @@ $userName = Auth::user()->name;
     display:flex;align-items:center;gap:.7rem;
     padding:.85rem 1.25rem;border-top:1px solid #F1F5F9;
     border-radius:10px;margin:.5rem .75rem 0;
-    transition:background .18s;cursor:pointer;
 }
-.sidebar__user:hover{background:#F8FAFC;}
 .sidebar__avatar{
     width:36px;height:36px;border-radius:50%;
     background:#E2E8F0;
@@ -249,10 +241,10 @@ $userName = Auth::user()->name;
 .sidebar__user-name{font-size:.82rem;font-weight:600;color:#0F172A;}
 .sidebar__user-role{font-size:.68rem;color:#94A3B8;}
 
-/* ── MAIN ── */
 .dash-main{
     flex:1;display:flex;flex-direction:column;
-    padding:1.5rem 2rem;gap:1.5rem;overflow-x:hidden;
+    justify-content:flex-start;
+    padding:1.5rem 2rem;gap:.65rem;overflow-x:hidden;
 }
 
 /* ── TOPBAR ── */
@@ -330,7 +322,7 @@ $userName = Auth::user()->name;
 .hero-btn:active{transform:scale(.97);}
 
 /* ── SECTION ── */
-.section{display:flex;flex-direction:column;gap:.85rem;animation:fadeInUp .35s ease both;}
+.dash-section{display:flex;flex-direction:column;gap:.85rem;animation:fadeInUp .35s ease both;}
 .section__head{display:flex;align-items:center;justify-content:space-between;}
 .section__title{font-size:1rem;font-weight:700;color:#0F172A;}
 .section__link{font-size:.82rem;font-weight:600;color:#2563EB;text-decoration:none;transition:color .18s;}

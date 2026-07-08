@@ -22,6 +22,8 @@ class Kelas extends Model
         'deskripsi',
         'kapasitas',
         'status',
+        'theme_color',
+        'cover_image',
     ];
 
     protected function casts(): array
@@ -59,8 +61,13 @@ class Kelas extends Model
         return $this->hasMany(Tugas::class);
     }
 
-    public function jadwal(): HasMany
+    public function jadwals(): HasMany
     {
         return $this->hasMany(Jadwal::class);
+    }
+
+    public function topiks(): HasMany
+    {
+        return $this->hasMany(Topik::class);
     }
 }

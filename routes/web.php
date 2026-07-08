@@ -101,12 +101,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/email/verification-notification', [VerificationController::class, 'resend'])->name('verification.resend');
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 
-    // Profil — bisa diakses siswa & pengajar
     Route::get('/dashboard/profil', [ProfilController::class, 'show'])->name('profil.show');
     Route::put('/dashboard/profil', [ProfilController::class, 'update'])->name('profil.update');
 
     // Materi download (siswa yang join kelas + pengajar pemilik)
     Route::get('/dashboard/materi/{materi}/download', [MateriController::class, 'download'])->name('materi.download');
+
+    // Universal dashboard redirect
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        if ($user->role === 'pengajar') {
+            return redirect()->route('dashboard.pengajar');
+        }
+        if ($user->quiz_result) {
+            return redirect()->route('dashboard.siswa');
+        }
+        return redirect()->route('welcome');
+    })->name('dashboard');
 });
 
 // ─── Siswa only ───────────────────────────────────────────────────────────────
@@ -122,6 +133,7 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
 
     // Kelas yang diikuti siswa
     Route::get('/dashboard/kelas-diikuti', [AnggotaKelasController::class, 'index'])->name('siswa.kelas.index');
+    Route::get('/dashboard/siswa/kelas/{kelas}', [AnggotaKelasController::class, 'show'])->name('siswa.kelas.show');
     Route::post('/dashboard/kelas-diikuti/join', [AnggotaKelasController::class, 'join'])->name('siswa.kelas.join');
     Route::delete('/dashboard/kelas-diikuti/{kelas}/leave', [AnggotaKelasController::class, 'leave'])->name('siswa.kelas.leave');
 
@@ -177,10 +189,16 @@ Route::middleware(['auth', 'role:pengajar'])->group(function () {
     // Kelas CRUD
     Route::get('/dashboard/kelas', [KelasController::class, 'index'])->name('dashboard.kelas');
     Route::post('/dashboard/kelas', [KelasController::class, 'store'])->name('kelas.store');
-    Route::get('/dashboard/kelas/{kelas}', [KelasController::class, 'edit'])->name('kelas.edit');
+    Route::get('/dashboard/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
     Route::put('/dashboard/kelas/{kelas}', [KelasController::class, 'update'])->name('kelas.update');
     Route::delete('/dashboard/kelas/{kelas}', [KelasController::class, 'destroy'])->name('kelas.destroy');
     Route::get('/dashboard/kelas/{kelas}/peserta', [AnggotaKelasController::class, 'peserta'])->name('kelas.peserta');
+
+    // Topik
+    Route::post('/dashboard/kelas/{kelas}/topik', [\App\Http\Controllers\TopikController::class, 'store'])->name('topik.store');
+    Route::put('/dashboard/topik/{topik}', [\App\Http\Controllers\TopikController::class, 'update'])->name('topik.update');
+    Route::delete('/dashboard/topik/{topik}', [\App\Http\Controllers\TopikController::class, 'destroy'])->name('topik.destroy');
+    Route::post('/dashboard/kelas/{kelas}/topik/reorder', [\App\Http\Controllers\TopikController::class, 'reorder'])->name('topik.reorder');
 
     // Materi
     Route::get('/dashboard/kelas/{kelas}/materi', [MateriController::class, 'index'])->name('materi.index');

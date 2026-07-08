@@ -33,7 +33,8 @@ class TugasController extends Controller
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
-            'deskripsi' => ['required', 'string'],
+            'deskripsi' => ['nullable', 'string', 'max:2000'],
+            'topik_id' => ['required', 'exists:topiks,id'],
             'deadline' => ['nullable', 'date', 'after:now'],
         ], [
             'deadline.after' => 'Deadline harus di masa depan.',
@@ -43,13 +44,15 @@ class TugasController extends Controller
             'kelas_id' => $kelas->id,
             'pengajar_id' => Auth::id(),
             'judul' => $validated['judul'],
-            'deskripsi' => $validated['deskripsi'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'topik_id' => $validated['topik_id'] ?? null,
             'deadline' => $validated['deadline'] ?? null,
-            'status' => 'draf',
+            'status' => 'terbit',
+            'published_at' => now(),
         ]);
 
-        return redirect()->route('tugas.index', $kelas)
-            ->with('success', 'Tugas berhasil ditambahkan sebagai draf.');
+        return redirect()->route('kelas.show', $kelas)
+            ->with('success', 'Tugas berhasil ditambahkan.');
     }
 
     /** Form edit tugas. */
@@ -67,13 +70,14 @@ class TugasController extends Controller
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
-            'deskripsi' => ['required', 'string'],
+            'deskripsi' => ['nullable', 'string', 'max:2000'],
+            'topik_id' => ['required', 'exists:topiks,id'],
             'deadline' => ['nullable', 'date'],
         ]);
 
         $tugas->update($validated);
 
-        return redirect()->route('tugas.index', $tugas->kelas_id)
+        return redirect()->route('kelas.show', $tugas->kelas_id)
             ->with('success', 'Tugas berhasil diperbarui.');
     }
 
@@ -84,7 +88,7 @@ class TugasController extends Controller
         $kelasId = $tugas->kelas_id;
         $tugas->delete();
 
-        return redirect()->route('tugas.index', $kelasId)
+        return redirect()->route('kelas.show', $kelasId)
             ->with('success', 'Tugas berhasil dihapus.');
     }
 
@@ -98,8 +102,8 @@ class TugasController extends Controller
             'published_at' => now(),
         ]);
 
-        return redirect()->route('tugas.index', $tugas->kelas_id)
-            ->with('success', 'Tugas berhasil dipublikasikan.');
+        return redirect()->route('kelas.show', $tugas->kelas_id)
+            ->with('success', 'Tugas berhasil diterbitkan.');
     }
 
     // ── SISWA ─────────────────────────────────────────────────────────────────

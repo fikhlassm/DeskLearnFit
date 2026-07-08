@@ -25,12 +25,6 @@ $metodeLabel = [
             <p class="topbar__sub">Catat dan evaluasi proses belajarmu setiap hari</p>
         </div>
         <div class="topbar__right">
-            <form method="POST" action="{{ route('logout') }}" style="margin:0">
-                @csrf
-                <button type="submit" class="topbar__icon-btn" title="Logout">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 3H4a1 1 0 00-1 1v12a1 1 0 001 1h3M13 14l3-4-3-4M16 10H7" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-            </form>
         </div>
     </div>
 
@@ -66,7 +60,7 @@ $metodeLabel = [
     {{-- DAFTAR CATATAN --}}
     @if($jurnalList->isEmpty())
     <div class="empty-state">
-        <div class="empty-state__icon">📓</div>
+        <div class="empty-state__icon" style="display:flex;justify-content:center;color:#94A3B8;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
         <p class="empty-state__title">Belum ada catatan belajar</p>
         <p class="empty-state__sub">Mulai catat proses belajarmu hari ini untuk melacak perkembangan.</p>
         <button class="btn-primary" onclick="openModal('modalTambah')">+ Tambah Catatan Pertama</button>
@@ -252,7 +246,9 @@ $metodeLabel = [
 .topbar__right{display:flex;align-items:center;gap:.6rem;}
 .topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;}
 .topbar__icon-btn:hover{background:#F1F5F9;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .alert-success{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:.65rem 1rem;color:#065F46;font-size:.83rem;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:.65rem 1rem;color:#991B1B;font-size:.83rem;}
 .stats-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}

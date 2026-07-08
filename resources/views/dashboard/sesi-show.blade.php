@@ -25,7 +25,7 @@ $metodeInfo = $metodeMap[$sesi->metode] ?? $metodeMap['pomodoro'];
                         <p class="tool-card__judul" style="color:#0F172A;">{{ $sesi->judul ?: 'Tanpa judul' }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sesi.index') }}" style="font-size:14px; color:#2563EB; font-weight:600; text-decoration:none;">← Kembali</a>
+                <a href="{{ route('sesi.index') }}" style="font-size:14px; color:#2563EB; font-weight:600; text-decoration:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali</a>
             </div>
 
             @if($sesi->metode === 'pomodoro')

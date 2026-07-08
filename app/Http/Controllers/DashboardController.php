@@ -105,7 +105,7 @@ class DashboardController extends Controller
             ->get();
 
         $tugasTerbaru = Tugas::where('pengajar_id', $user->id)
-            ->with('kelas:id,nama_kelas')
+            ->with('kelas:id,nama_kelas,theme_color')
             ->withCount('jawabanTugas')
             ->latest()
             ->take(5)
@@ -119,7 +119,7 @@ class DashboardController extends Controller
 
         $hariIni = now()->translatedFormat('l'); // Senin, Selasa, etc.
         $jadwalHariIni = Jadwal::whereHas('kelas', fn ($q) => $q->where('pengajar_id', $user->id))
-            ->with('kelas:id,nama_kelas')
+            ->with('kelas:id,nama_kelas,theme_color')
             ->where('hari', $hariIni)
             ->orderBy('jam_mulai')
             ->get();

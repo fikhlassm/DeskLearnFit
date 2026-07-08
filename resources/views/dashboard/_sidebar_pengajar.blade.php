@@ -1,7 +1,10 @@
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar__brand">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2563EB"/><path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        <div><p class="sidebar__brand-name">LearnFit</p><p class="sidebar__brand-sub">Platform Belajar Anda</p></div>
+    <div class="sidebar__brand" style="text-decoration:none;cursor:default;">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="shrink-0">
+            <rect width="28" height="28" rx="8" fill="#2563EB"/>
+            <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="font-display text-[22px] font-bold tracking-tight text-ink-900">LearnFit</span>
     </div>
     <nav class="sidebar__nav">
         <a href="{{ route('dashboard.pengajar') }}" class="sidebar__link {{ ($active ?? '') === 'beranda' ? 'sidebar__link--active' : '' }}">

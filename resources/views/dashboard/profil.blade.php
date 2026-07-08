@@ -31,7 +31,7 @@ $isSiswa   = $user->role === 'siswa';
         {{-- KARTU INFO --}}
         <div class="profil-card">
             <div class="profil-avatar-wrap">
-                <div class="profil-avatar">{{ strtoupper(mb_substr($user->name,0,1)) }}</div>
+                <div class="profil-avatar">{{ strtoupper(collect(explode(' ', trim($user->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
             </div>
             <p class="profil-nama">{{ $user->name }}</p>
             <p class="profil-email">{{ $user->email }}</p>
@@ -134,8 +134,12 @@ $isSiswa   = $user->role === 'siswa';
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
 .topbar__sub{font-size:.83rem;color:#64748B;margin-top:.1rem;}
 .topbar__right{display:flex;align-items:center;gap:.6rem;}
-.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;}
+.topbar__icon-btn{width:38px;height:38px;border:1px solid #E2E8F0;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s, transform .15s;}
+.topbar__icon-btn:hover{background:#F1F5F9;}
+.topbar__icon-btn:active{background:#E2E8F0;transform:scale(.93);}
+.hamburger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;flex-shrink:0;transition:background .18s, transform .15s;}
+.hamburger:hover{background:#F1F5F9;}
+.hamburger:active{background:#E2E8F0;transform:scale(.93);}
 .alert-success{background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:.65rem 1rem;color:#065F46;font-size:.83rem;}
 .alert-error{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:.65rem 1rem;color:#991B1B;font-size:.83rem;}
 .profil-grid{display:grid;grid-template-columns:260px 1fr;gap:1.5rem;align-items:start;}
@@ -159,8 +163,8 @@ $isSiswa   = $user->role === 'siswa';
 .input-disabled{background:#F8FAFC;color:#94A3B8;cursor:not-allowed;}
 .form-hint{font-size:.72rem;color:#94A3B8;margin-top:.15rem;}
 .form-actions{display:flex;justify-content:flex-end;margin-top:.5rem;}
-.btn-simpan-profil{padding:.65rem 1.75rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .18s;}
-.btn-simpan-profil:hover{background:#1d4ed8;}
+.btn-simpan-profil{padding:.65rem 1.75rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .18s, transform .18s, box-shadow .18s;}
+.btn-simpan-profil:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.25);}
 .sidebar-overlay{display:none;}
 @media(max-width:900px){
     .hamburger{display:flex;}
