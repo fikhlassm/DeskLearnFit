@@ -18,10 +18,11 @@
         <div class="topbar">
             <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
             <div>
-                <a href="{{ route('siswa.index') }}" style="color:#64748B;text-decoration:none;font-size:.78rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali ke daftar siswa</a>
                 <h1 class="topbar__title">Profil Siswa</h1>
             </div>
-            <div class="topbar__right"></div>
+            <div class="topbar__right">
+                <a href="{{ route('siswa.index') }}" class="btn-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Kembali ke Daftar Siswa</a>
+            </div>
         </div>
 
         <div class="profile-card">
@@ -41,11 +42,36 @@
         </div>
 
         <div class="stat-grid">
-            <div class="stat-box"><span class="stat-box__num">{{ $totalSesi }}</span><span class="stat-box__label">Total Sesi</span></div>
-            <div class="stat-box" data-tone="ok"><span class="stat-box__num">{{ $totalSelesai }}</span><span class="stat-box__label">Sesi Selesai</span></div>
-            <div class="stat-box" data-tone="primary"><span class="stat-box__num">{{ $totalDurasi }}</span><span class="stat-box__label">Menit Belajar</span></div>
-            <div class="stat-box"><span class="stat-box__num">{{ $totalJurnal }}</span><span class="stat-box__label">Jurnal</span></div>
-            <div class="stat-box" data-tone="primary"><span class="stat-box__num">{{ $totalKelas }}</span><span class="stat-box__label">Kelas Anda</span></div>
+            <div class="stat-box">
+                <div class="stat-box__icon" style="background:#EFF6FF; color:#2563EB;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div><span class="stat-box__num">{{ $totalSesi }}</span><span class="stat-box__label">Total Sesi</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon" style="background:#DCFCE7; color:#15803D;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 4L12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div><span class="stat-box__num">{{ $totalSelesai }}</span><span class="stat-box__label">Sesi Selesai</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon" style="background:#F3E8FF; color:#7C3AED;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div><span class="stat-box__num">{{ $totalDurasi }}</span><span class="stat-box__label">Menit Belajar</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon" style="background:#FEF3C7; color:#D97706;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div><span class="stat-box__num">{{ $totalJurnal }}</span><span class="stat-box__label">Jurnal</span></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box__icon" style="background:#CCFBF1; color:#0F766E;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div><span class="stat-box__num">{{ $totalKelas }}</span><span class="stat-box__label">Kelas Anda</span></div>
+            </div>
         </div>
 
         @if($sesiByMetode->count() > 0)
@@ -104,12 +130,14 @@
 .profile-card__email{font-size:.85rem;color:#64748B;margin-top:.1rem;}
 .profile-card__join{font-size:.75rem;color:#94A3B8;margin-top:.25rem;}
 .profile-card__metode{display:inline-block;margin-top:.65rem;font-size:.78rem;font-weight:700;padding:.3rem .75rem;border-radius:6px;}
-.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;}
-.stat-box{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:1rem;text-align:center;display:flex;flex-direction:column;gap:.25rem;}
-.stat-box[data-tone="ok"]{background:#F0FDF4;border-color:#86EFAC;}
-.stat-box[data-tone="primary"]{background:#EFF6FF;border-color:#93C5FD;}
-.stat-box__num{font-size:1.4rem;font-weight:800;color:#0F172A;}
-.stat-box__label{font-size:.7rem;color:#64748B;font-weight:600;}
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+.stat-box{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem;transition:transform .2s,box-shadow .2s;cursor:default;}
+.stat-box__icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.stat-box:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,23,42,.06);}
+.stat-box__num{display:block;font-size:1.75rem;font-weight:800;color:#0F172A;line-height:1;margin-bottom:.25rem;}
+.stat-box__label{display:block;font-size:.75rem;color:#64748B;font-weight:600;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .dash-section{display:flex;flex-direction:column;gap:.85rem;}
 .section__title{font-size:1rem;font-weight:700;color:#0F172A;}
 .metode-list,.sesi-list{display:flex;flex-direction:column;gap:.5rem;}
