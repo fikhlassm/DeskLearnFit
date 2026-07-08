@@ -15,7 +15,9 @@ class JawabanTugas extends Model
     protected $fillable = [
         'tugas_id',
         'siswa_id',
+        'tipe',
         'jawaban_text',
+        'link_url',
         'file_path',
         'submitted_at',
         'nilai',

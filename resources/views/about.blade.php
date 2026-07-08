@@ -218,7 +218,6 @@
             </div>
             <a href="{{ route('register') }}" class="btn-white btn-lg">
                 Mulai Gratis Sekarang
-                <x-icon name="arrow-right" class="h-4 w-4" />
             </a>
         </div>
     </section>

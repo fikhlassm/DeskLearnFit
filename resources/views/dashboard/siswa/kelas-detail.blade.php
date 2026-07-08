@@ -84,6 +84,39 @@
 .btn-back:hover{color:#2563EB;border-color:#2563EB;background:#EFF6FF;}
 .badge-kode{background:#F1F5F9;color:#475569;font-size:.75rem;font-weight:700;padding:.25rem .65rem;border-radius:6px;border:1px solid #E2E8F0;}
 
+.materi-modal-overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+    padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s;
+}
+.materi-modal-overlay.open { opacity: 1; visibility: visible; }
+.materi-modal-content {
+    background: #fff; border-radius: 16px; width: 100%; max-width: 600px;
+    max-height: 90vh; overflow-y: auto; padding: 1.75rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1); transform: translateY(20px); transition: transform 0.2s;
+}
+.materi-modal-overlay.open .materi-modal-content { transform: translateY(0); }
+.materi-modal-close {
+    background: transparent; border: none; font-size: 1.5rem; line-height: 1; color: #94A3B8;
+    cursor: pointer; padding: 0.2rem; transition: color 0.2s;
+}
+.materi-modal-close:hover { color: #DC2626; }
+.materi-modal-title { font-size: 1.3rem; font-weight: 800; color: #0F172A; }
+.materi-modal-date { font-size: 0.78rem; color: #94A3B8; }
+.materi-modal-desc { font-size: 0.88rem; color: #64748B; margin-bottom: 1.25rem; line-height: 1.6; }
+.btn-link-ext {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.25rem;
+    background: #EFF6FF; color: #2563EB; border-radius: 10px; text-decoration: none;
+    font-size: 0.88rem; font-weight: 600; margin-bottom: 1.25rem; transition: all 0.2s ease;
+}
+.btn-link-ext:hover { background: #DBEAFE; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37,99,235,0.15); }
+.btn-link-ext:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(37,99,235,0.1); }
+.materi-modal-konten { font-size: 0.88rem; color: #374151; line-height: 1.8; border-top: 1px solid #F1F5F9; padding-top: 1rem; }
+.badge-tipe { font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 6px; }
+.badge-tipe--teks { background: #EFF6FF; color: #2563EB; }
+.badge-tipe--link { background: #F0FDF4; color: #15803D; }
+.badge-tipe--file { background: #FFFBEB; color: #D97706; }
+
 .stream-container { max-width: 800px; margin: 1.5rem auto; padding: 0 1.5rem; }
 
 .topik-card {
@@ -128,6 +161,21 @@
 </style>
 
 <script>
+function openMateriModal(id) {
+    const modal = document.getElementById('materiModal-' + id);
+    if (modal) {
+        modal.style.display = 'flex';
+        // Allow reflow
+        setTimeout(() => modal.classList.add('open'), 10);
+    }
+}
+function closeMateriModal(id) {
+    const modal = document.getElementById('materiModal-' + id);
+    if (modal) {
+        modal.classList.remove('open');
+        setTimeout(() => modal.style.display = 'none', 200);
+    }
+}
 setTimeout(() => {
     const f = document.getElementById('flashMsg');
     if(f) f.style.transition='opacity .5s', f.style.opacity='0', setTimeout(()=>f.remove(),500);

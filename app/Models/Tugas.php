@@ -19,6 +19,8 @@ class Tugas extends Model
         'pengajar_id',
         'judul',
         'deskripsi',
+        'tipe',
+        'link_url',
         'deadline',
         'lampiran_path',
         'status',

@@ -17,7 +17,6 @@
     height: 64px; max-width: 1180px; margin: 0 auto; padding: 0 24px;
 }
 .qz-nav__brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-.qz-nav__name  { font-size: 18px; font-weight: 700; color: #0f172a; }
 .qz-nav__close {
     width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -50,12 +49,26 @@
 .qz-page {
     min-height: calc(100vh - 130px);
     background: #f8fafc;
-    padding-block: 2.5rem 6rem;
+    padding-block: 2.5rem 10rem;
 }
 .qz-wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
 
 /* ─── STEP (question) ─── */
-.qz-step { display: none; }
+.qz-step { 
+    display: none; 
+    --theme-bg: #eff6ff; 
+    --theme-border: #2563eb; 
+    --theme-text: #2563eb;
+    --theme-badge-bg: #dbeafe;
+}
+.qz-step[data-step="1"] { --theme-bg: #eff6ff; --theme-border: #2563eb; --theme-text: #2563eb; --theme-badge-bg: #dbeafe; }
+.qz-step[data-step="2"] { --theme-bg: #fdf4ff; --theme-border: #c026d3; --theme-text: #c026d3; --theme-badge-bg: #fae8ff; }
+.qz-step[data-step="3"] { --theme-bg: #fffbeb; --theme-border: #d97706; --theme-text: #d97706; --theme-badge-bg: #fef3c7; }
+.qz-step[data-step="4"] { --theme-bg: #f0fdf4; --theme-border: #16a34a; --theme-text: #16a34a; --theme-badge-bg: #dcfce7; }
+.qz-step[data-step="5"] { --theme-bg: #fef2f2; --theme-border: #dc2626; --theme-text: #dc2626; --theme-badge-bg: #fee2e2; }
+.qz-step[data-step="6"] { --theme-bg: #f5f3ff; --theme-border: #7c3aed; --theme-text: #7c3aed; --theme-badge-bg: #ede9fe; }
+.qz-step[data-step="7"] { --theme-bg: #ecfeff; --theme-border: #0891b2; --theme-text: #0891b2; --theme-badge-bg: #cffafe; }
+
 .qz-step.active {
     display: block;
     animation: stepIn .35s cubic-bezier(.4,0,.2,1) both;
@@ -69,7 +82,7 @@
 .qz-dimensi-badge {
     display: inline-flex; align-items: center; gap: .3rem;
     font-size: .65rem; font-weight: 700; letter-spacing: .07em;
-    color: #2563eb; background: #dbeafe; border-radius: 6px;
+    color: var(--theme-text); background: var(--theme-badge-bg); border-radius: 6px;
     padding: .2rem .65rem; margin-bottom: .85rem; width: fit-content;
     text-transform: uppercase;
 }
@@ -84,7 +97,7 @@
 .qz-step-badge {
     display: inline-flex; align-items: center; gap: .3rem;
     font-size: .65rem; font-weight: 700; letter-spacing: .07em;
-    color: #2563eb; background: #dbeafe; border-radius: 99px;
+    color: var(--theme-text); background: var(--theme-badge-bg); border-radius: 99px;
     padding: .2rem .65rem; margin-bottom: .7rem; width: fit-content;
 }
 .qz-qcard__q    { font-size: 1.05rem; font-weight: 600; color: #0f172a; line-height: 1.5; margin-bottom: .35rem; }
@@ -100,10 +113,10 @@
     transition: border-color .2s, box-shadow .2s, transform .15s, background .2s;
 }
 .qz-opt:hover {
-    border-color: #93c5fd; box-shadow: 0 4px 16px rgba(37,99,235,.08); transform: translateY(-1px);
+    border-color: var(--theme-border); box-shadow: 0 4px 16px rgba(15,23,42,.08); transform: translateY(-1px);
 }
 .qz-opt.selected {
-    border-color: #2563eb; background: #eff6ff;
+    border-color: var(--theme-border); background: var(--theme-bg);
     box-shadow: 0 4px 20px rgba(37,99,235,.12); transform: translateY(-1px);
 }
 .qz-opt__icon {
@@ -112,9 +125,9 @@
     flex-shrink: 0; font-size: 1.2rem; background: #f1f5f9;
     transition: background .2s;
 }
-.qz-opt.selected .qz-opt__icon { background: #dbeafe; }
+.qz-opt.selected .qz-opt__icon { background: var(--theme-badge-bg); }
 .qz-opt__label { flex: 1; font-size: .88rem; font-weight: 500; color: #0f172a; line-height: 1.4; }
-.qz-opt.selected .qz-opt__label { color: #1d4ed8; font-weight: 600; }
+.qz-opt.selected .qz-opt__label { color: var(--theme-text); font-weight: 600; }
 .qz-opt__radio {
     width: 22px; height: 22px; border-radius: 50%;
     border: 1.5px solid #cbd5e1; flex-shrink: 0;
@@ -123,7 +136,7 @@
     background: #fff;
 }
 .qz-opt.selected .qz-opt__radio {
-    border-color: #2563eb;
+    border-color: var(--theme-border);
     border-width: 6px;
 }
 
@@ -157,7 +170,7 @@
 
 /* ─── RESPONSIVE ─── */
 @media(max-width:640px){
-    .qz-page { padding-block: 1.5rem 8rem; }
+    .qz-page { padding-block: 1.5rem 12rem; }
     .qz-qcard { padding: 1.25rem; }
     .qz-opt__label { font-size: .83rem; }
 }
@@ -166,11 +179,11 @@
 <nav class="qz-nav">
     <div class="qz-nav__inner">
         <a href="/" class="qz-nav__brand">
-            <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                 <rect width="28" height="28" rx="8" fill="#2563EB"/>
                 <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            <span class="qz-nav__name">LearnFit</span>
+            <span class="font-display text-[22px] font-bold tracking-tight text-ink-900">LearnFit</span>
         </a>
         <a href="{{ route('welcome') }}" class="qz-nav__close" title="Keluar Quiz">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -213,7 +226,7 @@
     <div class="qz-dimensi-badge">Gaya Belajar</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 1 dari 7
         </span>
         <h2 class="qz-qcard__q">Saat belajar materi baru, Anda paling cepat mengerti jika melalui...</h2>
@@ -252,7 +265,7 @@
     <div class="qz-dimensi-badge">Durasi Fokus</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 2 dari 7
         </span>
         <h2 class="qz-qcard__q">Berapa lama Anda bisa bertahan belajar tanpa kehilangan konsentrasi?</h2>
@@ -291,7 +304,7 @@
     <div class="qz-dimensi-badge">Cara Mengatasi Kesulitan</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 3 dari 7
         </span>
         <h2 class="qz-qcard__q">Jika ada materi yang sulit dimengerti, apa yang Anda lakukan?</h2>
@@ -330,7 +343,7 @@
     <div class="qz-dimensi-badge">Lingkungan Belajar</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 4 dari 7
         </span>
         <h2 class="qz-qcard__q">Di mana Anda paling nyaman dan produktif saat belajar?</h2>
@@ -369,7 +382,7 @@
     <div class="qz-dimensi-badge">Metode Belajar Favorit</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 5 dari 7
         </span>
         <h2 class="qz-qcard__q">Saat mempersiapkan ujian, cara apa yang paling sering Anda lakukan?</h2>
@@ -408,7 +421,7 @@
     <div class="qz-dimensi-badge">Waktu Belajar</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 6 dari 7
         </span>
         <h2 class="qz-qcard__q">Di waktu mana Anda merasa paling fokus dan produktif untuk belajar?</h2>
@@ -447,7 +460,7 @@
     <div class="qz-dimensi-badge">Tujuan Belajar</div>
     <div class="qz-qcard">
         <span class="qz-step-badge">
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2563eb"/></svg>
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
             Soal 7 dari 7 — Terakhir!
         </span>
         <h2 class="qz-qcard__q">Apa target utama Anda saat sedang belajar?</h2>
@@ -489,9 +502,6 @@
     <div class="qz-bottom__inner">
         <button class="qz-btn-next" id="btnNext" disabled>
             Selanjutnya
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
         </button>
         <p class="qz-hint-pill">Jawabanmu membantu LearnFit menyesuaikan metode belajarmu.</p>
     </div>
@@ -557,7 +567,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (current === TOTAL) {
-            btnNext.innerHTML = 'Lihat Hasilku <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            btnNext.innerHTML = 'Lihat Hasilku';
         }
     });
 

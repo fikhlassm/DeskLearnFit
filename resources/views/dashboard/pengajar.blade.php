@@ -20,13 +20,6 @@
                 <p class="topbar__sub">Semoga harimu menyenangkan.</p>
             </div>
             <div class="topbar__right">
-                <div class="search-box" id="searchBox">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#94a3b8" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    <input type="text" placeholder="Cari mahasiswa, kelas..." id="searchInput">
-                    <button class="search-box__close" id="searchClose" aria-label="Tutup pencarian">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -505,15 +498,6 @@ document.querySelectorAll('.sidebar__link').forEach(link => {
         sidebar.classList.remove('sidebar--open');
         overlay.classList.remove('overlay--show');
     });
-});
-
-const searchBox = document.getElementById('searchBox');
-const searchClose = document.getElementById('searchClose');
-const searchInput = document.getElementById('searchInput');
-
-searchClose.addEventListener('click', () => {
-    searchBox.classList.remove('search-box--open');
-    searchInput.value = '';
 });
 
 // Real-time Countdown

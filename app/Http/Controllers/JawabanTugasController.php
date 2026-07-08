@@ -59,11 +59,11 @@ class JawabanTugasController extends Controller
     {
         $this->authorizeSiswaKelas($tugas);
 
-        if ($tugas->status === 'ditutup') {
-            return back()->with('error', 'Tugas ini sudah ditutup, tidak bisa mengumpulkan jawaban.');
+        if ($tugas->status === 'ditutup' || ($tugas->deadline && $tugas->deadline->isPast())) {
+            return back()->with('error', 'Tugas ini sudah melewati batas waktu (deadline) dan otomatis ditutup.');
         }
 
-        // Cek duplikasi — gunakan updateOrCreate
+        // Cek duplikasi
         $existing = JawabanTugas::where('tugas_id', $tugas->id)
             ->where('siswa_id', Auth::id())
             ->first();
@@ -73,12 +73,17 @@ class JawabanTugasController extends Controller
         }
 
         $validated = $request->validate([
-            'jawaban_text' => ['required', 'string', 'max:10000'],
-        ], [
-            'jawaban_text.required' => 'Isi jawaban wajib diisi.',
+            'tipe' => ['required', 'in:teks,link,file'],
+            'jawaban_text' => ['nullable', 'string', 'max:10000'],
+            'link_url' => ['nullable', 'url', 'max:255'],
+            'file_upload' => ['nullable', 'file', 'max:10240'],
         ]);
 
-        // Tentukan status: terlambat jika deadline sudah lewat
+        $filePath = null;
+        if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
+            $filePath = $request->file('file_upload')->store('jawaban_files', 'public');
+        }
+
         $status = 'terkirim';
         if ($tugas->deadline && $tugas->deadline->isPast()) {
             $status = 'terlambat';
@@ -87,7 +92,10 @@ class JawabanTugasController extends Controller
         JawabanTugas::create([
             'tugas_id' => $tugas->id,
             'siswa_id' => Auth::id(),
-            'jawaban_text' => $validated['jawaban_text'],
+            'tipe' => $validated['tipe'],
+            'jawaban_text' => $validated['jawaban_text'] ?? null,
+            'link_url' => $validated['tipe'] === 'link' ? ($validated['link_url'] ?? null) : null,
+            'file_path' => $filePath,
             'submitted_at' => now(),
             'status' => $status,
         ]);
@@ -108,13 +116,26 @@ class JawabanTugasController extends Controller
             abort(403, 'Jawaban ini bukan milik Anda.');
         }
 
-        if ($jawaban->tugas->status === 'ditutup') {
-            return back()->with('error', 'Tugas sudah ditutup, tidak bisa memperbarui jawaban.');
+        if ($jawaban->tugas->status === 'ditutup' || ($jawaban->tugas->deadline && $jawaban->tugas->deadline->isPast())) {
+            return back()->with('error', 'Tugas ini sudah melewati batas waktu (deadline) dan otomatis ditutup, tidak bisa memperbarui jawaban.');
         }
 
         $validated = $request->validate([
-            'jawaban_text' => ['required', 'string', 'max:10000'],
+            'tipe' => ['required', 'in:teks,link,file'],
+            'jawaban_text' => ['nullable', 'string', 'max:10000'],
+            'link_url' => ['nullable', 'url', 'max:255'],
+            'file_upload' => ['nullable', 'file', 'max:10240'],
         ]);
+
+        $filePath = $jawaban->file_path;
+        if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
+            if ($filePath && \Illuminate\Support\Facades\Storage::disk('public')->exists($filePath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($filePath);
+            }
+            $filePath = $request->file('file_upload')->store('jawaban_files', 'public');
+        } elseif ($validated['tipe'] !== 'file') {
+            $filePath = null;
+        }
 
         $status = 'terkirim';
         if ($jawaban->tugas->deadline && $jawaban->tugas->deadline->isPast()) {
@@ -122,7 +143,10 @@ class JawabanTugasController extends Controller
         }
 
         $jawaban->update([
-            'jawaban_text' => $validated['jawaban_text'],
+            'tipe' => $validated['tipe'],
+            'jawaban_text' => $validated['jawaban_text'] ?? null,
+            'link_url' => $validated['tipe'] === 'link' ? ($validated['link_url'] ?? null) : null,
+            'file_path' => $filePath,
             'submitted_at' => now(),
             'status' => $jawaban->status === 'dinilai' ? 'dinilai' : $status,
         ]);

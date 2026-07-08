@@ -1,24 +1,17 @@
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar__brand">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#2563EB"/><path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-        <div><p class="sidebar__brand-name">LearnFit</p><p class="sidebar__brand-sub">Platform Belajar Anda</p></div>
+    <div class="sidebar__brand" style="text-decoration:none;cursor:default;">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="shrink-0">
+            <rect width="28" height="28" rx="8" fill="#2563EB"/>
+            <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="font-display text-[22px] font-bold tracking-tight text-ink-900">LearnFit</span>
     </div>
     <nav class="sidebar__nav">
         <a href="{{ route('dashboard.siswa') }}" class="sidebar__link {{ ($active ?? '') === 'beranda' ? 'sidebar__link--active' : '' }}">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="11" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/><rect x="11" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".4"/></svg>
             Beranda
         </a>
-        @if(Auth::user()->quiz_result)
-        <a href="{{ route('quiz.result') }}" class="sidebar__link {{ ($active ?? '') === 'quiz' ? 'sidebar__link--active' : '' }}">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 12v-4m0-4h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            Hasil Quiz
-        </a>
-        @else
-        <a href="{{ route('quiz') }}" class="sidebar__link {{ ($active ?? '') === 'quiz' ? 'sidebar__link--active' : '' }}">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 12v-4m0-4h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            Quiz Gaya Belajar
-        </a>
-        @endif
+
         <a href="{{ route('siswa.kelas.index') }}" class="sidebar__link {{ ($active ?? '') === 'kelas' ? 'sidebar__link--active' : '' }}">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M7 3v14M2 8h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             Kelas Saya

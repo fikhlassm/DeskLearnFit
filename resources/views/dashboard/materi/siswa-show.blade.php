@@ -18,7 +18,7 @@
         @if($materi->deskripsi)<p class="materi-card__desc">{{ $materi->deskripsi }}</p>@endif
 
         @if($materi->tipe === 'link' && $materi->link_url)
-        <a href="{{ $materi->link_url }}" target="_blank" rel="noopener" class="btn-link-ext">🔗 Buka Link Materi →</a>
+        <a href="{{ $materi->link_url }}" target="_blank" rel="noopener" class="btn-link-ext">🔗 Buka Link Materi</a>
         @elseif($materi->tipe === 'file' && $materi->file_path)
         <a href="{{ route('materi.download', $materi) }}" class="btn-link-ext">📎 Unduh / Lihat File</a>
         @endif
@@ -39,8 +39,9 @@
 .materi-card__date{font-size:.78rem;color:#94A3B8;}
 .materi-card__judul{font-size:1.3rem;font-weight:800;color:#0F172A;margin-bottom:.6rem;}
 .materi-card__desc{font-size:.88rem;color:#64748B;margin-bottom:1rem;line-height:1.6;}
-.btn-link-ext{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.25rem;background:#EFF6FF;color:#2563EB;border-radius:10px;text-decoration:none;font-size:.88rem;font-weight:600;margin-bottom:1rem;transition:background .18s;}
-.btn-link-ext:hover{background:#DBEAFE;}
+.btn-link-ext{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.25rem;background:#EFF6FF;color:#2563EB;border-radius:10px;text-decoration:none;font-size:.88rem;font-weight:600;margin-bottom:1rem;transition:all .2s ease;}
+.btn-link-ext:hover{background:#DBEAFE;transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,99,235,.15);}
+.btn-link-ext:active{transform:translateY(0);box-shadow:0 2px 6px rgba(37,99,235,.1);}
 .materi-card__konten{font-size:.88rem;color:#374151;line-height:1.8;border-top:1px solid #F1F5F9;padding-top:1rem;}
 .badge-tipe{font-size:.65rem;font-weight:700;padding:.18rem .55rem;border-radius:6px;}
 .badge-tipe--teks{background:#EFF6FF;color:#2563EB;}

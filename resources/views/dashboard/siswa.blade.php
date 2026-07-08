@@ -36,49 +36,47 @@ $userName = Auth::user()->name;
             </button>
             <div>
                 <h1 class="topbar__title">Beranda</h1>
-                <p class="topbar__sub">Semangat belajar, {{ explode(' ', $userName)[0] }}! 🎯</p>
-            </div>
-            <div class="topbar__right">
-                <div class="search-box" id="searchBox">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#94a3b8" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    <input type="text" placeholder="Cari materi, sesi..." id="searchInput">
-                    <button class="search-box__close" id="searchClose" aria-label="Tutup pencarian">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    </button>
-                </div>
-                <button class="topbar__icon-btn search-toggle" id="searchToggle" aria-label="Cari">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="#475569" stroke-width="1.5"/><path d="M13 13l3.5 3.5" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <button class="topbar__icon-btn" aria-label="Notifikasi" style="position:relative;">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v2.586l-1.707 1.707A1 1 0 003 14h14a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z" stroke="#475569" stroke-width="1.5"/><path d="M8 14a2 2 0 004 0" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    <span class="notif-dot"></span>
-                </button>
+                <p class="topbar__sub">Semangat belajar, {{ explode(' ', $userName)[0] }}!</p>
             </div>
         </div>
 
         {{-- HERO: Real Data --}}
         <div class="hero-card">
             <div class="hero-card__left">
-                <p class="hero-card__eyebrow">Ringkasan Aktivitasmu</p>
-                <p class="hero-card__title">Halo, {{ explode(' ', $userName)[0] }}! 👋</p>
-                <div style="display:flex;gap:1.5rem;margin:.75rem 0;flex-wrap:wrap;">
-                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $totalCatatan }}</p><p style="font-size:.78rem;opacity:.8">Catatan Belajar</p></div>
-                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $totalSesiSelesai }}</p><p style="font-size:.78rem;opacity:.8">Sesi Selesai</p></div>
-                    <div><p style="font-size:2rem;font-weight:800;line-height:1;">{{ $kelasDiikuti->count() }}</p><p style="font-size:.78rem;opacity:.8">Kelas Diikuti</p></div>
+                <p class="hero-card__title" style="font-size:1.5rem; margin-bottom:1rem;">Halo, {{ explode(' ', $userName)[0] }}!</p>
+                <div class="hero-stats">
+                    <div class="stat-box">
+                        <span class="stat-box__val">{{ $totalCatatan }}</span>
+                        <span class="stat-box__lbl">Catatan Belajar</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box__val">{{ $totalSesiSelesai }}</span>
+                        <span class="stat-box__lbl">Sesi Selesai</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-box__val">{{ $kelasDiikuti->count() }}</span>
+                        <span class="stat-box__lbl">Kelas Diikuti</span>
+                    </div>
                 </div>
                 @if($totalDurasi > 0)
-                <p class="hero-card__note">Total {{ $totalDurasi }} menit belajar sejauh ini. Terus semangat!</p>
+                <p class="hero-card__note" style="margin-top:1rem;font-weight:500;">Total <span style="color:#FFF;">{{ $totalDurasi }} menit</span> belajar sejauh ini. Terus semangat!</p>
                 @else
-                <p class="hero-card__note">Mulai sesi belajar untuk melacak waktu belajarmu.</p>
+                <p class="hero-card__note" style="margin-top:1rem;font-weight:500;">Mulai sesi belajar untuk melacak waktu belajarmu.</p>
                 @endif
             </div>
-            <div class="hero-card__right">
-                @if($tugasBelumKumpul->count() > 0)
-                <span class="hero-badge" style="background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4)">⚠ {{ $tugasBelumKumpul->count() }} tugas belum dikumpulkan</span>
-                @else
-                <span class="hero-badge">✓ Semua tugas terkumpul</span>
-                @endif
-                <a href="{{ route('siswa.kelas.index') }}" class="hero-btn">Kelas Saya →</a>
+            <div class="hero-card__right" style="justify-content:center; align-items:center;">
+                <div style="background:rgba(255,255,255,0.15); padding:1.25rem; border-radius:16px; border:1px solid rgba(255,255,255,0.25); text-align:center; backdrop-filter:blur(8px); width:100%; min-width:200px;">
+                    @if($kelasDiikuti->count() == 0)
+                    <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.75rem;">Belum mengikuti kelas</p>
+                    @elseif($tugasBelumKumpul->count() > 0)
+                    <div style="background:rgba(239,68,68,0.4); border:1px solid rgba(239,68,68,0.6); border-radius:8px; padding:0.4rem 0.75rem; margin-bottom:0.75rem;">
+                        <p style="font-size:0.85rem; font-weight:700; color:#FFFFFF; margin:0;">⚠ {{ $tugasBelumKumpul->count() }} tugas belum dikumpulkan</p>
+                    </div>
+                    @else
+                    <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.75rem;">✓ Semua tugas terkumpul</p>
+                    @endif
+                    <a href="{{ route('siswa.kelas.index') }}" class="hero-btn" style="width:100%; justify-content:center;">Kelas Saya</a>
+                </div>
             </div>
         </div>
 
@@ -105,7 +103,7 @@ $userName = Auth::user()->name;
         <section class="dash-section">
             <div class="quiz-banner">
                 <div>
-                    <p class="quiz-banner__title">Temukan Metode Belajarmu! 🎯</p>
+                    <p class="quiz-banner__title">Temukan Metode Belajarmu!</p>
                     <p class="quiz-banner__desc">Ikuti quiz singkat untuk mendapatkan rekomendasi metode belajar yang paling cocok untukmu.</p>
                 </div>
                 <a href="{{ route('quiz') }}" class="quiz-banner__btn">Mulai Quiz Sekarang →</a>
@@ -117,9 +115,12 @@ $userName = Auth::user()->name;
         <section class="dash-section">
             <div class="section__head">
                 <h2 class="section__title">Tugas Perlu Dikumpulkan</h2>
-                <a href="{{ route('siswa.kelas.index') }}" class="section__link">Lihat Semua Kelas</a>
             </div>
-            @if($tugasBelumKumpul->isEmpty())
+            @if($kelasDiikuti->count() == 0)
+            <div style="background:#F1F5F9;border:1px solid #E2E8F0;border-radius:14px;padding:1rem 1.25rem;color:#475569;font-size:.85rem;font-weight:600;text-align:center;">
+                Belum ada kelas yang diikuti.
+            </div>
+            @elseif($tugasBelumKumpul->isEmpty())
             <div style="background:#DCFCE7;border:1px solid #6EE7B7;border-radius:14px;padding:1rem 1.25rem;color:#065F46;font-size:.85rem;font-weight:600;">
                 ✓ Semua tugas sudah dikumpulkan!
             </div>
@@ -129,7 +130,7 @@ $userName = Auth::user()->name;
                 <a href="{{ route('siswa.tugas.show', $tugas) }}" style="text-decoration:none">
                 <div class="history-item">
                     <div class="history-icon" style="background:#FEF2F2;">
-                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h8M4 14h10" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     </div>
                     <div class="history-item__body">
                         <p class="history-item__name">{{ $tugas->judul }}</p>
@@ -251,31 +252,22 @@ $userName = Auth::user()->name;
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
 .topbar__title{font-size:1.5rem;font-weight:800;color:#0F172A;letter-spacing:-.03em;}
 .topbar__sub{font-size:.83rem;color:#64748B;margin-top:.1rem;}
-.topbar__right{display:flex;align-items:center;gap:.6rem;}
-.topbar__icon-btn{
-    width:38px;height:38px;border:1px solid #E2E8F0;
-    background:#fff;border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;transition:background .18s,transform .15s;
+.hero-stats {
+    display:flex; gap:1rem; flex-wrap:wrap; margin-top:0.5rem;
 }
-.topbar__icon-btn:hover{background:#F1F5F9;}
-.topbar__icon-btn:active{background:#E2E8F0;transform:scale(.93);}
-.notif-dot{
-    position:absolute;top:7px;right:7px;
-    width:8px;height:8px;border-radius:50%;
-    background:#EF4444;border:1.5px solid #fff;
+.stat-box {
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:12px; padding:0.8rem 1.2rem;
+    display:flex; flex-direction:column; gap:0.2rem;
+    min-width: 110px;
 }
-.search-box{
-    display:flex;align-items:center;gap:.5rem;
-    background:#fff;border:1px solid #E2E8F0;
-    border-radius:10px;padding:.5rem .9rem;
-    width:260px;transition:border-color .18s,box-shadow .18s;
+.stat-box__val {
+    font-size:1.8rem; font-weight:800; line-height:1; color:#fff;
 }
-.search-box:focus-within{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
-.search-box input{border:none;outline:none;font-size:.83rem;color:#0F172A;font-family:inherit;width:100%;background:transparent;}
-.search-box input::placeholder{color:#94A3B8;}
-.search-box__close{display:none;background:none;border:none;cursor:pointer;padding:0;line-height:0;flex-shrink:0;}
-.search-toggle{display:none;}
+.stat-box__lbl {
+    font-size:0.75rem; font-weight:600; opacity:0.85; text-transform:uppercase; letter-spacing:0.02em;
+}
 
 /* ── HERO CARD ── */
 .hero-card{
@@ -363,24 +355,24 @@ $userName = Auth::user()->name;
 
 /* ── QUIZ BANNER ── */
 .quiz-banner{
-    background:linear-gradient(135deg,#F5F3FF,#EDE9FE);
-    border:1px solid #DDD6FE;
+    background:linear-gradient(135deg,#EFF6FF,#DBEAFE);
+    border:1px solid #BFDBFE;
     border-radius:16px;padding:1.5rem;
     display:flex;align-items:center;justify-content:space-between;gap:1rem;
     transition:box-shadow .2s,transform .2s;
 }
-.quiz-banner:hover{box-shadow:0 6px 24px rgba(124,58,237,.12);transform:translateY(-2px);}
-.quiz-banner__title{font-size:1rem;font-weight:700;color:#4C1D95;margin-bottom:.3rem;}
-.quiz-banner__desc{font-size:.8rem;color:#5B21B6;line-height:1.5;}
+.quiz-banner:hover{box-shadow:0 6px 24px rgba(37,99,235,.12);transform:translateY(-2px);}
+.quiz-banner__title{font-size:1rem;font-weight:700;color:#1E3A8A;margin-bottom:.3rem;}
+.quiz-banner__desc{font-size:.8rem;color:#1D4ED8;line-height:1.5;}
 .quiz-banner__btn{
     display:inline-flex;align-items:center;
-    background:#7C3AED;color:#fff;
+    background:#2563EB;color:#fff;
     font-size:.82rem;font-weight:700;
     padding:.65rem 1.3rem;border-radius:12px;
     text-decoration:none;white-space:nowrap;flex-shrink:0;
     transition:background .18s,transform .15s,box-shadow .18s;
 }
-.quiz-banner__btn:hover{background:#6D28D9;transform:translateY(-1px);box-shadow:0 4px 14px rgba(124,58,237,.3);}
+.quiz-banner__btn:hover{background:#1D4ED8;transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.3);}
 .quiz-banner__btn:active{transform:scale(.97);}
 
 /* ── RIWAYAT ── */
@@ -468,16 +460,7 @@ $userName = Auth::user()->name;
     }
     .sidebar-overlay.overlay--show{display:block;opacity:1;}
     .hero-card{flex-direction:column;align-items:flex-start;}
-    .hero-card__right{flex-direction:row;align-items:center;}
-    .search-box{display:none;}
-    .search-box.search-box--open{
-        display:flex;
-        position:fixed;top:12px;left:50%;transform:translateX(-50%);
-        width:calc(100vw - 2rem);max-width:420px;
-        z-index:300;box-shadow:0 4px 20px rgba(15,23,42,.15);
-    }
-    .search-box.search-box--open .search-box__close{display:flex;}
-    .search-toggle{display:flex;}
+    .hero-card__right{flex-direction:row;align-items:center;width:100%;}
 }
 @media(max-width:560px){
     .dash-main{padding:1rem;}
@@ -507,20 +490,6 @@ document.querySelectorAll('.sidebar__link').forEach(link => {
         sidebar.classList.remove('sidebar--open');
         overlay.classList.remove('overlay--show');
     });
-});
-
-const searchBox = document.getElementById('searchBox');
-const searchToggle = document.getElementById('searchToggle');
-const searchClose = document.getElementById('searchClose');
-const searchInput = document.getElementById('searchInput');
-
-searchToggle.addEventListener('click', () => {
-    searchBox.classList.add('search-box--open');
-    searchInput.focus();
-});
-searchClose.addEventListener('click', () => {
-    searchBox.classList.remove('search-box--open');
-    searchInput.value = '';
 });
 </script>
 @endsection

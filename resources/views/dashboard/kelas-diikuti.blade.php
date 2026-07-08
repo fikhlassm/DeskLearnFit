@@ -9,6 +9,10 @@
         <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
         <div><h1 class="topbar__title">Kelas Saya</h1><p class="topbar__sub">Kelas yang kamu ikuti</p></div>
         <div class="topbar__right">
+            <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#94a3b8" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <input type="text" placeholder="Cari nama atau mapel kelas..." id="searchInput">
+            </div>
         </div>
     </div>
 
@@ -47,17 +51,18 @@
             @endif
             <div class="kelas-card__body">
                 <p class="kelas-card__nama">{{ $kelas->nama_kelas }}</p>
-                <p class="kelas-card__pengajar">{{ $kelas->mata_pelajaran }} &middot; Pengajar: {{ $kelas->pengajar->name ?? '-' }}</p>
+                <p class="kelas-card__pengajar" style="font-weight:600; margin-bottom:.15rem;">{{ $kelas->mata_pelajaran }}</p>
+                <p class="kelas-card__pengajar">Pengajar: {{ $kelas->pengajar->name ?? '-' }}</p>
                 <p class="kelas-card__kode" style="margin-top:.25rem">Kode: <code>{{ $kelas->kode_kelas }}</code></p>
                 
-                <div class="kelas-card__actions">
-                    <a href="{{ route('siswa.kelas.show', $kelas) }}" class="btn-masuk-kelas">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        Masuk Kelas
+                <div class="kelas-card__actions" style="margin-top:auto; padding-top:1rem; display:flex; gap:0.5rem; align-items:stretch;">
+                    <a href="{{ route('siswa.kelas.show', $kelas) }}" class="btn-masuk-kelas" style="flex:1;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                        Masuk
                     </a>
-                    <form method="POST" action="{{ route('siswa.kelas.leave', $kelas) }}" onsubmit="return confirm('Keluar dari kelas {{ $kelas->nama_kelas }}?')" style="display:inline">
+                    <form method="POST" action="{{ route('siswa.kelas.leave', $kelas) }}" onsubmit="return confirm('Keluar dari kelas {{ $kelas->nama_kelas }}?')" style="display:flex; flex:1;">
                         @csrf @method('DELETE')
-                        <button type="submit" class="btn-leave">Keluar</button>
+                        <button type="submit" class="btn-leave" style="flex:1; width:100%;">Keluar</button>
                     </form>
                 </div>
             </div>
@@ -92,8 +97,9 @@
 .join-input{flex:1;padding:.6rem 1rem;border:1px solid #E2E8F0;border-radius:10px;font-size:.88rem;outline:none;font-family:inherit;transition:border-color .18s;}
 .join-input:focus{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
 .input-error{border-color:#EF4444;}
-.btn-join{padding:.6rem 1.25rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:background .18s;}
-.btn-join:hover{background:#1d4ed8;}
+.btn-join{padding:.6rem 1.25rem;background:#2563EB;color:#fff;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s ease;}
+.btn-join:hover{background:#1d4ed8;transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,99,235,.25);}
+.btn-join:active{transform:translateY(0);box-shadow:0 2px 6px rgba(37,99,235,.2);}
 .form-error{font-size:.78rem;color:#EF4444;}
 .kelas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
 .kelas-card{background:#fff;border:1px solid #E2E8F0;border-radius:12px;display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .2s,transform .2s;}
@@ -109,21 +115,44 @@
 .btn-lihat-materi,.btn-lihat-tugas{padding:.38rem .75rem;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none;transition:background .18s;}
 .btn-lihat-materi{background:#EFF6FF;color:#2563EB;}
 .btn-lihat-tugas{background:#F5F3FF;color:#7C3AED;}
-.btn-masuk-kelas{padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .18s;display:flex;align-items:center;justify-content:center;gap:.4rem;background:#8B5CF6;color:#fff;}
-.btn-masuk-kelas:hover{background:#7C3AED;}
-.btn-leave{padding:.38rem .75rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;}
-.btn-leave:hover{background:#FEE2E2;border-color:#FCA5A5;}
+.btn-masuk-kelas{padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:all .2s ease;display:flex;align-items:center;justify-content:center;gap:.4rem;background:#8B5CF6;color:#fff;}
+.btn-masuk-kelas:hover{background:#7C3AED;transform:translateY(-2px);box-shadow:0 4px 12px rgba(139,92,246,.25);}
+.btn-masuk-kelas:active{transform:translateY(0);box-shadow:0 2px 6px rgba(139,92,246,.2);}
+.btn-leave{padding:.5rem .75rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s ease;display:flex;align-items:center;justify-content:center;}
+.btn-leave:hover{background:#FEE2E2;border-color:#FCA5A5;transform:translateY(-2px);box-shadow:0 4px 12px rgba(220,38,38,.15);}
+.btn-leave:active{transform:translateY(0);box-shadow:0 2px 6px rgba(220,38,38,.1);}
 .empty-state{text-align:center;padding:3rem 1rem;background:#fff;border:1px dashed #E2E8F0;border-radius:16px;}
 .empty-state__icon{font-size:2.5rem;margin-bottom:.65rem;}
 .empty-state__title{font-size:.95rem;font-weight:700;color:#0F172A;margin-bottom:.3rem;}
 .empty-state__sub{font-size:.8rem;color:#64748B;}
+.search-box{display:flex;align-items:center;gap:.5rem;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:.5rem .9rem;width:260px;transition:border-color .18s,box-shadow .18s;}
+.search-box:focus-within{border-color:#2563EB;box-shadow:0 0 0 3px rgba(37,99,235,.10);}
+.search-box input{border:none;outline:none;font-size:.83rem;color:#0F172A;font-family:inherit;width:100%;background:transparent;}
+.search-box input::placeholder{color:#94A3B8;}
 .sidebar-overlay{display:none;}
-@media(max-width:900px){.hamburger{display:flex;}.sidebar{position:fixed;top:0;left:-260px;z-index:200;height:100vh;width:240px;transition:left .28s;}.sidebar.sidebar--open{left:0;box-shadow:4px 0 24px rgba(15,23,42,.15);}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:199;transition:opacity .28s;opacity:0;}.sidebar-overlay.overlay--show{display:block;opacity:1;}.dash-main{padding:1rem;}}
+@media(max-width:900px){.hamburger{display:flex;}.sidebar{position:fixed;top:0;left:-260px;z-index:200;height:100vh;width:240px;transition:left .28s;}.sidebar.sidebar--open{left:0;box-shadow:4px 0 24px rgba(15,23,42,.15);}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:199;transition:opacity .28s;opacity:0;}.sidebar-overlay.overlay--show{display:block;opacity:1;}.dash-main{padding:1rem;}.search-box{width:200px;}}
+@media(max-width:560px){.topbar{flex-wrap:wrap;}.search-box{width:100%;order:3;}}
 </style>
 <script>
 const sidebar=document.querySelector('.sidebar'),overlay=document.getElementById('sidebarOverlay'),hamburger=document.getElementById('hamburgerBtn');
 if(hamburger){hamburger.addEventListener('click',()=>{sidebar.classList.add('sidebar--open');overlay.classList.add('overlay--show');});}
 if(overlay){overlay.addEventListener('click',()=>{sidebar.classList.remove('sidebar--open');overlay.classList.remove('overlay--show');});}
 setTimeout(()=>{const f=document.getElementById('flashMsg');if(f)f.style.transition='opacity .5s',f.style.opacity='0',setTimeout(()=>f&&f.remove(),500);},3000);
+
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        const cards = document.querySelectorAll('.kelas-card');
+        cards.forEach(card => {
+            const textContent = card.innerText.toLowerCase();
+            if (textContent.includes(filter)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
 </script>
 @endsection

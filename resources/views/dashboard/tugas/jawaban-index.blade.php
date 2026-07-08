@@ -18,11 +18,29 @@
         <div class="jawaban-card__header">
             <div>
                 <p class="jawaban-card__nama">{{ $j->siswa->name }}</p>
-                <p class="jawaban-card__email">{{ $j->siswa->email }} · {{ $j->submitted_at?->format('d M Y H:i') }}</p>
+                <p class="jawaban-card__email">
+                    {{ $j->siswa->email }} · {{ $j->submitted_at?->format('d M Y H:i') }}
+                    @if($j->submitted_at && $j->created_at && abs($j->submitted_at->diffInSeconds($j->created_at)) > 10)
+                        <span style="background:#FFF7ED; color:#EA580C; border:1px solid #FFEDD5; font-size:.65rem; padding:.15rem .45rem; border-radius:4px; font-weight:700; margin-left:.4rem;">DIUBAH</span>
+                    @endif
+                </p>
             </div>
             <span class="badge-status badge-status--{{ $j->status }}">{{ ucfirst($j->status) }}</span>
         </div>
-        <div class="jawaban-card__teks">{{ $j->jawaban_text }}</div>
+        <div class="jawaban-card__teks">
+            <div style="margin-bottom:.5rem;">
+                <span class="badge-tipe badge-tipe--{{ $j->tipe ?? 'teks' }}">{{ strtoupper($j->tipe ?? 'teks') }}</span>
+            </div>
+            @if($j->tipe === 'link')
+                <a href="{{ $j->link_url }}" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">🔗 {{ $j->link_url }}</a>
+                @if($j->jawaban_text)<div style="margin-top:.5rem">{!! nl2br(e($j->jawaban_text)) !!}</div>@endif
+            @elseif($j->tipe === 'file')
+                <a href="{{ Storage::url($j->file_path) }}" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">📎 Unduh / Lihat File Jawaban</a>
+                @if($j->jawaban_text)<div style="margin-top:.5rem">{!! nl2br(e($j->jawaban_text)) !!}</div>@endif
+            @else
+                {!! nl2br(e($j->jawaban_text)) !!}
+            @endif
+        </div>
         @if($j->nilai !== null)
         <div class="jawaban-card__nilai">Nilai: <strong>{{ $j->nilai }}/100</strong> — {{ $j->feedback }}</div>
         @endif
@@ -49,7 +67,7 @@
 .jawaban-card__header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
 .jawaban-card__nama{font-size:.92rem;font-weight:700;color:#0F172A;}
 .jawaban-card__email{font-size:.75rem;color:#94A3B8;margin-top:.1rem;}
-.jawaban-card__teks{font-size:.85rem;color:#374151;line-height:1.7;background:#F8FAFC;border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem;white-space:pre-wrap;}
+.jawaban-card__teks{font-size:.85rem;color:#374151;line-height:1.7;background:#F8FAFC;border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem;}
 .jawaban-card__nilai{font-size:.82rem;color:#15803D;background:#DCFCE7;border-radius:8px;padding:.5rem .85rem;margin-bottom:.75rem;}
 .nilai-form{display:flex;flex-direction:column;gap:.5rem;}
 .nilai-row{display:flex;gap:.5rem;flex-wrap:wrap;}
@@ -61,6 +79,10 @@
 .badge-status--terkirim{background:#DBEAFE;color:#1D4ED8;}
 .badge-status--dinilai{background:#DCFCE7;color:#15803D;}
 .badge-status--terlambat{background:#FEE2E2;color:#DC2626;}
+.badge-tipe { font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 6px; }
+.badge-tipe--teks { background: #EFF6FF; color: #2563EB; }
+.badge-tipe--link { background: #F0FDF4; color: #15803D; }
+.badge-tipe--file { background: #FFFBEB; color: #D97706; }
 </style>
 <script>
 const s=document.querySelector('.sidebar'),o=document.getElementById('sidebarOverlay'),h=document.getElementById('hamburgerBtn');

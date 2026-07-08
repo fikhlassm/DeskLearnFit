@@ -8,12 +8,11 @@
     <nav class="public-nav">
         <div class="container-page flex h-[68px] items-center">
             <a href="{{ route('home') }}" class="public-nav__brand">
-                <span class="grid h-7 w-7 place-items-center rounded-lg bg-brand-600 text-white">
-                    <svg viewBox="0 0 28 28" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                        <path d="M8 10h12M8 14h8M8 18h10"/>
-                    </svg>
-                </span>
-                <span class="public-nav__brand-name">LearnFit</span>
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="shrink-0">
+                    <rect width="28" height="28" rx="8" fill="#2563EB"/>
+                    <path d="M8 10h12M8 14h8M8 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="font-display text-[22px] font-bold tracking-tight text-ink-900">LearnFit</span>
             </a>
         </div>
     </nav>
@@ -32,7 +31,7 @@
                     data-animate style="--delay:80ms">
                     Selamat<br>Bergabung!
                 </h1>
-                <p class="max-w-[400px] text-[14px] leading-relaxed text-ink-500"
+                <p class="text-[14px] leading-relaxed text-ink-500"
                    data-animate style="--delay:140ms">
                     Langkah awal menuju cara belajar yang lebih cerdas dan efektif.
                 </p>
@@ -51,51 +50,50 @@
                     <div class="rec-card__actions">
                         <a href="{{ route('quiz') }}" class="btn-primary">
                             Mulai Quiz
-                            <x-icon name="arrow-right" class="h-3.5 w-3.5" />
                         </a>
                         <a href="{{ route('dashboard.siswa') }}" class="btn-ghost no-underline">Lakukan Nanti</a>
                     </div>
                 </div>
 
                 {{-- Quick links --}}
-                <div class="quick-links" data-animate style="--delay:270ms">
-                    <a href="#" class="quick-link">
+                <div class="quick-links mt-auto" data-animate style="--delay:270ms">
+                    <a href="{{ route('siswa.kelas.index') }}" class="quick-link">
                         <div class="quick-link__icon bg-brand-50">
                             <x-icon name="book-open" class="h-[18px] w-[18px] text-brand-600" />
                         </div>
                         <div>
-                            <p class="quick-link__title">Materi Belajar</p>
-                            <p class="quick-link__sub">200+ topik</p>
+                            <p class="quick-link__title">Kelas Saya</p>
+                            <p class="quick-link__sub">Akses materi &amp; tugas</p>
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
-                    <a href="#" class="quick-link">
+                    <a href="{{ route('sesi.index') }}" class="quick-link">
                         <div class="quick-link__icon bg-emerald-50">
                             <x-icon name="clock" class="h-[18px] w-[18px] text-emerald-600" />
                         </div>
                         <div>
-                            <p class="quick-link__title">Jadwal Belajar</p>
-                            <p class="quick-link__sub">Atur waktumu</p>
+                            <p class="quick-link__title">Sesi Belajar</p>
+                            <p class="quick-link__sub">Mulai waktu fokusmu</p>
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
-                    <a href="#" class="quick-link">
+                    <a href="{{ route('catatan.index') }}" class="quick-link">
                         <div class="quick-link__icon bg-orange-50">
-                            <x-icon name="star" style="solid" class="h-[18px] w-[18px] text-orange-500" />
+                            <x-icon name="document-text" class="h-[18px] w-[18px] text-orange-500" />
                         </div>
                         <div>
-                            <p class="quick-link__title">Pencapaian</p>
-                            <p class="quick-link__sub">Badge &amp; sertifikat</p>
+                            <p class="quick-link__title">Catatan Belajar</p>
+                            <p class="quick-link__sub">Jurnal &amp; riwayat</p>
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
-                    <a href="#" class="quick-link">
+                    <a href="{{ route('notebook.index') }}" class="quick-link">
                         <div class="quick-link__icon bg-purple-50">
-                            <x-icon name="rectangle-stack" class="h-[18px] w-[18px] text-purple-600" />
+                            <x-icon name="pencil-square" class="h-[18px] w-[18px] text-purple-600" />
                         </div>
                         <div>
-                            <p class="quick-link__title">Forum Diskusi</p>
-                            <p class="quick-link__sub">Tanya &amp; jawab</p>
+                            <p class="quick-link__title">Notebook</p>
+                            <p class="quick-link__sub">Blurting &amp; Feynman</p>
                         </div>
                         <x-icon name="chevron-right" class="quick-link__arr h-3.5 w-3.5 text-ink-300" />
                     </a>
@@ -108,39 +106,19 @@
                 <div class="illus-card" data-animate="fade-right" style="--delay:100ms">
                     <span class="illus-card__blob illus-card__blob--1"></span>
                     <span class="illus-card__blob illus-card__blob--2"></span>
-                    <svg class="illus-card__fig" viewBox="0 0 260 300" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <rect x="85" y="155" width="90" height="95" rx="20" fill="#4EB89D"/>
-                        <rect x="112" y="140" width="36" height="24" rx="8" fill="#F5C5A3"/>
-                        <ellipse cx="130" cy="112" rx="38" ry="38" fill="#F5C5A3"/>
-                        <path d="M92 102c0-28 76-36 76-9" fill="#3D2B1F"/>
-                        <ellipse cx="130" cy="78" rx="38" ry="17" fill="#3D2B1F"/>
-                        <ellipse cx="117" cy="112" rx="5" ry="5.5" fill="#3D2B1F"/>
-                        <ellipse cx="143" cy="112" rx="5" ry="5.5" fill="#3D2B1F"/>
-                        <circle cx="119" cy="110" r="1.5" fill="white"/>
-                        <circle cx="145" cy="110" r="1.5" fill="white"/>
-                        <path d="M118 124 q12 9 24 0" stroke="#C87137" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                        <path d="M85 165 Q55 142 48 108" stroke="#4EB89D" stroke-width="22" stroke-linecap="round"/>
-                        <ellipse cx="46" cy="100" rx="12" ry="13" fill="#F5C5A3"/>
-                        <path d="M175 165 Q205 142 212 108" stroke="#4EB89D" stroke-width="22" stroke-linecap="round"/>
-                        <ellipse cx="214" cy="100" rx="12" ry="13" fill="#F5C5A3"/>
-                        <rect x="85" y="218" width="42" height="60" rx="10" fill="#2C3E6B"/>
-                        <rect x="133" y="218" width="42" height="60" rx="10" fill="#2C3E6B"/>
-                        <rect x="80" y="270" width="50" height="16" rx="8" fill="#1E2A45"/>
-                        <rect x="130" y="270" width="50" height="16" rx="8" fill="#1E2A45"/>
-                        <path d="M112 155 l18-14 18 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
+                    <img src="{{ asset('images/welcome-illustration.png') }}" alt="Ilustrasi Belajar" class="relative z-10 w-full max-w-[280px]" style="mix-blend-mode: darken;">
                     <span class="badge-float badge-float--tl">
-                        <x-icon name="star" style="solid" class="h-3 w-3 text-amber-400" />
+                        <x-icon name="rocket" class="h-3.5 w-3.5 text-brand-500" />
                         Mulai Belajar Hari Ini!
                     </span>
                     <span class="badge-float badge-float--br">
-                        <x-icon name="check-circle" style="solid" class="h-3.5 w-3.5 text-brand-600" />
-                        Akun berhasil dibuat
+                        <x-icon name="sparkles" class="h-3.5 w-3.5 text-amber-500" />
+                        Gaya Belajar Personal
                     </span>
                 </div>
 
                 {{-- Steps --}}
-                <div class="steps-card" data-animate="fade-right" style="--delay:200ms">
+                <div class="steps-card mt-auto" data-animate="fade-right" style="--delay:200ms">
                     <p class="steps-card__head">Mulai dari sini 👇</p>
                     <div class="step">
                         <span class="step__dot step__dot--done">
@@ -169,16 +147,25 @@
                     </div>
                 </div>
 
-                {{-- Tip box --}}
-                <div class="tip-box" data-animate="fade-right" style="--delay:300ms">
-                    <x-icon name="information-circle" class="mt-px h-4 w-4 flex-shrink-0 text-brand-600" />
-                    <p class="tip-box__text">
-                        <strong>Tips:</strong> Selesaikan quiz gaya belajar untuk mendapatkan rekomendasi materi yang personal.
-                    </p>
-                </div>
-            </div>
+            </div> {{-- End public-col-right --}}
 
+        </div> {{-- End public-page__body --}}
+
+        {{-- Tip text (centered vertically and horizontally) --}}
+        <div id="tip-text-anim" class="-mt-4 mb-6 flex justify-center text-center px-4" data-animate="fade-up" style="--delay:300ms">
+            <p class="text-[13px] text-ink-500 max-w-[600px] flex items-start sm:items-center justify-center gap-1.5">
+                <x-icon name="information-circle" class="h-4 w-4 flex-shrink-0 text-brand-600" />
+                <span><strong>Tips:</strong> Selesaikan quiz gaya belajar untuk mendapatkan rekomendasi materi yang personal.</span>
+            </p>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    const tip = document.getElementById('tip-text-anim');
+                    if (tip) tip.classList.add('is-visible');
+                }, 50);
+            });
+        </script>
     </main>
 
     @include('partials._public_footer')

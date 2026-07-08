@@ -12,18 +12,61 @@
 
     <div class="section-card">
         <p class="section-card__title">Tambah Tugas Baru</p>
-        <form method="POST" action="{{ route('tugas.store', $kelas) }}">
+        <form method="POST" action="{{ route('tugas.store', $kelas) }}" enctype="multipart/form-data">
             @csrf
             @if(request('topik') || old('topik_id'))
                 <input type="hidden" name="topik_id" value="{{ old('topik_id', request('topik')) }}">
             @endif
             @if($errors->any())<div class="alert-error" style="margin-bottom:.75rem">{{ $errors->first() }}</div>@endif
             <div class="form-group"><label>Judul *</label><input type="text" name="judul" value="{{ old('judul') }}" required class="form-input"></div>
-            <div class="form-group"><label>Deskripsi / Instruksi *</label><textarea name="deskripsi" rows="3" required class="form-input">{{ old('deskripsi') }}</textarea></div>
+            
+            <div class="form-group">
+                <label>Tipe Pengumpulan *</label>
+                <select name="tipe" id="tipeSelect" class="form-input" required onchange="toggleTugasFields()">
+                    <option value="teks" {{ old('tipe') === 'teks' ? 'selected' : '' }}>Teks Saja</option>
+                    <option value="link" {{ old('tipe') === 'link' ? 'selected' : '' }}>Link / Tautan</option>
+                    <option value="file" {{ old('tipe') === 'file' ? 'selected' : '' }}>Upload File</option>
+                </select>
+            </div>
+
+            <div class="form-group"><label>Deskripsi / Instruksi *</label><textarea name="deskripsi" rows="3" class="form-input">{{ old('deskripsi') }}</textarea></div>
+
+            <div class="form-group" id="linkField" style="display:none;">
+                <label>URL Link *</label>
+                <input type="url" name="link_url" value="{{ old('link_url') }}" placeholder="https://..." class="form-input">
+            </div>
+
+            <div class="form-group" id="fileField" style="display:none;">
+                <label>Upload File *</label>
+                <input type="file" name="file_upload" class="form-input" style="padding: .4rem .85rem;">
+                <small style="color:#64748B; font-size:.75rem; margin-top:.2rem;">Maks 10MB.</small>
+            </div>
+
             <div class="form-group"><label>Deadline (opsional)</label><input type="datetime-local" name="deadline" value="{{ old('deadline') }}" class="form-input"></div>
             <button type="submit" class="btn-primary">Simpan Tugas</button>
         </form>
     </div>
+
+    <script>
+    function toggleTugasFields() {
+        const tipe = document.getElementById('tipeSelect').value;
+        const linkField = document.getElementById('linkField');
+        const fileField = document.getElementById('fileField');
+        
+        if (tipe === 'link') {
+            linkField.style.display = 'flex';
+            fileField.style.display = 'none';
+        } else if (tipe === 'file') {
+            linkField.style.display = 'none';
+            fileField.style.display = 'flex';
+        } else {
+            linkField.style.display = 'none';
+            fileField.style.display = 'none';
+        }
+    }
+    // Initialize state on load
+    document.addEventListener('DOMContentLoaded', toggleTugasFields);
+    </script>
 
 
 </main>

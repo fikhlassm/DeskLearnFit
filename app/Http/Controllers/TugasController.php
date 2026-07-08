@@ -33,20 +33,31 @@ class TugasController extends Controller
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
+            'tipe' => ['required', 'in:teks,link,file'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
             'topik_id' => ['required', 'exists:topiks,id'],
             'deadline' => ['nullable', 'date', 'after:now'],
+            'link_url' => ['nullable', 'url', 'max:255'],
+            'file_upload' => ['nullable', 'file', 'max:10240'],
         ], [
             'deadline.after' => 'Deadline harus di masa depan.',
         ]);
+
+        $lampiranPath = null;
+        if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
+            $lampiranPath = $request->file('file_upload')->store('tugas_files', 'public');
+        }
 
         Tugas::create([
             'kelas_id' => $kelas->id,
             'pengajar_id' => Auth::id(),
             'judul' => $validated['judul'],
+            'tipe' => $validated['tipe'],
             'deskripsi' => $validated['deskripsi'] ?? null,
             'topik_id' => $validated['topik_id'] ?? null,
             'deadline' => $validated['deadline'] ?? null,
+            'link_url' => $validated['tipe'] === 'link' ? ($validated['link_url'] ?? null) : null,
+            'lampiran_path' => $lampiranPath,
             'status' => 'terbit',
             'published_at' => now(),
         ]);
@@ -70,12 +81,33 @@ class TugasController extends Controller
 
         $validated = $request->validate([
             'judul' => ['required', 'string', 'max:255'],
+            'tipe' => ['required', 'in:teks,link,file'],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
             'topik_id' => ['required', 'exists:topiks,id'],
             'deadline' => ['nullable', 'date'],
+            'link_url' => ['nullable', 'url', 'max:255'],
+            'file_upload' => ['nullable', 'file', 'max:10240'],
         ]);
 
-        $tugas->update($validated);
+        $lampiranPath = $tugas->lampiran_path;
+        if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
+            if ($lampiranPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($lampiranPath)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($lampiranPath);
+            }
+            $lampiranPath = $request->file('file_upload')->store('tugas_files', 'public');
+        } elseif ($validated['tipe'] !== 'file') {
+            $lampiranPath = null;
+        }
+
+        $tugas->update([
+            'judul' => $validated['judul'],
+            'tipe' => $validated['tipe'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'topik_id' => $validated['topik_id'] ?? null,
+            'deadline' => $validated['deadline'] ?? null,
+            'link_url' => $validated['tipe'] === 'link' ? ($validated['link_url'] ?? null) : null,
+            'lampiran_path' => $lampiranPath,
+        ]);
 
         return redirect()->route('kelas.show', $tugas->kelas_id)
             ->with('success', 'Tugas berhasil diperbarui.');

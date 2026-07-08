@@ -32,7 +32,6 @@
                 </p>
                 <a href="{{ route('register') }}" class="btn-primary btn-lg hero__cta">
                     Mulai Sekarang
-                    <x-icon name="arrow-right" class="h-4 w-4" />
                 </a>
                 <div class="hero__dots">
                     <span class="inline-block h-2 w-6 rounded-sm bg-brand-600"></span>
@@ -177,7 +176,6 @@
             </div>
             <a href="{{ route('register') }}" class="btn-white btn-lg">
                 Mulai Gratis Sekarang
-                <x-icon name="arrow-right" class="h-4 w-4" />
             </a>
         </div>
     </section>
