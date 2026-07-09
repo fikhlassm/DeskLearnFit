@@ -78,6 +78,11 @@ class AnggotaKelasController extends Controller
             return back()->withErrors(['kode_kelas' => 'Kamu sudah terdaftar di kelas ini.'])->withInput();
         }
 
+        $jumlahSiswa = AnggotaKelas::where('kelas_id', $kelas->id)->count();
+        if ($jumlahSiswa >= $kelas->kapasitas) {
+            return back()->withErrors(['kode_kelas' => 'Kapasitas kelas sudah penuh.'])->withInput();
+        }
+
         AnggotaKelas::create([
             'kelas_id' => $kelas->id,
             'siswa_id' => Auth::id(),

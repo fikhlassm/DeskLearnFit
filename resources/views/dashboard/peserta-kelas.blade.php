@@ -26,8 +26,8 @@
                 @foreach($peserta as $i => $anggota)
                 <tr>
                     <td>{{ $i + 1 }}</td>
-                    <td>{{ $anggota->siswa->name }}</td>
-                    <td>{{ $anggota->siswa->email }}</td>
+                    <td>{{ $anggota->siswa?->name ?? 'Akun Terhapus' }}</td>
+                    <td>{{ $anggota->siswa?->email ?? '-' }}</td>
                     <td>{{ $anggota->joined_at?->format('d M Y') ?? '-' }}</td>
                 </tr>
                 @endforeach
