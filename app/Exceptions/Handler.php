@@ -27,4 +27,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if (isset($_SERVER['VERCEL']) || isset($_ENV['VERCEL'])) {
+            echo "<pre style='background:white;color:red;padding:20px'>REAL EXCEPTION: " . $e->getMessage() . "\n\n" . $e->getFile() . ":" . $e->getLine() . "\n\n" . $e->getTraceAsString() . "</pre>";
+            die();
+        }
+        return parent::render($request, $e);
+    }
 }
