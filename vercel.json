@@ -9,12 +9,11 @@
     },
     "routes": [
         {
-            "src": "/(build|css|images|storage)/(.*)",
-            "dest": "/$1/$2"
+            "src": "/",
+            "dest": "/api/index.php"
         },
         {
-            "src": "/(favicon\\.ico|robots\\.txt)",
-            "dest": "/$1"
+            "handle": "filesystem"
         },
         {
             "src": "/(.*)",
