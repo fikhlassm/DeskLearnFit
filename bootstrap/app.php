@@ -22,6 +22,7 @@ $app = new Application(
 
 if (isset($_ENV['APP_STORAGE'])) {
     $app->useStoragePath($_ENV['APP_STORAGE']);
+    $app->useBootstrapPath($_ENV['APP_STORAGE'] . '/bootstrap');
 }
 
 /*
