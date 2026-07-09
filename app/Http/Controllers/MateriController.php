@@ -44,7 +44,7 @@ class MateriController extends Controller
 
         $filePath = null;
         if ($request->hasFile('file') && $request->tipe === 'file') {
-            $filePath = $request->file('file')->store('materi', 'public');
+            $filePath = $request->file('file')->store('materi', env('FILESYSTEM_DISK', 'public'));
         }
 
         Materi::create([
@@ -89,9 +89,9 @@ class MateriController extends Controller
         $filePath = $materi->file_path;
         if ($request->hasFile('file') && $request->tipe === 'file') {
             if ($filePath) {
-                Storage::disk('public')->delete($filePath);
+                Storage::disk(env('FILESYSTEM_DISK', 'public'))->delete($filePath);
             }
-            $filePath = $request->file('file')->store('materi', 'public');
+            $filePath = $request->file('file')->store('materi', env('FILESYSTEM_DISK', 'public'));
         }
 
         $materi->update([
@@ -114,7 +114,7 @@ class MateriController extends Controller
         $kelasId = $materi->kelas_id;
 
         if ($materi->file_path) {
-            Storage::disk('public')->delete($materi->file_path);
+            Storage::disk(env('FILESYSTEM_DISK', 'public'))->delete($materi->file_path);
         }
 
         $materi->delete();
@@ -179,11 +179,11 @@ class MateriController extends Controller
 
         abort_unless($isMyKelas, 403, 'Anda tidak punya akses ke materi ini.');
 
-        if (! $materi->file_path || ! Storage::disk('public')->exists($materi->file_path)) {
+        if (! $materi->file_path || ! Storage::disk(env('FILESYSTEM_DISK', 'public'))->exists($materi->file_path)) {
             abort(404, 'File tidak ditemukan.');
         }
 
-        return Storage::disk('public')->download(
+        return Storage::disk(env('FILESYSTEM_DISK', 'public'))->download(
             $materi->file_path,
             $materi->judul.'.'.pathinfo($materi->file_path, PATHINFO_EXTENSION),
         );

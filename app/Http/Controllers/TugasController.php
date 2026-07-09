@@ -45,7 +45,7 @@ class TugasController extends Controller
 
         $lampiranPath = null;
         if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
-            $lampiranPath = $request->file('file_upload')->store('tugas_files', 'public');
+            $lampiranPath = $request->file('file_upload')->store('tugas_files', env('FILESYSTEM_DISK', 'public'));
         }
 
         Tugas::create([
@@ -91,10 +91,10 @@ class TugasController extends Controller
 
         $lampiranPath = $tugas->lampiran_path;
         if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
-            if ($lampiranPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($lampiranPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($lampiranPath);
+            if ($lampiranPath && \Illuminate\Support\Facades\Storage::disk(env('FILESYSTEM_DISK', 'public'))->exists($lampiranPath)) {
+                \Illuminate\Support\Facades\Storage::disk(env('FILESYSTEM_DISK', 'public'))->delete($lampiranPath);
             }
-            $lampiranPath = $request->file('file_upload')->store('tugas_files', 'public');
+            $lampiranPath = $request->file('file_upload')->store('tugas_files', env('FILESYSTEM_DISK', 'public'));
         } elseif ($validated['tipe'] !== 'file') {
             $lampiranPath = null;
         }
@@ -118,6 +118,11 @@ class TugasController extends Controller
     {
         $this->authorizeTugas($tugas);
         $kelasId = $tugas->kelas_id;
+        
+        if ($tugas->lampiran_path) {
+            \Illuminate\Support\Facades\Storage::disk(env('FILESYSTEM_DISK', 'public'))->delete($tugas->lampiran_path);
+        }
+
         $tugas->delete();
 
         return redirect()->route('kelas.show', $kelasId)

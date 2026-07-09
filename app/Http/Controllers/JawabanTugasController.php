@@ -81,7 +81,7 @@ class JawabanTugasController extends Controller
 
         $filePath = null;
         if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
-            $filePath = $request->file('file_upload')->store('jawaban_files', 'public');
+            $filePath = $request->file('file_upload')->store('jawaban_files', env('FILESYSTEM_DISK', 'public'));
         }
 
         $status = 'terkirim';
@@ -129,10 +129,10 @@ class JawabanTugasController extends Controller
 
         $filePath = $jawaban->file_path;
         if ($validated['tipe'] === 'file' && $request->hasFile('file_upload')) {
-            if ($filePath && \Illuminate\Support\Facades\Storage::disk('public')->exists($filePath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($filePath);
+            if ($filePath && \Illuminate\Support\Facades\Storage::disk(env('FILESYSTEM_DISK', 'public'))->exists($filePath)) {
+                \Illuminate\Support\Facades\Storage::disk(env('FILESYSTEM_DISK', 'public'))->delete($filePath);
             }
-            $filePath = $request->file('file_upload')->store('jawaban_files', 'public');
+            $filePath = $request->file('file_upload')->store('jawaban_files', env('FILESYSTEM_DISK', 'public'));
         } elseif ($validated['tipe'] !== 'file') {
             $filePath = null;
         }
