@@ -187,9 +187,9 @@ $userName = Auth::user()->name;
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     {{-- FAB --}}
-    <button class="fab" title="Tambah Sesi Belajar">
+    <a href="{{ route('sesi.index') }}" class="fab" title="Tambah Sesi Belajar">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 4v14M4 11h14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
+    </a>
 </div>
 
     </main>
