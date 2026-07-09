@@ -137,7 +137,7 @@
     .testi-card__role { @apply text-xs text-ink-400; }
 
     .testi-stats {
-        @apply container-page flex flex-wrap items-center justify-center gap-y-4 rounded-3xl border border-ink-200 bg-white px-10 py-7;
+        @apply mx-auto w-fit max-w-[calc(100%-3rem)] flex flex-wrap items-center justify-center gap-y-4 rounded-3xl border border-ink-200 bg-white px-10 py-7;
     }
     .testi-stat { @apply px-10 text-center; }
     .testi-stat__num { @apply font-display block text-[28px] font-bold text-brand-600; }

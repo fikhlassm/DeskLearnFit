@@ -412,6 +412,7 @@
     display:none;position:fixed;inset:0;
     background:rgba(15,23,42,.45);z-index:100;
     align-items:center;justify-content:center;padding:1.25rem;
+    backdrop-filter:blur(5px);
 }
 .modal-overlay.open{display:flex;}
 .modal{

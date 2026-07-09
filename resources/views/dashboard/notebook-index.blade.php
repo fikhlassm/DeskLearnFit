@@ -17,7 +17,7 @@
         <div class="topbar">
             <button class="hamburger" id="hamburgerBtn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="#475569" stroke-width="1.8" stroke-linecap="round"/></svg></button>
             <div>
-                <h1 class="topbar__title">Catatan Belajar</h1>
+                <h1 class="topbar__title">Riwayat Sesi</h1>
                 <p class="topbar__sub">Semua sesi belajar yang pernah kamu buat, dikelompokkan per metode</p>
             </div>
             <div class="topbar__right">

@@ -11,7 +11,7 @@ $metodeMap = [
 @endphp
 
 <div class="dash-page">
-    @include('dashboard._sidebar_siswa', ['active' => 'sesi-belajar'])
+    @include('dashboard._sidebar_siswa', ['active' => 'sesi'])
 
     <main class="dash-main">
         <header class="dash-header">
@@ -32,11 +32,20 @@ $metodeMap = [
         @endif
 
         <div class="method-selector">
+            @php $quizResult = Auth::user()->quiz_result; @endphp
             @foreach($metodeMap as $m => $info)
-                <a href="?metode={{ $m }}" class="method-tab {{ $selectedMetode === $m ? 'method-tab--active' : '' }}" style="border-bottom-color:{{ $selectedMetode === $m ? $info['color'] : 'transparent' }}">
-                    <span class="method-icon" style="background:{{ $selectedMetode === $m ? $info['bg'] : '#F1F5F9' }}; color:{{ $info['color'] }}">{{ $info['icon'] }}</span>
+                @php 
+                    $isLocked = $quizResult && $quizResult !== $m;
+                    $href = $isLocked ? '#' : route('sesi.index', ['metode' => $m]);
+                    $activeClass = $selectedMetode === $m ? 'method-tab--active' : '';
+                    $lockedClass = $isLocked ? 'opacity-50 cursor-not-allowed' : '';
+                @endphp
+                <a href="{{ $href }}" class="method-tab {{ $activeClass }} {{ $lockedClass }}" 
+                   style="border-bottom-color:{{ $selectedMetode === $m && !$isLocked ? $info['color'] : 'transparent' }}"
+                   {!! $isLocked ? 'onclick="event.preventDefault(); alert(\'Kamu hanya dapat mengakses metode ' . ucfirst(str_replace('_', ' ', $quizResult)) . ' sesuai hasil kuis.\');"' : '' !!}>
+                    <span class="method-icon" style="background:{{ $selectedMetode === $m && !$isLocked ? $info['bg'] : '#F1F5F9' }}; color:{{ $info['color'] }}; filter: {{ $isLocked ? 'grayscale(100%)' : 'none' }}">{{ $info['icon'] }}</span>
                     <div>
-                        <div class="method-name" style="color:{{ $selectedMetode === $m ? $info['color'] : '#475569' }}">{{ $info['label'] }}</div>
+                        <div class="method-name" style="color:{{ $selectedMetode === $m && !$isLocked ? $info['color'] : '#475569' }}">{{ $info['label'] }} @if($isLocked) 🔒 @endif</div>
                         <div class="method-desc">{{ $info['desc'] }}</div>
                     </div>
                 </a>

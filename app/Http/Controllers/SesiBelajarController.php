@@ -31,21 +31,27 @@ class SesiBelajarController extends Controller
             ->where('status', 'selesai')
             ->count();
 
-        $selectedMetode = $request->query('metode', 'pomodoro');
-        if (! in_array($selectedMetode, $this->metodeValid, true)) {
-            $selectedMetode = 'pomodoro';
+        $selectedMetode = $request->query('metode');
+        if ($user->quiz_result) {
+            $selectedMetode = $user->quiz_result;
+        } else {
+            if (! in_array($selectedMetode, $this->metodeValid, true)) {
+                $selectedMetode = 'pomodoro';
+            }
         }
 
         return view('dashboard.sesi-belajar', compact(
             'riwayat',
             'totalSelesai',
-            'selectedMetode',
+            'selectedMetode'
         ) + ['active' => 'sesi']);
     }
 
     /** Buat sesi belajar baru. */
     public function store(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
             'metode' => ['required', 'string', Rule::in($this->metodeValid)],
             'judul' => ['nullable', 'string', 'max:200'],
@@ -62,6 +68,10 @@ class SesiBelajarController extends Controller
             'jumlah_siklus.min' => 'Jumlah siklus minimal 1.',
             'jumlah_siklus.max' => 'Jumlah siklus maksimal 10.',
         ]);
+
+        if ($user->quiz_result && $validated['metode'] !== $user->quiz_result) {
+            return back()->with('error', 'Kamu hanya dapat menggunakan metode ' . ucfirst(str_replace('_', ' ', $user->quiz_result)) . ' sesuai hasil kuis.');
+        }
 
         if ($validated['metode'] === 'pomodoro') {
             $request->validate([

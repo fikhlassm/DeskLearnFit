@@ -45,19 +45,25 @@ class GoogleController extends Controller
             $user = User::create([
                 'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Pengguna',
                 'email' => $googleUser->getEmail(),
-                'password' => Hash::make(Str::random(32)),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+                'password' => null,
                 'role' => 'siswa',
                 'email_verified_at' => now(),
             ]);
-        } elseif (! $user->email_verified_at) {
-            $user->forceFill(['email_verified_at' => now()])->save();
+        } else {
+            $user->update([
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+            ]);
+            if (! $user->email_verified_at) {
+                $user->forceFill(['email_verified_at' => now()])->save();
+            }
         }
 
         Auth::login($user, true);
 
-        $route = $user->isPengajar() ? 'dashboard.pengajar' : 'dashboard.siswa';
-
-        return redirect()->route($route)
+        return redirect()->route('dashboard')
             ->with('success', 'Berhasil login dengan Google.');
     }
 

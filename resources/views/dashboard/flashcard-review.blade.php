@@ -9,18 +9,18 @@
 
 <div class="review-page">
     <div class="review-topbar">
-        <a href="{{ route('sesi.index', ['metode' => 'active_recall']) }}" class="review-back">
+        <a href="{{ route('sesi.show', $sesi->id) }}" class="btn-back">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Kembali ke Sesi
         </a>
         <div class="review-title">
-            <h1>🃏 Mode Review</h1>
+            <h1>Mode Review</h1>
             <p>{{ $sesi->judul ?: 'Tanpa judul' }} · {{ $cards->count() }} kartu</p>
         </div>
         <div class="review-stats">
-            <span class="review-stat" data-tone="ok">✓ {{ $stats['benar'] }}</span>
-            <span class="review-stat" data-tone="err">✗ {{ $stats['salah'] }}</span>
-            <span class="review-stat" data-tone="primary">{{ $stats['percent'] }}%</span>
+            <span class="review-stat" data-tone="ok" id="statBenar">Benar: <span id="valBenar">{{ $stats['benar'] }}</span></span>
+            <span class="review-stat" data-tone="err" id="statSalah">Salah: <span id="valSalah">{{ $stats['salah'] }}</span></span>
+            <span class="review-stat" data-tone="primary" id="statAkurasi">Akurasi: <span id="valAkurasi">{{ $stats['percent'] }}</span>%</span>
         </div>
     </div>
 
@@ -37,15 +37,15 @@
                     <div class="review-card__face review-card__face--front">
                         <p class="review-card__label">Pertanyaan</p>
                         <p class="review-card__q">{{ $card->pertanyaan }}</p>
-                        <button type="button" class="review-card__flip" onclick="flipCard({{ $i }})">Lihat Jawaban ↻</button>
+                        <button type="button" class="review-card__flip" onclick="flipCard({{ $i }})">Lihat Jawaban</button>
                     </div>
                     <div class="review-card__face review-card__face--back" style="display:none">
                         <p class="review-card__label">Jawaban</p>
                         <p class="review-card__a">{{ $card->jawaban }}</p>
                         <p class="review-card__ask">Apakah kamu mengingatnya dengan benar?</p>
                         <div class="review-card__actions">
-                            <button type="button" class="review-btn review-btn--err" onclick="submitAnswer(this, {{ $card->id }}, 0)">✗ Salah</button>
-                            <button type="button" class="review-btn review-btn--ok" onclick="submitAnswer(this, {{ $card->id }}, 1)">✓ Benar</button>
+                            <button type="button" class="review-btn review-btn--err" onclick="submitAnswer(this, {{ $card->id }}, 0)">Salah</button>
+                            <button type="button" class="review-btn review-btn--ok" onclick="submitAnswer(this, {{ $card->id }}, 1)">Benar</button>
                         </div>
                     </div>
                 </div>
@@ -54,9 +54,9 @@
         </div>
 
         <div class="review-controls">
-            <button type="button" class="review-nav review-nav--prev" id="btnPrev" disabled onclick="navigateCard(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Sebelumnya</button>
+            <button type="button" class="review-nav review-nav--prev" id="btnPrev" disabled onclick="navigateCard(-1)">< Sebelumnya</button>
             <span class="review-hint" id="reviewHint">Klik "Lihat Jawaban" untuk membalik kartu</span>
-            <button type="button" class="review-nav review-nav--next" id="btnNext" onclick="navigateCard(1)">Selanjutnya →</button>
+            <button type="button" class="review-nav review-nav--next" id="btnNext" onclick="navigateCard(1)">Selanjutnya ></button>
         </div>
     </div>
 
@@ -77,8 +77,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 .review-page{min-height:100vh;background:linear-gradient(135deg,#F5F3FF,#EFF6FF);font-family:'Plus Jakarta Sans',sans-serif;padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1.5rem;max-width:920px;margin:0 auto;}
 .review-topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
-.review-back{display:inline-flex;align-items:center;gap:.4rem;color:#475569;text-decoration:none;font-size:.85rem;font-weight:600;padding:.5rem .8rem;border-radius:8px;background:#fff;border:1px solid #E2E8F0;}
-.review-back:hover{background:#F8FAFC;}
+.btn-back{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;color:#64748B;border:1px solid #E2E8F0;border-radius:50px;text-decoration:none;font-size:.82rem;font-weight:500;transition:all .18s;}
+.btn-back:hover{color:#2563EB;border-color:#2563EB;box-shadow:0 2px 8px rgba(37,99,235,.1);}
 .review-title h1{font-size:1.3rem;font-weight:800;color:#0F172A;letter-spacing:-.02em;}
 .review-title p{font-size:.78rem;color:#64748B;margin-top:.1rem;}
 .review-stats{display:flex;gap:.5rem;}
@@ -98,6 +98,7 @@
 .review-card__q{font-size:1.4rem;font-weight:700;line-height:1.4;margin-bottom:1.5rem;}
 .review-card__a{font-size:1.15rem;line-height:1.55;margin-bottom:1rem;white-space:pre-wrap;background:rgba(255,255,255,.1);padding:1rem;border-radius:12px;}
 .review-card__ask{font-size:.85rem;opacity:.9;margin-bottom:1.25rem;font-style:italic;}
+
 .review-card__flip{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:.6rem 1.4rem;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;}
 .review-card__flip:hover{background:rgba(255,255,255,.25);}
 
@@ -108,15 +109,16 @@
 .review-btn:hover{transform:translateY(-2px);opacity:.92;}
 
 .review-controls{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;gap:1rem;flex-wrap:wrap;}
-.review-nav{padding:.6rem 1.2rem;background:#F8FAFC;color:#475569;border:1px solid #E2E8F0;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;}
-.review-nav:hover:not(:disabled){background:#fff;border-color:#94A3B8;}
+.review-nav{padding:.6rem 1.2rem;background:#7C3AED;color:#fff;border:none;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:transform .15s, opacity .15s;}
+.review-nav:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(124,58,237,.3);}
 .review-nav:disabled{opacity:.4;cursor:not-allowed;}
 .review-hint{font-size:.78rem;color:#94A3B8;font-style:italic;}
 
 .review-summary{background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 4px 16px rgba(15,23,42,.05);}
 .review-summary h2{font-size:1rem;font-weight:700;color:#0F172A;margin-bottom:1rem;}
 .summary-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
-.summary-stat{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:1rem;text-align:center;display:flex;flex-direction:column;gap:.3rem;}
+.summary-stat{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:1rem;text-align:center;display:flex;flex-direction:column;gap:.3rem;transition:transform .2s,box-shadow .2s;}
+.summary-stat:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(15,23,42,.08);}
 .summary-stat[data-tone="ok"]{background:#F0FDF4;border-color:#86EFAC;}
 .summary-stat[data-tone="err"]{background:#FEF2F2;border-color:#FCA5A5;}
 .summary-stat[data-tone="primary"]{background:#F5F3FF;border-color:#C4B5FD;}
@@ -182,6 +184,15 @@ async function submitAnswer(btn, cardId, benar) {
         });
 
         if (response.ok) {
+            let valBenar = parseInt(document.getElementById('valBenar').innerText);
+            let valSalah = parseInt(document.getElementById('valSalah').innerText);
+            if(benar) valBenar++; else valSalah++;
+            
+            document.getElementById('valBenar').innerText = valBenar;
+            document.getElementById('valSalah').innerText = valSalah;
+            let akurasi = Math.round((valBenar / (valBenar + valSalah)) * 100) || 0;
+            document.getElementById('valAkurasi').innerText = akurasi;
+
             if (current < total - 1) {
                 navigateCard(1);
             } else {

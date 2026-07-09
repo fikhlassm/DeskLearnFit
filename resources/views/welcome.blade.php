@@ -162,7 +162,7 @@
             <div class="testi-stat__divider"></div>
             <div class="testi-stat">
                 <span class="testi-stat__num">{{ number_format($stats['totalCatatan']) }}</span>
-                <span class="testi-stat__label">Catatan & Jurnal</span>
+                <span class="testi-stat__label">Catatan/Jurnal</span>
             </div>
         </div>
     </section>

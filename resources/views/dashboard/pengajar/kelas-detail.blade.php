@@ -337,7 +337,7 @@ input:checked + .slider:before {transform:translateX(20px);}
 }
 
 /* Modals */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:100;align-items:center;justify-content:center;padding:1.25rem;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:100;align-items:center;justify-content:center;padding:1.25rem;backdrop-filter:blur(5px);}
 .modal-overlay.open{display:flex;}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:520px;box-shadow:0 8px 32px rgba(0,0,0,.16);animation:slideUp .2s ease;}
 @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}

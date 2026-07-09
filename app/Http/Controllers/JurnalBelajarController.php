@@ -27,9 +27,14 @@ class JurnalBelajarController extends Controller
             ->orderByDesc('tanggal')
             ->orderByDesc('created_at');
 
-        // Filter opsional berdasarkan metode
-        if ($request->filled('metode') && in_array($request->metode, $this->metodeValid, true)) {
-            $query->where('metode_yang_digunakan', $request->metode);
+        // Jika user sudah memiliki hasil kuis, maka secara paksa metode diset menjadi hasil kuis.
+        if (Auth::user()->quiz_result) {
+            $query->where('metode_yang_digunakan', Auth::user()->quiz_result);
+        } else {
+            // Filter opsional berdasarkan metode
+            if ($request->filled('metode') && in_array($request->metode, $this->metodeValid, true)) {
+                $query->where('metode_yang_digunakan', $request->metode);
+            }
         }
 
         $jurnalList = $query->paginate(10)->withQueryString();
@@ -46,6 +51,8 @@ class JurnalBelajarController extends Controller
     /** Simpan catatan belajar baru. */
     public function store(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
             'tanggal' => ['required', 'date', 'before_or_equal:today'],
             'judul' => ['nullable', 'string', 'max:200'],
@@ -61,7 +68,11 @@ class JurnalBelajarController extends Controller
             'rating_efektivitas.max' => 'Rating maksimal 5.',
         ]);
 
-        Auth::user()->jurnalBelajar()->create($validated);
+        if ($user->quiz_result && $validated['metode_yang_digunakan'] !== $user->quiz_result) {
+            return back()->with('error', 'Kamu hanya dapat membuat catatan dengan metode ' . ucfirst(str_replace('_', ' ', $user->quiz_result)) . ' sesuai hasil kuis.');
+        }
+
+        $user->jurnalBelajar()->create($validated);
 
         return redirect()->route('catatan.index')
             ->with('success', 'Catatan belajar berhasil disimpan.');
@@ -85,9 +96,13 @@ class JurnalBelajarController extends Controller
     }
 
     /** Update catatan belajar. */
-    public function update(Request $request, JurnalBelajar $jurnal): RedirectResponse
+    public function update(Request $request, JurnalBelajar $catatan): RedirectResponse
     {
-        $this->authorizeOwnership($jurnal);
+        $user = Auth::user();
+
+        if ($catatan->user_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $validated = $request->validate([
             'tanggal' => ['required', 'date', 'before_or_equal:today'],
@@ -98,7 +113,11 @@ class JurnalBelajarController extends Controller
             'durasi_menit' => ['nullable', 'integer', 'min:1', 'max:1440'],
         ]);
 
-        $jurnal->update($validated);
+        if ($user->quiz_result && $validated['metode_yang_digunakan'] !== $user->quiz_result) {
+            return back()->with('error', 'Kamu hanya dapat mengubah catatan ke metode ' . ucfirst(str_replace('_', ' ', $user->quiz_result)) . ' sesuai hasil kuis.');
+        }
+
+        $catatan->update($validated);
 
         return redirect()->route('catatan.index')
             ->with('success', 'Catatan belajar berhasil diperbarui.');

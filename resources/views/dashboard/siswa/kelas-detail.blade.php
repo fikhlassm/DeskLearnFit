@@ -85,9 +85,11 @@
 .badge-kode{background:#F1F5F9;color:#475569;font-size:.75rem;font-weight:700;padding:.25rem .65rem;border-radius:6px;border:1px solid #E2E8F0;}
 
 .materi-modal-overlay {
-    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
-    z-index: 1000; display: flex; align-items: center; justify-content: center;
-    padding: 1rem; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15,23,42,0.45); z-index: 100;
+    display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+    opacity: 0; visibility: hidden; transition: all 0.25s ease;
+    backdrop-filter: blur(5px);
 }
 .materi-modal-overlay.open { opacity: 1; visibility: visible; }
 .materi-modal-content {
