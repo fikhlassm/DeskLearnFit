@@ -26,7 +26,13 @@
         </div>
 
         <div class="profile-card">
-            <div class="profile-card__avatar">{{ strtoupper(collect(explode(' ', trim($siswa->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
+            <div class="profile-card__avatar" style="overflow:hidden;">
+                @if($siswa->avatar)
+                    <img src="{{ $siswa->avatar }}" alt="{{ $siswa->name }}" style="width:100%; height:100%; object-fit:cover;">
+                @else
+                    {{ strtoupper(collect(explode(' ', trim($siswa->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}
+                @endif
+            </div>
             <div class="profile-card__body">
                 <h2 class="profile-card__name">{{ $siswa->name }}</h2>
                 <p class="profile-card__email">{{ $siswa->email }}</p>

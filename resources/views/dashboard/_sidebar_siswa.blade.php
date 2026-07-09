@@ -34,7 +34,13 @@
         </a>
     </nav>
     <div class="sidebar__user">
-        <div class="sidebar__avatar"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="#64748b" stroke-width="1.5"/><path d="M3 18c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="sidebar__avatar" style="overflow:hidden;">
+            @if(Auth::user()->avatar)
+                <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" style="width:100%; height:100%; object-fit:cover;">
+            @else
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="#64748b" stroke-width="1.5"/><path d="M3 18c0-3.31 3.13-6 7-6s7 2.69 7 6" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/></svg>
+            @endif
+        </div>
         <div><p class="sidebar__user-name">{{ Auth::user()->name }}</p><p class="sidebar__user-role">Siswa</p></div>
     </div>
 </aside>

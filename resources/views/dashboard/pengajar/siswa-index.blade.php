@@ -34,7 +34,13 @@
         <div class="siswa-list">
             @forelse($siswa as $s)
             <a href="{{ route('siswa.show', $s) }}" class="siswa-card">
-                <div class="siswa-card__avatar">{{ strtoupper(collect(explode(' ', trim($s->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
+                <div class="siswa-card__avatar" style="overflow:hidden;">
+                    @if($s->avatar)
+                        <img src="{{ $s->avatar }}" alt="{{ $s->name }}" style="width:100%; height:100%; object-fit:cover;">
+                    @else
+                        {{ strtoupper(collect(explode(' ', trim($s->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}
+                    @endif
+                </div>
                 <div class="siswa-card__body">
                     <p class="siswa-card__name">{{ $s->name }}</p>
                     <p class="siswa-card__email">{{ $s->email }}</p>

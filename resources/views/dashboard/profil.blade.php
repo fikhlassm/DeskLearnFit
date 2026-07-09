@@ -31,7 +31,13 @@ $isSiswa   = $user->role === 'siswa';
         {{-- KARTU INFO --}}
         <div class="profil-card">
             <div class="profil-avatar-wrap">
-                <div class="profil-avatar">{{ strtoupper(collect(explode(' ', trim($user->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}</div>
+                <div class="profil-avatar" style="overflow:hidden;">
+                    @if($user->avatar)
+                        <img src="{{ $user->avatar }}" alt="{{ $user->name }}" style="width:100%; height:100%; object-fit:cover;">
+                    @else
+                        {{ strtoupper(collect(explode(' ', trim($user->name)))->map(fn($w) => mb_substr($w,0,1))->take(2)->join('')) }}
+                    @endif
+                </div>
             </div>
             <p class="profil-nama">{{ $user->name }}</p>
             <p class="profil-email">{{ $user->email }}</p>
