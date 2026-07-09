@@ -20,6 +20,10 @@ $app = new Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+if (isset($_SERVER['VERCEL'])) {
+    $app->useStoragePath('/tmp');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
