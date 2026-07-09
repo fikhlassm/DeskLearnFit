@@ -1,0 +1,19 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-Bg629w7W.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DMQOLfIs.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/views/public.js": {
+    "file": "assets/public-4uH7z4rP.js",
+    "name": "public",
+    "src": "resources/js/views/public.js",
+    "isEntry": true
+  }
+}
